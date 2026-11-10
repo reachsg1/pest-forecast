@@ -112,6 +112,10 @@ FIELD_CANDIDATES: dict[str, list[str]] = {
 # --- 기상청 단기예보 (공공데이터포털) ---------------------------------------
 KMA_VILAGE_FCST = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst"
 KMA_BASE_TIMES = ["0200", "0500", "0800", "1100", "1400", "1700", "2000", "2300"]
+# 중기예보(공공데이터포털 '기상청_중기예보 조회서비스', 별도 활용신청). 구역표: data/reference/kma_mid_regions.csv
+KMA_MID_BASE = "https://apis.data.go.kr/1360000/MidFcstInfoService"
+KMA_MID_TA = f"{KMA_MID_BASE}/getMidTa"            # 도시별 최저·최고기온(regId 예: 11B20701 이천)
+KMA_MID_LAND = f"{KMA_MID_BASE}/getMidLandFcst"    # 육상 구역 날씨·강수확률(regId 예: 11B00000)
 
 # --- NCPMS 오픈API --------------------------------------------------------
 NCPMS_BASE = "http://ncpms.rda.go.kr/npmsAPI/service"

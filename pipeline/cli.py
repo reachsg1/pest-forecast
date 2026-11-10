@@ -67,12 +67,14 @@ def cmd_spots(_: argparse.Namespace) -> int:
 
 def _live_weather(spots: list[dict], issued: date, horizon: int, warnings: list[str]) -> dict[str, list[DailyWeather]]:
     from pipeline.fetch.agriweather import fetch_range_daily
-    from pipeline.fetch.kma import extend_forecast, fetch_vilage_fcst, latlon_to_grid
+    from pipeline.fetch.kma import MidForecaster, extend_forecast, fetch_vilage_fcst, latlon_to_grid
 
     key = config.data_go_kr_key()
     kkey = config.kma_key()
     start = date(issued.year, 1, 1)  # 적산온도 모델 때문에 연초부터
     out: dict[str, list[DailyWeather]] = {}
+    mid = MidForecaster(kkey) if kkey else None
+    mid_failed = False
     for i, sp in enumerate(spots, 1):
         code = sp["spot_code"]
         obs = fetch_range_daily(key, code, start, issued)
@@ -83,9 +85,16 @@ def _live_weather(spots: list[dict], issued: date, horizon: int, warnings: list[
                 fc = fetch_vilage_fcst(kkey, nx, ny)
             except Exception as e:  # noqa: BLE001
                 warnings.append(f"{code} 단기예보 실패: {e}")
-        series = extend_forecast(obs, fc, issued + timedelta(days=horizon))
+        mid_days: list = []
+        if mid and not mid_failed and sp.get("lat") and sp.get("lon"):
+            try:
+                mid_days, _reg = mid.for_point(float(sp["lat"]), float(sp["lon"]))
+            except Exception as e:  # noqa: BLE001
+                mid_failed = True  # 승인 전·장애면 지점마다 다시 시도하지 않음
+                warnings.append(f"중기예보 실패 — 단기예보 이후는 최근 평균으로 채움: {str(e)[:200]}")
+        series = extend_forecast(obs, fc, issued + timedelta(days=horizon), mid=mid_days)
         out[code] = series
-        log.info("[%d/%d] %s 관측 %d일, 예보 %d일", i, len(spots), code, len(obs), len(fc))
+        log.info("[%d/%d] %s 관측 %d일, 단기예보 %d일, 중기예보 %d일", i, len(spots), code, len(obs), len(fc), len(mid_days))
     return out
 
 
