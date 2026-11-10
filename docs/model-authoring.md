@@ -46,6 +46,17 @@ models/apple/anthracnose/
 - `demo_only: true`는 데모 실행(`--demo`)에서만 적재되는 시연용 모형입니다. 실제 모델에는 쓰지 않습니다(`apple/anthracnose/variants/demo_wet` 참고)
 - 추가 모델도 파라미터 근거를 `references`에 적고 `status: draft`로 시작합니다
 
+### 예찰 자료로 학습한 모델(예찰 학습형)
+
+NCPMS 시군구 예찰값을 정답으로, 같은 시군 농업기상 관측소 일자료를 입력으로 유형 C(로지스틱)를 학습합니다. 고추 탄저병 예: `models/pepper/anthracnose/variants/survey_logit`.
+
+1. `python scripts/fetch_weather_all.py` — 전국 일자료 캐시
+2. `python scripts/fetch_survey.py --crop … --examin … --item … --pest …` — 코드는 `data/reference/ncpms_survey_targets.csv`
+3. `python -m pipeline.survey_train --pest <pest_id>` — 학습/시험 연도를 나눠 기본 모델·계절 평균과 비교하고 `params`를 냅니다
+4. `params`를 variant의 `model.yaml`에, 결과 요약을 `eval.json`(`status: survey_evaluated`)에 옮기면 검증 탭에 비교표가 나옵니다
+
+판단 기준: 전체 AUC만 보지 말고 **같은 회차 변별력**(같은 조사일의 시군끼리 비교)을 함께 봅니다. 계절 평균(0.5)보다 높아야 기상이 실제로 기여한 것입니다.
+
 ## 3. model.py
 
 ```python

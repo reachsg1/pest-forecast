@@ -30,6 +30,15 @@ FEATURE_HELP = {
     "rain_30d": "최근 30일 누적 강수량(mm)",
     "rain_days_30d": "최근 30일 강수일수(≥1mm)",
     "sunshine_7d": "최근 7일 평균 일조시간",
+    "tavg_14d": "최근 14일 평균기온",
+    "rh_14d": "최근 14일 평균 상대습도",
+    "rain_14d": "최근 14일 누적 강수량(mm)",
+    "rain_days_14d": "최근 14일 강수일수(≥1mm)",
+    "lwd_14d": "최근 14일 평균 잎젖음(결로)시간",
+    "lwd_30d": "최근 30일 평균 잎젖음(결로)시간",
+    "rain_days_season": "6월 1일 이후 강수일수(≥1mm)",
+    "wet_warm_days_season": "6월 1일 이후 20~30℃이면서 비(≥1mm)가 온 날 수",
+    "doy": "연중 일차(계절 진행)",
 }
 
 
@@ -39,22 +48,41 @@ def _vals(seq, attr):
 
 
 def compute_features(window: Sequence[DailyWeather]) -> dict[str, float]:
-    """window: 오늘을 포함한 최근 N일(오름차순)."""
-    last7 = window[-7:]
+    """window: 오늘을 포함한 최근 N일(오름차순). 30·14·7일 피처는 끝에서 잘라 쓰고,
+    시즌 피처(_season)는 window 안에서 그해 6월 1일 이후만 센다(window_days를 충분히 길게)."""
+    if not window:
+        return {}
+    last30, last14, last7 = window[-30:], window[-14:], window[-7:]
+
+    def avg(seq, attr):
+        v = _vals(seq, attr)
+        return mean(v) if v else float("nan")
+
+    def lwd(seq):
+        v = [w.lwd_hours if w.lwd_hours is not None else w.estimated_lwd() for w in seq]
+        return mean(v) if v else float("nan")
+
     f: dict[str, float] = {}
-    t = _vals(window, "tavg")
-    f["tavg_30d"] = mean(t) if t else float("nan")
-    tn = _vals(last7, "tmin")
-    f["tmin_7d"] = mean(tn) if tn else float("nan")
-    tx = _vals(last7, "tmax")
-    f["tmax_7d"] = mean(tx) if tx else float("nan")
-    rh = _vals(window, "rh")
-    f["rh_30d"] = mean(rh) if rh else float("nan")
-    rain = [w.rain or 0.0 for w in window]
-    f["rain_30d"] = sum(rain)
-    f["rain_days_30d"] = float(sum(1 for r in rain if r >= 1.0))
-    sun = _vals(last7, "sunshine")
-    f["sunshine_7d"] = mean(sun) if sun else float("nan")
+    f["tavg_30d"] = avg(last30, "tavg")
+    f["tmin_7d"] = avg(last7, "tmin")
+    f["tmax_7d"] = avg(last7, "tmax")
+    f["rh_30d"] = avg(last30, "rh")
+    rain30 = [w.rain or 0.0 for w in last30]
+    f["rain_30d"] = sum(rain30)
+    f["rain_days_30d"] = float(sum(1 for r in rain30 if r >= 1.0))
+    f["sunshine_7d"] = avg(last7, "sunshine")
+    f["tavg_14d"] = avg(last14, "tavg")
+    f["rh_14d"] = avg(last14, "rh")
+    rain14 = [w.rain or 0.0 for w in last14]
+    f["rain_14d"] = sum(rain14)
+    f["rain_days_14d"] = float(sum(1 for r in rain14 if r >= 1.0))
+    f["lwd_14d"] = lwd(last14)
+    f["lwd_30d"] = lwd(last30)
+    today = window[-1].date
+    season = [w for w in window if w.date.year == today.year and (w.date.month, w.date.day) >= (6, 1)]
+    f["rain_days_season"] = float(sum(1 for w in season if (w.rain or 0.0) >= 1.0))
+    f["wet_warm_days_season"] = float(sum(1 for w in season if (w.rain or 0.0) >= 1.0 and w.tavg is not None and 20.0 <= w.tavg <= 30.0))
+    f["doy"] = float(today.timetuple().tm_yday)
     return f
 
 

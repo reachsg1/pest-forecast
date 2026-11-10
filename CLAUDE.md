@@ -19,7 +19,7 @@
   - 톤: 페이지 머리는 짙은 녹·청록 그라데이션 히어로(`.hero-dark`, `PageHeader`) + 반투명 유리 요소(`.glass-tile` `.glass-dark` `.btn-light` `.btn-glass`), 본문은 밝은 카드. 지도는 위성(기본)/일반 전환, 조건·범례는 지도 위 유리 패널. 사용자가 "구식"이라 한 흰 카드 나열형으로 되돌리지 않는다.
   - 위성 타일(Esri World Imagery)·홈 히어로 위성 배경은 개발용. 운영 전 VWorld 위성·하이브리드 타일로 교체(한글 지명).
   - Tailwind 설정(`tailwind.config.ts`)을 바꾸면 dev 서버를 재시작해야 반영된다. `npm run build`는 dev 서버의 `.next`를 덮어쓰므로 dev 서버를 멈추고 빌드 후 `.next`를 지우고 다시 띄운다.
-- 외부 API 키는 환경변수(`NCPMS_API_KEY`, `DATA_GO_KR_KEY`, `KMA_API_KEY`)로만. 코드·커밋·로그에 절대 넣지 않는다. 공공데이터포털 키는 `config.normalize_key()`가 디코딩한다.
+- 외부 API 키는 환경변수(`NCPMS_API_KEY`, `DATA_GO_KR_KEY`, `KMA_API_KEY`)로만(로컬은 루트 `.env`, git 제외). 코드·커밋·로그에 절대 넣지 않는다. `fetch/http.py`가 오류·로그의 키를 가린다. 공공데이터포털 키는 `config.normalize_key()`가 디코딩한다.
 - 모델 파라미터(`model.yaml`)는 담당 연구자 검토 대상. 값을 바꾸면 `references`에 근거를 적고 `status`를 유지/갱신한다. 임의로 "그럴듯한" 수치를 만들지 말고, 모르면 TODO로 남긴다.
 - 농업기상 API 응답 태그명은 미확인 상태(`pipeline/config.py` FIELD_CANDIDATES). `python -m pipeline.cli probe` 결과로 맞춘다.
 - NCPMS 서비스 코드는 공식 명세로 확정(`NCPMS_SERVICE_CODES`, `docs/ncpms-research.md`). 검색·예찰 계열은 `serviceType` 필수, 예측(SVC31~34)은 위젯이라 원자료 아님, 발생정보(발령)는 OpenAPI 없음. 대상 병해충을 늘릴 때는 NCPMS 예찰(검증)·예측모형(비교) 유무를 먼저 본다(`data/reference/ncpms_*.csv`).
@@ -34,6 +34,9 @@ python -m pipeline.cli probe && python -m pipeline.cli spots
 python -m pipeline.cli run --spots 20                    # 라이브(키 필요)
 python -m pipeline.backtest                              # data/survey/survey.csv 있을 때
 python scripts/fetch_cultivation.py --year 2025          # 시군별 노지 재배면적 → data/reference/cultivation.csv
+python scripts/fetch_weather_all.py --years 2015-2025 --months 4-9   # 전국 농업기상 일자료 캐시(월 1회 호출)
+python scripts/fetch_survey.py --crop VC011205 --examin 01320 --item 탄저병 --pest pepper_anthracnose  # NCPMS 시군구 예찰
+python -m pipeline.survey_train --pest pepper_anthracnose [--with-history]   # 예찰 학습형 학습·연도 분리 검증
 cd apps/web && npm install && npm run typecheck && npm run build && npm run dev
 ```
 

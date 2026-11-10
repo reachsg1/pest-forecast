@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ModelCard from "./ModelCard";
 import RiskBadge from "./RiskBadge";
+import SurveyEvalCard from "./SurveyEvalCard";
 import TrendChart from "./TrendChart";
 import { GradeBar, Icon } from "./ui";
 import { GRADES, NA, NA_REASONS, fmtIndex } from "@/lib/grades";
@@ -45,6 +46,8 @@ export default function PestTabs({
   const countMap = Object.fromEntries(GRADES.map((g) => [g.name, entries.filter((e) => e.grade_today === g.name).length])) as Record<Grade, number>;
   const naCount = entries.filter((e) => e.grade_today == null).length;
   const top = entries.filter((e) => e.grade_today != null).slice(0, 10);
+  const surveyEvalModels = models.filter((m) => m.eval?.status === "survey_evaluated" && m.eval.test);
+  const defaultLabel = models.find((m) => m.is_default)?.label ?? "기본 모델";
 
   return (
     <div className="card overflow-hidden">
@@ -243,6 +246,10 @@ export default function PestTabs({
 
         {tab === "eval" && (
           <section role="tabpanel" id="panel-eval" aria-labelledby="tab-eval" className="space-y-4 text-sm">
+            {surveyEvalModels.map((m) => (
+              <SurveyEvalCard key={m.model_id} model={m} defaultLabel={defaultLabel} />
+            ))}
+            {surveyEvalModels.length > 0 && <div className="pt-2 text-xs font-semibold text-slate-500">기본 모델({defaultLabel}) 백테스트</div>}
             {pest.eval.status === "evaluated" && pest.eval.years ? (
               <div className="-mx-3 overflow-x-auto">
                 <table className="table-clean">

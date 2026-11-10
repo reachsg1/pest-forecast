@@ -27,9 +27,23 @@ export interface Spot {
   data_poor: boolean;
 }
 
+// 예찰 학습형 모델의 연도 분리 검증 결과(pipeline/survey_train.py)
+export interface SurveyEvalBlock {
+  n: number;
+  positive_rate: number;
+  auc: { survey_logit: number; climatology: number; default_rule: number; persistence?: number; gbm_reference?: number };
+  within_round_auc: { survey_logit: number; climatology: number; default_rule: number; persistence?: number };
+  brier: { survey_logit: number; climatology: number; constant_rate?: number; gbm_reference?: number };
+}
+
 export interface EvalSummary {
   status: string;
   note?: string;
+  method?: string;
+  n_sigungu?: number;
+  test?: SurveyEvalBlock;
+  test_by_year?: Record<string, SurveyEvalBlock>;
+  with_history_reference?: { note: string; test: SurveyEvalBlock };
   years?: Record<
     string,
     {

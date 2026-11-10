@@ -1,0 +1,133 @@
+{
+  "model_id": "pepper_anthracnose__survey_logit",
+  "version": "0.1.0",
+  "evaluated_at": "2026-11-10",
+  "status": "survey_evaluated",
+  "method": "연도 분리 검증: 학습 2015~2022, 시험 2023~2025. 정답 = 시군구 예찰 피해과율 > 0.",
+  "n_sigungu": 65,
+  "skipped": {
+    "관측소 없음": 441,
+    "기상 부족": 24
+  },
+  "test": {
+    "n": 1104,
+    "positive_rate": 0.313,
+    "auc": {
+      "survey_logit": 0.835,
+      "climatology": 0.82,
+      "default_rule": 0.534,
+      "gbm_reference": 0.833,
+      "persistence": 0.796
+    },
+    "within_round_auc": {
+      "survey_logit": 0.562,
+      "default_rule": 0.452,
+      "persistence": 0.711,
+      "climatology": 0.5
+    },
+    "brier": {
+      "survey_logit": 0.1564,
+      "climatology": 0.1568,
+      "gbm_reference": 0.1607,
+      "constant_rate": 0.2206
+    }
+  },
+  "test_by_year": {
+    "2023": {
+      "n": 306,
+      "positive_rate": 0.379,
+      "auc": {
+        "survey_logit": 0.904,
+        "climatology": 0.891,
+        "default_rule": 0.55,
+        "gbm_reference": 0.896,
+        "persistence": 0.803
+      },
+      "within_round_auc": {
+        "survey_logit": 0.64,
+        "default_rule": 0.488,
+        "persistence": 0.707,
+        "climatology": 0.5
+      },
+      "brier": {
+        "survey_logit": 0.1223,
+        "climatology": 0.1298,
+        "gbm_reference": 0.1236,
+        "constant_rate": 0.2354
+      }
+    },
+    "2024": {
+      "n": 407,
+      "positive_rate": 0.324,
+      "auc": {
+        "survey_logit": 0.815,
+        "climatology": 0.8,
+        "default_rule": 0.534,
+        "gbm_reference": 0.803,
+        "persistence": 0.811
+      },
+      "within_round_auc": {
+        "survey_logit": 0.498,
+        "default_rule": 0.465,
+        "persistence": 0.747,
+        "climatology": 0.5
+      },
+      "brier": {
+        "survey_logit": 0.1685,
+        "climatology": 0.1673,
+        "gbm_reference": 0.1794,
+        "constant_rate": 0.2231
+      }
+    },
+    "2025": {
+      "n": 391,
+      "positive_rate": 0.251,
+      "auc": {
+        "survey_logit": 0.793,
+        "climatology": 0.792,
+        "default_rule": 0.496,
+        "gbm_reference": 0.798,
+        "persistence": 0.771
+      },
+      "within_round_auc": {
+        "survey_logit": 0.587,
+        "default_rule": 0.413,
+        "persistence": 0.67,
+        "climatology": 0.5
+      },
+      "brier": {
+        "survey_logit": 0.1707,
+        "climatology": 0.167,
+        "gbm_reference": 0.1701,
+        "constant_rate": 0.2064
+      }
+    }
+  },
+  "with_history_reference": {
+    "note": "직전 회차 예찰값을 피처로 더한 판(운영엔 예찰 실시간 연동 필요)",
+    "test": {
+      "n": 1104,
+      "positive_rate": 0.313,
+      "auc": {
+        "survey_logit": 0.898,
+        "climatology": 0.82,
+        "default_rule": 0.534,
+        "gbm_reference": 0.905,
+        "persistence": 0.796
+      },
+      "within_round_auc": {
+        "survey_logit": 0.752,
+        "default_rule": 0.452,
+        "persistence": 0.711,
+        "climatology": 0.5
+      },
+      "brier": {
+        "survey_logit": 0.1168,
+        "climatology": 0.1568,
+        "gbm_reference": 0.1126,
+        "constant_rate": 0.2206
+      }
+    }
+  },
+  "note": "AUC 1.0=완벽, 0.5=무작위. '같은 회차 변별력'은 같은 조사일의 시군끼리 비교한 AUC로, 계절(시기) 효과를 뺀 성능입니다."
+}

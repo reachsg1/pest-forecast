@@ -1,0 +1,76 @@
+id: pepper_anthracnose__survey_logit
+pest_id: pepper_anthracnose
+name_ko: 고추 탄저병
+name_sci: Colletotrichum acutatum / C. scovillei
+crop: pepper
+kind: disease
+type: C
+version: 0.1.0
+horizon_days: 7
+season:
+  start_month: 6
+  end_month: 9
+inputs:
+- tavg
+- tmin
+- rh
+- rain
+- lwd_hours(결로시간 관측)
+label: 예찰 학습형
+description: NCPMS 노지고추 탄저병 예찰(2015~2022, 시군구 피해과율)과 같은 시군 농업기상 관측소 일자료로 학습한 로지스틱
+  모델. '그 시기에 그 시군에서 탄저병이 발생했을 확률'을 위험지수(0~100)로 냅니다.
+logic: 조사일 전날까지 기상으로 만든 10개 피처(최근 14일 기온·습도·강수·결로, 최근 30일 결로, 6월 1일 이후 강수일수 등, 연중
+  일차)를 표준화해 가중합 → 로지스틱 확률. 2023~2025년(학습에 쓰지 않은 해) 검증에서 현재 기본 모델보다 크게 낫지만, 대부분은 계절
+  진행(시기)을 맞힌 효과이고 같은 시기 시군 간 차이를 가르는 힘은 약합니다(검증 탭 참고).
+params:
+  window_days: 150
+  bias: -0.9221
+  features:
+  - name: tavg_14d
+    center: 23.412
+    scale: 2.818
+    weight: 0.306
+  - name: rh_14d
+    center: 79.515
+    scale: 8.601
+    weight: 0.2135
+  - name: rain_14d
+    center: 86.813
+    scale: 150.106
+    weight: 0.2657
+  - name: rain_days_14d
+    center: 4.394
+    scale: 2.553
+    weight: -0.1979
+  - name: lwd_14d
+    center: 5.771
+    scale: 4.307
+    weight: -0.2662
+  - name: lwd_30d
+    center: 5.539
+    scale: 4.02
+    weight: 0.3406
+  - name: tmin_7d
+    center: 19.089
+    scale: 3.609
+    weight: 0.1979
+  - name: rain_days_season
+    center: 16.051
+    scale: 12.753
+    weight: 1.142
+  - name: wet_warm_days_season
+    center: 13.101
+    scale: 11.778
+    weight: -0.5469
+  - name: doy
+    center: 204.525
+    scale: 33.639
+    weight: 1.0511
+references:
+- '학습 자료: NCPMS 병해충 예찰 OpenAPI(SVC51~53) 노지고추 ''탄저병(피해과율)'' 시군구 조사값 2015~2025 (scripts/fetch_survey.py)'
+- '기상 자료: 국립농업과학원 농업기상 기본 관측데이터 V3(공공데이터포털 15078057) 일자료, 시군명 매칭 관측소 평균 (scripts/fetch_weather_all.py)'
+- '학습·검증 절차: pipeline/survey_train.py — 학습 2015~2022, 시험 2023~2025, 결과 data/survey/eval_pepper_anthracnose_survey.json'
+owner: ''
+status: draft
+ncpms_key: ''
+ncpms_kind: sick

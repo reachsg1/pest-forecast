@@ -15,3 +15,17 @@
 | source_file | 원본 파일명 |
 
 원본: 공공데이터포털 "농촌진흥청_병해충 예찰조사"(2015~2025) 및 "병해충조사지점현황정보". 원본 CSV는 용량·개인정보 검토 후 `data/survey/raw/`(git 제외)에 두고 정제 스크립트로 변환한다.
+
+## NCPMS 예찰 OpenAPI 수집본(시군구 단위)
+
+`scripts/fetch_survey.py`로 받은 시군구별 조사값. 예찰 학습형 모델(`pipeline/survey_train.py`)의 정답이다.
+
+| 파일 | 내용 |
+|---|---|
+| `ncpms_pepper_anthracnose_sigungu.csv` | 노지고추 '탄저병(피해과율)' 2015~2025, 5,006행(수치 4,675). 컬럼: year, round, survey_date, sido_code, sido, sigungu_code, sigungu, item, value |
+| `eval_pepper_anthracnose_survey.json` | 기상만 쓴 로지스틱 — 학습 2015~2022 / 시험 2023~2025 결과와 계수 |
+| `eval_pepper_anthracnose_survey_history.json` | 참고: 직전 회차 예찰값을 더한 판 |
+
+- 회차: 6~9월 매월 1·16일(연 최대 8회). 2015년은 6월 16일부터 4회
+- 같은 이름이 두 시도에 있는 시군(고성군 등)과 '구' 단위는 관측소 시도를 알 수 없어 학습에서 뺀다
+- 재수집: `python scripts/fetch_survey.py --crop VC011205 --examin 01320 --item 탄저병 --pest pepper_anthracnose` (캐시가 있으면 호출 0건, 처음 받을 때 약 790건)
