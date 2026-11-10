@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import RiskBadge from "./RiskBadge";
+import { Icon } from "./ui";
 import { NA, NA_REASONS, fmtIndex, gradeMeta } from "@/lib/grades";
 import type { SpotFile, Spot } from "@/lib/types";
 
@@ -108,22 +109,27 @@ export default function FarmClient({ spots, pests, horizon }: { spots: Spot[]; p
   };
 
   return (
-    <div className="grid gap-4 lg:grid-cols-[360px_1fr]">
+    <div className="grid items-start gap-5 lg:grid-cols-[360px_1fr]">
       <form
-        className="space-y-3 rounded-lg border bg-white p-4 text-sm"
+        className="card card-pad space-y-4 text-sm lg:sticky lg:top-24"
         onSubmit={(e) => {
           e.preventDefault();
           add();
         }}
       >
-        <h2 className="font-semibold">농장 추가</h2>
+        <div className="flex items-center gap-2.5">
+          <span className="grid h-9 w-9 place-items-center rounded-xl bg-brand-50 text-brand-600">
+            <Icon name="plus" />
+          </span>
+          <h2 className="section-title">농장 추가</h2>
+        </div>
         <label className="block">
-          <span className="text-gray-600">농장 이름</span>
-          <input className="mt-1 w-full rounded border px-2 py-1" value={name} onChange={(e) => setName(e.target.value)} placeholder="예: 뒷밭 사과원" />
+          <span className="field-label">농장 이름</span>
+          <input className="field" value={name} onChange={(e) => setName(e.target.value)} placeholder="예: 뒷밭 사과원" />
         </label>
         <label className="block">
-          <span className="text-gray-600">작물</span>
-          <select className="mt-1 w-full rounded border px-2 py-1" value={crop} onChange={(e) => setCrop(e.target.value)}>
+          <span className="field-label">작물</span>
+          <select className="field" value={crop} onChange={(e) => setCrop(e.target.value)}>
             {crops.map((c) => (
               <option key={c} value={c}>
                 {pests.find((p) => p.crop === c)?.crop_ko ?? c}
@@ -131,86 +137,103 @@ export default function FarmClient({ spots, pests, horizon }: { spots: Spot[]; p
             ))}
           </select>
         </label>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-3">
           <label className="block">
-            <span className="text-gray-600">위도</span>
-            <input className="mt-1 w-full rounded border px-2 py-1" inputMode="decimal" value={lat} onChange={(e) => setLat(e.target.value)} placeholder="36.5" />
+            <span className="field-label">위도</span>
+            <input className="field num" inputMode="decimal" value={lat} onChange={(e) => setLat(e.target.value)} placeholder="36.5" />
           </label>
           <label className="block">
-            <span className="text-gray-600">경도</span>
-            <input className="mt-1 w-full rounded border px-2 py-1" inputMode="decimal" value={lon} onChange={(e) => setLon(e.target.value)} placeholder="127.5" />
+            <span className="field-label">경도</span>
+            <input className="field num" inputMode="decimal" value={lon} onChange={(e) => setLon(e.target.value)} placeholder="127.5" />
           </label>
         </div>
-        <div className="flex gap-2">
-          <button type="button" onClick={locate} className="rounded border px-3 py-1 hover:bg-gray-50">
-            현재 위치 사용
+        <div className="flex gap-2 pt-1">
+          <button type="button" onClick={locate} className="btn-secondary flex-1">
+            <Icon name="location" /> 현재 위치
           </button>
-          <button type="submit" className="rounded bg-brand px-3 py-1 font-semibold text-white hover:bg-brand-dark">
+          <button type="submit" className="btn-primary flex-1">
             추가
           </button>
         </div>
-        {msg && <p className="text-xs text-red-700">{msg}</p>}
-        <p className="text-xs text-gray-500">주소 검색(지오코딩)은 2단계에서 연결합니다. 지금은 지도 앱에서 좌표를 복사해 넣어 주세요.</p>
+        {msg && <p className="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">{msg}</p>}
+        <p className="text-xs leading-relaxed text-slate-400">주소 검색(지오코딩)은 2단계에서 연결합니다. 지금은 지도 앱에서 좌표를 복사해 넣어 주세요.</p>
       </form>
 
-      <section className="space-y-3">
-        {farms.length === 0 && <p className="rounded-lg border border-dashed bg-white p-6 text-center text-sm text-gray-500">등록된 농장이 없습니다.</p>}
+      <section className="space-y-4" aria-label="등록한 농장">
+        {farms.length === 0 && (
+          <div className="card flex flex-col items-center px-6 py-16 text-center">
+            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-slate-100 text-slate-400">
+              <Icon name="farm" className="h-6 w-6" />
+            </span>
+            <p className="mt-4 font-semibold text-slate-700">등록된 농장이 없습니다</p>
+            <p className="mt-1 text-sm text-slate-500">왼쪽에서 농장 위치와 작물을 추가하면 가장 가까운 관측지점의 위험도를 보여 드립니다.</p>
+          </div>
+        )}
         {farms.map((f) => {
           const file = files[f.spot_code];
           const myPests = pests.filter((p) => p.crop === f.crop);
           return (
-            <article key={f.id} className="rounded-lg border bg-white p-4">
-              <div className="flex items-start justify-between gap-2">
-                <div>
-                  <h3 className="text-base font-bold">{f.name}</h3>
-                  <p className="text-xs text-gray-600">
-                    {pests.find((p) => p.crop === f.crop)?.crop_ko} · 최근접 관측지점 {file?.spot.name ?? f.spot_code} ({f.distance_km} km)
+            <article key={f.id} className="card overflow-hidden">
+              <div className="flex items-start justify-between gap-3 px-5 pt-5">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h3 className="truncate text-lg font-bold tracking-tight">{f.name}</h3>
+                    <span className="chip bg-brand-50 text-brand-700">{pests.find((p) => p.crop === f.crop)?.crop_ko}</span>
+                  </div>
+                  <p className="mt-0.5 text-xs text-slate-500">
+                    최근접 관측지점 {file?.spot.name ?? f.spot_code} · <span className="num">{f.distance_km} km</span>
                   </p>
                 </div>
-                <button onClick={() => save(farms.filter((x) => x.id !== f.id))} className="text-xs text-gray-500 underline">
+                <button onClick={() => save(farms.filter((x) => x.id !== f.id))} className="btn-secondary btn-sm text-slate-500">
                   삭제
                 </button>
               </div>
               {!file ? (
-                <p className="mt-2 text-sm text-gray-500">불러오는 중…</p>
+                <div className="m-5 h-24 animate-pulse rounded-xl bg-slate-100" />
               ) : (
-                <table className="mt-3 w-full text-sm">
-                  <thead>
-                    <tr className="text-left text-xs text-gray-600">
-                      <th className="py-1 pr-2">병해충</th>
-                      <th className="py-1 pr-2">오늘</th>
-                      <th className="py-1">{horizon}일 타임라인</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {myPests.map((p) => {
-                      const s = (file.series[p.pest_id] ?? []).filter((x) => x.offset >= 0 && x.offset <= horizon);
-                      const today = s.find((x) => x.offset === 0);
-                      return (
-                        <tr key={p.pest_id} className="border-t">
-                          <td className="py-1.5 pr-2">
-                            <Link href={`/pests/${p.pest_id}?spot=${f.spot_code}&tab=trend`} className="hover:underline">
-                              {p.name_ko}
-                            </Link>
-                          </td>
-                          <td className="py-1.5 pr-2">{today ? <RiskBadge grade={today.grade} index={today.index} na={today.na_reason} size="sm" /> : "-"}</td>
-                          <td className="py-1.5">
-                            <div className="flex gap-0.5" role="img" aria-label={s.map((x) => `${x.offset}일 ${x.grade ?? NA.label}`).join(", ")}>
-                              {s.map((x) =>
-                                x.grade == null ? (
-                                  // 해당 없음: 빈 칸(점선 테두리)으로 등급색과 구분
-                                  <span key={x.offset} title={`+${x.offset}일 ${NA.label}${x.na_reason ? " · " + NA_REASONS[x.na_reason].short : ""}`} className="h-4 flex-1 rounded-sm border border-dashed border-gray-300 bg-white" />
-                                ) : (
-                                  <span key={x.offset} title={`+${x.offset}일 ${x.grade} ${fmtIndex(x.index)}`} className="h-4 flex-1 rounded-sm" style={{ background: gradeMeta(x.grade).color, opacity: x.offset === 0 ? 1 : 0.75 }} />
-                                ),
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+                <div className="mt-3 overflow-x-auto px-2 pb-2">
+                  <table className="table-clean">
+                    <thead>
+                      <tr>
+                        <th>병해충</th>
+                        <th>오늘</th>
+                        <th className="w-1/2">{horizon}일 타임라인</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {myPests.map((p) => {
+                        const s = (file.series[p.pest_id] ?? []).filter((x) => x.offset >= 0 && x.offset <= horizon);
+                        const today = s.find((x) => x.offset === 0);
+                        return (
+                          <tr key={p.pest_id}>
+                            <td>
+                              <Link href={`/pests/${p.pest_id}?spot=${f.spot_code}&tab=trend`} className="font-medium text-slate-900 hover:text-brand-700">
+                                {p.name_ko}
+                              </Link>
+                            </td>
+                            <td>{today ? <RiskBadge grade={today.grade} index={today.index} na={today.na_reason} size="sm" /> : "-"}</td>
+                            <td>
+                              <div className="flex gap-1" role="img" aria-label={s.map((x) => `${x.offset}일 ${x.grade ?? NA.label}`).join(", ")}>
+                                {s.map((x) =>
+                                  x.grade == null ? (
+                                    // 해당 없음: 빈 칸(점선 테두리)으로 등급색과 구분
+                                    <span key={x.offset} title={`+${x.offset}일 ${NA.label}${x.na_reason ? " · " + NA_REASONS[x.na_reason].short : ""}`} className="h-5 flex-1 rounded-md border border-dashed border-slate-300 bg-white" />
+                                  ) : (
+                                    <span key={x.offset} title={`+${x.offset}일 ${x.grade} ${fmtIndex(x.index)}`} className="h-5 flex-1 rounded-md" style={{ background: gradeMeta(x.grade).color, opacity: x.offset === 0 ? 1 : 0.7 }} />
+                                  ),
+                                )}
+                              </div>
+                              <div className="mt-1 flex justify-between text-[10px] text-slate-400">
+                                <span>오늘</span>
+                                <span>+{horizon}일</span>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
               )}
             </article>
           );

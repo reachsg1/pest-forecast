@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import RiskBadge from "./RiskBadge";
 import Sparkline from "./Sparkline";
+import { Icon } from "./ui";
 import { NA_REASONS, pestFullName, windowText } from "@/lib/grades";
 import type { SpotFile } from "@/lib/types";
 
@@ -27,7 +28,14 @@ export default function SpotPanel({ code, pestId, pests, horizon, onClose }: { c
   }, [code]);
 
   if (err) return <p className="text-sm text-red-700">지점 자료를 불러오지 못했습니다. ({code})</p>;
-  if (!data) return <p className="text-sm text-gray-500">불러오는 중…</p>;
+  if (!data)
+    return (
+      <div className="space-y-3" aria-busy="true">
+        <div className="h-5 w-32 animate-pulse rounded bg-slate-100" />
+        <div className="h-9 w-24 animate-pulse rounded-full bg-slate-100" />
+        <div className="h-16 animate-pulse rounded-xl bg-slate-100" />
+      </div>
+    );
 
   const series = data.series[pestId] ?? [];
   const future = series.filter((p) => p.offset >= 0 && p.offset <= horizon);
@@ -45,69 +53,82 @@ export default function SpotPanel({ code, pestId, pests, horizon, onClose }: { c
   const season = windowText(phen);
   const isNa = today != null && today.grade == null;
 
+  const wx = [
+    { k: "강우", v: `${rainSum.toFixed(1)}`, u: "mm", sub: `${rainDays}일` },
+    { k: "평균기온", v: avg("tavg")?.toFixed(1) ?? "-", u: "℃" },
+    { k: "평균습도", v: avg("rh")?.toFixed(0) ?? "-", u: "%" },
+    { k: "잎젖음(추정)", v: avg("lwd_hours")?.toFixed(1) ?? "-", u: "h/일" },
+  ];
+
   return (
-    <div className="space-y-3 text-sm">
+    <div className="space-y-5 text-sm">
       <div className="flex items-start justify-between gap-2">
-        <div>
-          <div className="text-base font-bold">{data.spot.name}</div>
-          <div className="text-xs text-gray-600">
-            {data.spot.sigungu} · {data.spot.spot_code}
-            {data.missing_rate > 0.3 && <span className="ml-1 rounded bg-gray-100 px-1 text-gray-700">자료 부족</span>}
+        <div className="min-w-0">
+          <div className="text-lg font-bold tracking-tight text-slate-900">{data.spot.name}</div>
+          <div className="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs text-slate-500">
+            {data.spot.sigungu}
+            <span className="text-slate-300">·</span>
+            <span className="font-mono text-[11px] text-slate-400">{data.spot.spot_code}</span>
+            {data.missing_rate > 0.3 && <span className="chip">자료 부족</span>}
           </div>
         </div>
         {onClose && (
-          <button onClick={onClose} className="rounded border px-2 py-0.5 text-xs" aria-label="패널 닫기">
-            닫기
+          <button onClick={onClose} className="grid h-8 w-8 place-items-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700" aria-label="패널 닫기">
+            <Icon name="close" />
           </button>
         )}
       </div>
 
-      <div>
-        <div className="text-xs text-gray-600">{pestName} · 오늘</div>
-        {today ? <RiskBadge grade={today.grade} index={today.index} na={today.na_reason} size="lg" /> : <span className="text-gray-500">예측 없음</span>}
-        {isNa && today?.na_reason && (
-          <p className="mt-2 rounded-md bg-gray-50 px-3 py-2 text-xs leading-relaxed text-gray-600">{NA_REASONS[today.na_reason].long(pest?.crop_ko ?? "이 작물")}</p>
+      <div className="rounded-xl bg-slate-50 p-4">
+        <div className="text-xs font-medium text-slate-500">{pestName} · 오늘</div>
+        <div className="mt-2">{today ? <RiskBadge grade={today.grade} index={today.index} na={today.na_reason} size="lg" /> : <span className="text-slate-500">예측 없음</span>}</div>
+        {isNa && today?.na_reason && <p className="mt-3 text-xs leading-relaxed text-slate-600">{NA_REASONS[today.na_reason].long(pest?.crop_ko ?? "이 작물")}</p>}
+        {season && <p className="mt-2 text-xs text-slate-500">재배 기간 {season}</p>}
+        {future.length > 0 && future.some((p) => p.index != null) && (
+          <div className="mt-4 border-t border-slate-200/70 pt-3">
+            <div className="flex items-baseline justify-between text-[11px] text-slate-400">
+              <span className="font-medium text-slate-500">{horizon}일 추이</span>
+              <span>점선은 예측</span>
+            </div>
+            <div className="mt-1.5">
+              <Sparkline values={future.map((p) => p.index)} width={280} height={52} fluid />
+            </div>
+            <div className="flex justify-between text-[10px] text-slate-400">
+              <span>오늘</span>
+              <span>+{horizon}일</span>
+            </div>
+          </div>
         )}
-        {season && <p className="mt-1.5 text-xs text-gray-500">재배 기간 {season}</p>}
       </div>
 
-      {future.length > 0 && future.some((p) => p.index != null) && (
+      {recent.length > 0 && (
         <div>
-          <div className="text-xs font-semibold">위험지수 {horizon}일 추이 (예측은 점선)</div>
-          <Sparkline values={future.map((p) => p.index)} width={280} height={56} />
-          <div className="flex justify-between text-[10px] text-gray-500">
-            <span>오늘</span>
-            <span>+{horizon}일</span>
-          </div>
+          <div className="text-xs font-semibold text-slate-500">최근 7일 입력 기상</div>
+          <dl className="mt-2 grid grid-cols-2 gap-2">
+            {wx.map((w) => (
+              <div key={w.k} className="rounded-xl border border-slate-100 px-3 py-2">
+                <dt className="text-[11px] text-slate-400">{w.k}</dt>
+                <dd className="num mt-0.5 font-semibold text-slate-900">
+                  {w.v}
+                  <span className="ml-0.5 text-xs font-normal text-slate-400">{w.u}</span>
+                  {w.sub && <span className="ml-1 text-xs font-normal text-slate-400">· {w.sub}</span>}
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
       )}
 
-      {recent.length > 0 && (
-        <dl className="grid grid-cols-2 gap-x-3 gap-y-1 rounded bg-gray-50 p-2 text-xs">
-          <dt className="col-span-2 font-semibold">최근 7일 입력 기상</dt>
-          <dt className="text-gray-600">강우량 · 강우일</dt>
-          <dd className="tabular-nums">
-            {rainSum.toFixed(1)} mm · {rainDays}일
-          </dd>
-          <dt className="text-gray-600">평균기온</dt>
-          <dd className="tabular-nums">{avg("tavg")?.toFixed(1) ?? "-"} ℃</dd>
-          <dt className="text-gray-600">평균습도</dt>
-          <dd className="tabular-nums">{avg("rh")?.toFixed(0) ?? "-"} %</dd>
-          <dt className="text-gray-600">잎젖음(추정)</dt>
-          <dd className="tabular-nums">{avg("lwd_hours")?.toFixed(1) ?? "-"} h/일</dd>
-        </dl>
-      )}
-
       <div>
-        <div className="text-xs font-semibold">이 지점의 다른 병해충 (오늘)</div>
-        <ul className="mt-1 space-y-1">
+        <div className="text-xs font-semibold text-slate-500">이 지점의 다른 병해충 · 오늘</div>
+        <ul className="mt-1.5 divide-y divide-slate-100">
           {pests
             .filter((p) => p.pest_id !== pestId && data.series[p.pest_id])
             .map((p) => {
               const t = data.series[p.pest_id].find((x) => x.offset === 0);
               return (
-                <li key={p.pest_id} className="flex items-center justify-between">
-                  <Link href={`/map?crop=${p.crop}&pest=${p.pest_id}&spot=${code}`} className="hover:underline">
+                <li key={p.pest_id} className="flex items-center justify-between gap-2 py-2">
+                  <Link href={`/map?crop=${p.crop}&pest=${p.pest_id}&spot=${code}`} className="truncate text-slate-700 hover:text-brand-700">
                     {pestFullName(p.crop_ko, p.name_ko)}
                   </Link>
                   {t && <RiskBadge grade={t.grade} index={t.index} na={t.na_reason} size="sm" />}
@@ -117,12 +138,12 @@ export default function SpotPanel({ code, pestId, pests, horizon, onClose }: { c
         </ul>
       </div>
 
-      <div className="flex gap-2 pt-1">
-        <Link href={`/pests/${pestId}?spot=${code}`} className="rounded bg-brand px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-dark">
+      <div className="flex gap-2">
+        <Link href={`/pests/${pestId}?spot=${code}`} className="btn-primary btn-sm flex-1">
           상세 보기
         </Link>
-        <Link href={`/farm?spot=${code}`} className="rounded border px-3 py-1.5 text-xs hover:bg-gray-50">
-          내 농장 추가
+        <Link href={`/farm?spot=${code}`} className="btn-secondary btn-sm flex-1">
+          <Icon name="plus" className="h-3.5 w-3.5" /> 내 농장 추가
         </Link>
       </div>
     </div>

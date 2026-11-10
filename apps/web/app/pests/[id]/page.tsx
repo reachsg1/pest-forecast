@@ -29,33 +29,55 @@ export default async function PestDetailPage({ params, searchParams }: { params:
   const spotFile = selectedCode ? await getSpotFile(selectedCode) : null;
   const ncpmsUrl = "https://ncpms.rda.go.kr/npms/Main.np";
 
+  const alertN = applicable.filter((e) => gradeRank(e.grade_today) >= 2).length;
+
   return (
-    <div className="space-y-4">
-      <nav aria-label="경로" className="text-xs text-gray-500">
-        <Link href="/pests" className="hover:underline">
+    <div className="space-y-6">
+      <nav aria-label="경로" className="flex items-center gap-1.5 text-xs text-slate-400">
+        <Link href="/pests" className="hover:text-slate-700">
           병해충
-        </Link>{" "}
-        › {pest.crop_ko} › {pest.name_ko}
+        </Link>
+        <span>/</span>
+        <span>{pest.crop_ko}</span>
+        <span>/</span>
+        <span className="text-slate-600">{pest.name_ko}</span>
       </nav>
-      <header className="flex flex-wrap items-start justify-between gap-3 rounded-lg border bg-white p-4">
-        <div>
-          <h1 className="text-2xl font-bold">
-            {pestFullName(pest.crop_ko, pest.name_ko)}
-          </h1>
-          <p className="text-sm text-gray-600">
-            <span className="italic">{pest.name_sci}</span> · 기주: {pest.crop_ko} ·{" "}
-            <a className="underline" href={ncpmsUrl} target="_blank" rel="noreferrer">
-              NCPMS 도감 ↗
-            </a>
-          </p>
-        </div>
-        <div className="text-right">
-          <div className="text-xs text-gray-600">오늘 전국 최고 등급 · 기준일 {risk?.issued_date ?? "-"}</div>
-          <RiskBadge grade={maxGrade} size="lg" />
-          <div className="mt-1 text-xs text-gray-600">
-            주의보 이상 {applicable.filter((e) => gradeRank(e.grade_today) >= 2).length}곳 / {applicable.length}곳
-            {entries.length > applicable.length && <span className="text-gray-400"> · 해당 없음 {entries.length - applicable.length}곳</span>}
+      <header className="card overflow-hidden">
+        <div className="flex flex-wrap items-start justify-between gap-6 p-6">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="chip bg-brand-50 text-brand-700">{pest.crop_ko}</span>
+              <span className="chip">{pest.kind === "insect" ? "해충" : "병"}</span>
+              <span className="chip">유형 {pest.type}</span>
+            </div>
+            <h1 className="page-title mt-3">{pestFullName(pest.crop_ko, pest.name_ko)}</h1>
+            <p className="mt-1.5 text-sm text-slate-500">
+              <span className="italic">{pest.name_sci}</span>
+              <span className="mx-1.5 text-slate-300">·</span>
+              <a className="font-medium text-brand-600 hover:text-brand-700" href={ncpmsUrl} target="_blank" rel="noreferrer">
+                NCPMS 도감 ↗
+              </a>
+            </p>
           </div>
+          <div className="flex shrink-0 gap-6 sm:gap-8">
+            <div>
+              <div className="text-xs text-slate-400">오늘 전국 최고 등급</div>
+              <div className="mt-1.5">
+                <RiskBadge grade={maxGrade} size="lg" />
+              </div>
+            </div>
+            <div>
+              <div className="text-xs text-slate-400">주의보 이상</div>
+              <div className="num mt-1 text-2xl font-bold tracking-tight">
+                {alertN}
+                <span className="text-sm font-medium text-slate-400"> / {applicable.length}곳</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 bg-slate-50/60 px-6 py-2.5 text-xs text-slate-500">
+          <span className="num">기준일 {risk?.issued_date ?? "-"}</span>
+          {entries.length > applicable.length && <span className="text-slate-400">해당 없음 {entries.length - applicable.length}곳 제외</span>}
         </div>
       </header>
       <PestTabs

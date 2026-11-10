@@ -1,49 +1,28 @@
 import Link from "next/link";
-
-const NAV = [
-  { href: "/map", label: "예측 지도" },
-  { href: "/farm", label: "내 농장" },
-  { href: "/pests", label: "병해충" },
-  { href: "/data", label: "데이터·API" },
-  { href: "/about", label: "검증·소개" },
-];
+import NavLinks from "./NavLinks";
 
 export default function Header({ demo }: { demo?: boolean }) {
   return (
-    <header className="border-b border-gray-200 bg-white">
+    <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-white/80 backdrop-blur-md supports-[backdrop-filter]:bg-white/70">
       <a href="#main" className="sr-only sr-only-focusable">
         본문 바로가기
       </a>
-      <div className="mx-auto flex max-w-7xl items-center gap-6 px-4 py-3">
-        <Link href="/" className="flex items-center gap-2 text-lg font-bold text-brand-dark">
-          <span aria-hidden="true" className="inline-block h-6 w-6 rounded-full bg-brand" />
-          병해충 발생 예측
+      <div className="mx-auto flex h-16 max-w-7xl items-center gap-6 px-4 sm:px-6">
+        <Link href="/" className="flex shrink-0 items-center gap-2.5">
+          <span aria-hidden="true" className="grid h-8 w-8 place-items-center rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-sm">
+            <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 19c0-8 5-14 15-14 0 10-6 15-14 15M5 19l7-7" />
+            </svg>
+          </span>
+          <span className="leading-tight">
+            <span className="block text-[15px] font-bold tracking-tight text-slate-900">병해충 발생 예측</span>
+            <span className="hidden text-[11px] font-medium text-slate-400 sm:block">농촌진흥청 · 농업기상 기반</span>
+          </span>
         </Link>
-        <nav aria-label="주 메뉴" className="hidden flex-1 md:block">
-          <ul className="flex gap-1">
-            {NAV.map((n) => (
-              <li key={n.href}>
-                <Link href={n.href} className="rounded px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-brand-dark">
-                  {n.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <details className="relative md:hidden">
-          <summary className="cursor-pointer list-none rounded border px-3 py-1 text-sm">메뉴</summary>
-          <ul className="absolute right-0 z-20 mt-2 w-44 rounded border bg-white p-2 shadow">
-            {NAV.map((n) => (
-              <li key={n.href}>
-                <Link href={n.href} className="block rounded px-3 py-2 text-sm hover:bg-gray-100">
-                  {n.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </details>
+        <NavLinks />
         {demo && (
-          <span className="rounded bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-900" title="합성 기상으로 만든 데모 데이터입니다">
+          <span className="ml-auto hidden items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700 ring-1 ring-inset ring-amber-200 sm:inline-flex md:ml-0" title="합성 기상으로 만든 데모 데이터입니다">
+            <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-amber-500" />
             데모 데이터
           </span>
         )}

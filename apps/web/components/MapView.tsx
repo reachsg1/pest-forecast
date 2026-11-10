@@ -7,6 +7,7 @@ import type { Map as MLMap } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import RiskBadge from "./RiskBadge";
 import SpotPanel from "./SpotPanel";
+import { Icon } from "./ui";
 import { GRADES, NA, fmtIndex, gradeOf, gradeRank } from "@/lib/grades";
 import type { Grade, NaReason, RiskFile, RiskSpotEntry, Spot } from "@/lib/types";
 
@@ -161,13 +162,21 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
   const counts = GRADES.map((g) => ({ ...g, n: entries.filter((e) => e.grade === g.name).length }));
   const naCount = entries.filter((e) => e.grade == null).length;
 
+  const [copied, setCopied] = useState(false);
+  const share = () => {
+    navigator.clipboard?.writeText(window.location.href).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    });
+  };
+
   return (
-    <div className="space-y-3">
-      {/* 필터 바 */}
-      <div className="flex flex-wrap items-center gap-2 rounded-lg border bg-white p-2 text-sm" role="group" aria-label="예측 조건">
-        <label className="flex items-center gap-1">
-          <span className="text-gray-600">작물</span>
-          <select className="rounded border px-2 py-1" value={crop} onChange={(e) => setParams({ crop: e.target.value, pest: null, spot: null })}>
+    <div className="space-y-4">
+      {/* 조건 바 */}
+      <div className="card flex flex-wrap items-end gap-x-5 gap-y-3 p-4" role="group" aria-label="예측 조건">
+        <label className="min-w-[110px]">
+          <span className="field-label">작물</span>
+          <select className="field py-1.5" value={crop} onChange={(e) => setParams({ crop: e.target.value, pest: null, spot: null })}>
             {crops.map((c) => (
               <option key={c} value={c}>
                 {pests.find((p) => p.crop === c)?.crop_ko ?? c}
@@ -175,9 +184,9 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
             ))}
           </select>
         </label>
-        <label className="flex items-center gap-1">
-          <span className="text-gray-600">병해충</span>
-          <select className="rounded border px-2 py-1" value={pestId} onChange={(e) => setParams({ pest: e.target.value })}>
+        <label className="min-w-[170px]">
+          <span className="field-label">병해충</span>
+          <select className="field py-1.5" value={pestId} onChange={(e) => setParams({ pest: e.target.value })}>
             {cropPests.map((p) => (
               <option key={p.pest_id} value={p.pest_id}>
                 {p.name_ko}
@@ -185,22 +194,22 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
             ))}
           </select>
         </label>
-        <div className="flex items-center gap-1" role="radiogroup" aria-label="전망">
-          <span className="text-gray-600">전망</span>
-          {[0, 3, 7, 10].filter((d) => d <= horizon).map((d) => (
-            <button
-              key={d}
-              role="radio"
-              aria-checked={offset === d}
-              onClick={() => setParams({ d: String(d) })}
-              className={`rounded-full px-3 py-1 ${offset === d ? "bg-brand text-white" : "border bg-white hover:bg-gray-50"}`}
-            >
-              {d === 0 ? "오늘" : `+${d}일`}
-            </button>
-          ))}
+        <div>
+          <span className="field-label" id="horizon-label">
+            전망
+          </span>
+          <div className="segmented" role="radiogroup" aria-labelledby="horizon-label">
+            {[0, 3, 7, 10].filter((d) => d <= horizon).map((d) => (
+              <button key={d} role="radio" aria-checked={offset === d} onClick={() => setParams({ d: String(d) })} className="segmented-item">
+                {d === 0 ? "오늘" : `+${d}일`}
+              </button>
+            ))}
+          </div>
         </div>
-        <label className="flex items-center gap-1">
-          <span className="text-gray-600">날짜</span>
+        <label className="min-w-[200px] flex-1">
+          <span className="field-label">
+            날짜 <span className="num ml-1 font-bold text-slate-900">{addDays(issuedDate, offset)}</span>
+          </span>
           <input
             type="range"
             min={0}
@@ -208,72 +217,81 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
             value={offset}
             onChange={(e) => setParams({ d: e.target.value })}
             aria-valuetext={addDays(issuedDate, offset)}
-            className="w-28"
+            className="h-9 w-full accent-brand-600"
           />
-          <span className="tabular-nums">{addDays(issuedDate, offset)}</span>
         </label>
-        <button
-          className="ml-auto rounded border px-3 py-1 hover:bg-gray-50"
-          onClick={() => navigator.clipboard?.writeText(window.location.href)}
-          title="현재 조건이 담긴 링크를 복사"
-        >
-          링크 공유
+        <button className="btn-secondary btn-sm h-9" onClick={share} title="현재 조건이 담긴 링크를 복사">
+          {copied ? "복사됨" : "링크 공유"}
         </button>
       </div>
 
       {/* 지도 + 패널 */}
-      <div className="grid gap-3 lg:grid-cols-[1fr_320px]">
-        <div className="relative h-[60vh] min-h-[420px] overflow-hidden rounded-lg border bg-gray-100">
+      <div className="grid gap-4 lg:grid-cols-[1fr_340px]">
+        <div className="card relative h-[62vh] min-h-[440px] overflow-hidden bg-slate-100 p-0">
           <div ref={containerRef} className="h-full w-full" aria-label={`${pestName} 위험도 지도`} role="application" />
-          {loading && <div className="absolute inset-x-0 top-0 bg-white/80 p-2 text-center text-xs">불러오는 중…</div>}
-          <div className="absolute bottom-2 left-2 rounded-lg border bg-white/95 p-2 text-xs shadow" aria-label="범례">
-            <div className="mb-1 font-semibold">{pestName} · {offset === 0 ? "오늘" : `+${offset}일`}</div>
-            <ul className="flex gap-3">
+          {loading && (
+            <div className="absolute left-1/2 top-3 -translate-x-1/2 rounded-full bg-white/90 px-3 py-1 text-xs text-slate-500 shadow-card backdrop-blur">불러오는 중…</div>
+          )}
+          <div className="absolute bottom-3 left-3 max-w-[calc(100%-1.5rem)] rounded-xl border border-white/60 bg-white/85 px-3.5 py-2.5 text-xs shadow-lift backdrop-blur-md" aria-label="범례">
+            <div className="mb-1.5 font-semibold text-slate-800">
+              {pestName} <span className="font-normal text-slate-400">· {offset === 0 ? "오늘" : `+${offset}일`}</span>
+            </div>
+            <ul className="flex flex-wrap items-center gap-x-3 gap-y-1 text-slate-600">
               {counts.map((g) => (
-                <li key={g.name} className="flex items-center gap-1">
-                  <span className="inline-block rounded-full" style={{ width: 8 + gradeRank(g.name) * 3, height: 8 + gradeRank(g.name) * 3, background: g.color }} aria-hidden="true" />
-                  {g.name} <b>{g.n}</b>
+                <li key={g.name} className="flex items-center gap-1.5">
+                  <span className="inline-block rounded-full ring-2 ring-white" style={{ width: 8 + gradeRank(g.name) * 2.5, height: 8 + gradeRank(g.name) * 2.5, background: g.color }} aria-hidden="true" />
+                  {g.name} <b className="num text-slate-900">{g.n}</b>
                 </li>
               ))}
               {naCount > 0 && (
-                <li className="flex items-center gap-1 text-gray-500" title="비재배지·재배 시기 아님">
-                  <span className="inline-block h-2 w-2 rounded-full border bg-white" style={{ borderColor: NA.stroke }} aria-hidden="true" />
-                  {NA.label} <b>{naCount}</b>
+                <li className="flex items-center gap-1.5 text-slate-400" title="비재배지·재배 시기 아님">
+                  <span className="inline-block h-2 w-2 rounded-full border-[1.5px] bg-white" style={{ borderColor: NA.stroke }} aria-hidden="true" />
+                  {NA.label} <b className="num text-slate-500">{naCount}</b>
                 </li>
               )}
             </ul>
           </div>
         </div>
-        <aside className="rounded-lg border bg-white p-3" aria-label="선택 지점 정보">
+        <aside className="card p-5" aria-label="선택 지점 정보">
           {selected ? (
             <SpotPanel code={selected} pestId={pestId} pests={pests} horizon={horizon} onClose={() => setParams({ spot: null })} />
           ) : (
-            <div className="text-sm text-gray-600">
-              <p className="font-semibold text-gray-800">지점을 선택하세요</p>
-              <p className="mt-1">지도의 원을 클릭하면 위험지수 추이, 입력 기상, 다른 병해충 등급을 볼 수 있습니다.</p>
-              <p className="mt-3 text-xs">원이 클수록·붉을수록 위험이 높습니다. 회색은 정상, 테두리만 있는 작은 흰 원은 작물을 재배하지 않거나 재배 시기가 아니어서 계산하지 않은 지점입니다.</p>
+            <div className="flex h-full flex-col items-center justify-center py-10 text-center">
+              <span className="grid h-12 w-12 place-items-center rounded-2xl bg-brand-50 text-brand-600">
+                <Icon name="location" className="h-6 w-6" />
+              </span>
+              <p className="mt-4 font-semibold text-slate-800">지점을 선택하세요</p>
+              <p className="mt-1.5 text-sm leading-relaxed text-slate-500">지도의 원을 누르면 위험지수 추이, 입력 기상, 다른 병해충 등급을 볼 수 있습니다.</p>
+              <p className="mt-4 text-xs leading-relaxed text-slate-400">원이 클수록·붉을수록 위험이 높습니다. 테두리만 있는 작은 흰 원은 작물을 재배하지 않거나 재배 시기가 아니어서 계산하지 않은 지점입니다.</p>
             </div>
           )}
         </aside>
       </div>
 
       {/* 접근성 대체 표 */}
-      <details className="rounded-lg border bg-white p-3">
-        <summary className="cursor-pointer text-sm font-semibold">지점별 위험도 표 (지도의 대체 자료) · {entries.length}개 지점</summary>
-        <div className="mt-2 overflow-x-auto">
-          <table className="w-full text-sm">
+      <details className="card group overflow-hidden">
+        <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-4 text-sm font-semibold text-slate-800">
+          <span>
+            지점별 위험도 표 <span className="font-normal text-slate-400">· 지도의 대체 자료 · {entries.length}개 지점</span>
+          </span>
+          <span aria-hidden="true" className="text-slate-400 transition group-open:rotate-180">
+            ▾
+          </span>
+        </summary>
+        <div className="overflow-x-auto border-t border-slate-100">
+          <table className="table-clean">
             <caption className="sr-only">
               {pestName} {addDays(issuedDate, offset)} 기준 지점별 위험도
             </caption>
             <thead>
-              <tr className="border-b text-left text-xs text-gray-600">
-                <th className="py-1 pr-2">지점</th>
-                <th className="py-1 pr-2">시군</th>
-                <th className="py-1 pr-2">등급</th>
-                <th className="py-1 pr-2">지수</th>
-                <th className="py-1 pr-2">7일 최대</th>
-                <th className="py-1 pr-2">10일 최대</th>
-                <th className="py-1 pr-2">자료</th>
+              <tr>
+                <th>지점</th>
+                <th>시군</th>
+                <th>등급</th>
+                <th className="text-right">지수</th>
+                <th className="text-right">7일 최대</th>
+                <th className="text-right">10일 최대</th>
+                <th>자료</th>
               </tr>
             </thead>
             <tbody>
@@ -281,30 +299,30 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
                 .slice()
                 .sort((a, b) => (a.index == null ? 1 : 0) - (b.index == null ? 1 : 0) || (b.index ?? 0) - (a.index ?? 0))
                 .map((e) => (
-                  <tr key={e.spot_code} className={`border-b ${e.spot_code === selected ? "bg-brand-light" : ""}`}>
-                    <td className="py-1 pr-2">
-                      <button className="underline" onClick={() => setParams({ spot: e.spot_code })}>
+                  <tr key={e.spot_code} className={e.spot_code === selected ? "bg-brand-50/60" : ""}>
+                    <td>
+                      <button className="font-medium text-slate-900 hover:text-brand-700" onClick={() => setParams({ spot: e.spot_code })}>
                         {e.name}
                       </button>
                     </td>
-                    <td className="py-1 pr-2 text-gray-600">{e.sigungu}</td>
-                    <td className="py-1 pr-2">
+                    <td className="text-slate-500">{e.sigungu}</td>
+                    <td>
                       <RiskBadge grade={e.grade} na={e.na} size="sm" />
                     </td>
-                    <td className="py-1 pr-2 tabular-nums">{fmtIndex(e.index)}</td>
-                    <td className="py-1 pr-2 tabular-nums">{fmtIndex(e.max_index_7d)}</td>
-                    <td className="py-1 pr-2 tabular-nums">{fmtIndex(e.max_index_10d)}</td>
-                    <td className="py-1 pr-2 text-xs text-gray-500">{e.data_poor ? "자료 부족" : ""}</td>
+                    <td className="num text-right">{fmtIndex(e.index)}</td>
+                    <td className="num text-right text-slate-500">{fmtIndex(e.max_index_7d)}</td>
+                    <td className="num text-right text-slate-500">{fmtIndex(e.max_index_10d)}</td>
+                    <td className="text-xs text-slate-400">{e.data_poor ? "자료 부족" : ""}</td>
                   </tr>
                 ))}
             </tbody>
           </table>
         </div>
-        <div className="mt-2 flex gap-3 text-xs">
-          <a className="underline" href={`/api/v1/risk?pest=${pestId}&offset=${offset}&format=csv`}>
+        <div className="flex gap-4 border-t border-slate-100 px-5 py-3 text-xs">
+          <a className="link-arrow text-xs" href={`/api/v1/risk?pest=${pestId}&offset=${offset}&format=csv`}>
             CSV 다운로드
           </a>
-          <Link className="underline" href={`/pests/${pestId}`}>
+          <Link className="font-medium text-slate-500 hover:text-slate-900" href={`/pests/${pestId}`}>
             {pestName} 상세·예측 근거
           </Link>
         </div>

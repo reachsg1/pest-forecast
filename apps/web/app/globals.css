@@ -6,26 +6,130 @@
   color-scheme: light;
 }
 
-html {
-  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", system-ui, sans-serif;
-}
-
 body {
-  @apply bg-gray-50 text-gray-900 antialiased;
+  @apply bg-canvas font-sans text-slate-900 antialiased;
+  font-feature-settings: "tnum" 0;
+  letter-spacing: -0.01em;
 }
 
 a:focus-visible,
 button:focus-visible,
 select:focus-visible,
-input:focus-visible {
-  @apply outline outline-2 outline-offset-2 outline-brand;
+input:focus-visible,
+summary:focus-visible {
+  @apply outline outline-2 outline-offset-2 outline-brand-500;
 }
 
 .sr-only-focusable:focus {
   @apply not-sr-only absolute left-2 top-2 z-50 rounded bg-white px-3 py-2 shadow;
 }
 
-/* MapLibre 팝업·컨트롤 글꼴 통일 */
+/* ---- 공통 컴포넌트 클래스 (화면 톤을 한곳에서 관리) ---------------------- */
+@layer components {
+  /* 카드: 흰 면 + 옅은 테두리 + 얕은 그림자 */
+  .card {
+    @apply rounded-2xl border border-slate-200/80 bg-white shadow-card;
+  }
+  .card-pad {
+    @apply p-5 sm:p-6;
+  }
+  .card-hover {
+    @apply transition duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-lift;
+  }
+
+  /* 페이지 머리 */
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-wider text-brand-600;
+  }
+  .page-title {
+    @apply text-2xl font-bold tracking-tight text-slate-900 sm:text-[28px];
+  }
+  .page-desc {
+    @apply mt-1.5 max-w-2xl text-sm leading-relaxed text-slate-500;
+  }
+  .section-title {
+    @apply text-base font-bold tracking-tight text-slate-900;
+  }
+
+  /* 버튼 */
+  .btn {
+    @apply inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-xl px-4 py-2 text-sm font-semibold transition;
+  }
+  .btn-primary {
+    @apply btn bg-brand-600 text-white shadow-sm hover:bg-brand-700;
+  }
+  .btn-secondary {
+    @apply btn border border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50;
+  }
+  .btn-sm {
+    @apply rounded-lg px-3 py-1.5 text-xs;
+  }
+  .link-arrow {
+    @apply inline-flex items-center gap-1 text-sm font-semibold text-brand-600 hover:text-brand-700;
+  }
+
+  /* 세그먼트 컨트롤(작물·전망 선택 등) */
+  .segmented {
+    @apply inline-flex items-center gap-0.5 rounded-xl bg-slate-100 p-1;
+  }
+  .segmented-item {
+    @apply rounded-lg px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:text-slate-900;
+  }
+  .segmented-item[aria-checked="true"],
+  .segmented-item[aria-current="page"] {
+    @apply bg-white text-slate-900 shadow-sm;
+  }
+
+  /* 입력 */
+  .field {
+    @apply w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm transition placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-100;
+  }
+  .field-label {
+    @apply mb-1.5 block text-xs font-semibold text-slate-600;
+  }
+
+  /* 표 */
+  .table-clean {
+    @apply w-full text-sm;
+  }
+  .table-clean thead th {
+    @apply whitespace-nowrap border-b border-slate-200 px-3 py-2.5 text-left text-xs font-semibold text-slate-500;
+  }
+  /* 가로 스크롤은 되되 스크롤바는 숨김(탭 줄 등) */
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .table-clean tbody td {
+    @apply border-b border-slate-100 px-3 py-2.5 align-middle;
+  }
+  .table-clean tbody tr {
+    @apply transition-colors hover:bg-slate-50/70;
+  }
+  .table-clean tbody tr:last-child td {
+    @apply border-b-0;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600;
+  }
+  .num {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* MapLibre 컨트롤을 카드 톤에 맞춤 */
+.maplibregl-ctrl-group {
+  @apply !rounded-xl !border !border-slate-200 !shadow-card;
+}
+.maplibregl-ctrl-group button {
+  @apply !h-9 !w-9;
+}
+.maplibregl-ctrl-attrib {
+  @apply !rounded-lg !text-[11px];
+}
 .maplibregl-popup-content {
   @apply rounded-lg px-3 py-2 text-sm shadow-lg;
 }
