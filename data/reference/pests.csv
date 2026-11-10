@@ -6,4 +6,4 @@ rice_sheath_blight,rice,벼 잎집무늬마름병,Rhizoctonia solani,disease,sic
 rice_planthoppers,rice,벼멸구·흰등멸구,"Nilaparvata lugens, Sogatella furcifera",insect,insect,,7,9
 pepper_anthracnose,pepper,고추 탄저병,Colletotrichum acutatum / C. scovillei,disease,sick,,6,9
 pepper_phytophthora,pepper,고추 역병,Phytophthora capsici,disease,sick,,6,8
-pepper_tobacco_cutworm,pepper,담배거세미나방,Spodoptera litura,insect,insect,,6,10
+pepper_oriental_tobacco_budworm,pepper,담배나방,Helicoverpa assulta,insect,insect,,5,10

@@ -1,0 +1,7 @@
+{
+  "model_id": "pepper_oriental_tobacco_budworm",
+  "version": "0.1.0",
+  "years": {},
+  "status": "no_survey_data",
+  "note": "data/survey/survey.csv 가 없어 비교하지 못함. NCPMS 고추(노지) 담배나방(피해과율) 예찰 적재 후 다시 실행."
+}

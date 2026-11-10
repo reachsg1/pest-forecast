@@ -32,7 +32,7 @@ Claude(프로젝트 대화)에서 설계와 초기 구축을 마치고 Claude Co
 - 1단계는 **정적 JSON**(`apps/web/public/data`)을 커밋 → Vercel 자동 재배포. DB(Neon)·Blob은 2단계
 - 위험도 등급 4단계: 정상 0~24 / 예보 25~49 / 주의보 50~74 / 경보 75~100 (NCPMS 발생정보 용어와 정렬)
 - 모델 유형 3종(A 감염조건 규칙, B 유효적산온도, C 통계·ML)을 플러그인으로; 병해충마다 폴더 하나(`model.yaml`+`model.py`+`eval.json`)
-- 1차 대상 8종: 사과 탄저병(A)·복숭아순나방(B), 벼 잎도열병(A)·잎집무늬마름병(C)·벼멸구류(C), 고추 탄저병(A)·역병(A+토양수분)·담배거세미나방(B)
+- 1차 대상 8종: 사과 탄저병(A)·복숭아순나방(B), 벼 잎도열병(A)·잎집무늬마름병(C)·벼멸구류(C), 고추 탄저병(A)·역병(A+토양수분)·담배나방(B, 11-10 담배거세미나방에서 교체)
 - 3일 이후 전망은 중기예보 연동 전까지 최근 14일 평균(지속성)으로 채우고 `is_forecast=True` 표시
 - 잎젖음시간은 관측이 없으면 습도·강우로 추정(`DailyWeather.estimated_lwd`)
 - 지도 OSM 래스터 타일(개발용) → 운영 전 VWorld 교체
@@ -48,7 +48,7 @@ Claude(프로젝트 대화)에서 설계와 초기 구축을 마치고 Claude Co
 - 정적 JSON 브라우저 캐시 `max-age=600`(`next.config.ts`): 배치 직후 최대 10분간 파일별로 어제·오늘 데이터가 섞여 보일 수 있음. 운영 전 파일명에 기준일 버전을 붙이거나 캐시 시간 조정 검토
 
 - `pipeline/config.py`: FIELD_CANDIDATES 실제 태그로 확정. NCPMS 서비스 코드는 11-10 공식 명세로 확정(예찰 SVC51~53 추가, 발생정보는 OpenAPI 미제공) — 조사 결과·대상 확대안은 `docs/ncpms-research.md`
-- 대상 병해충 재검토: 고추 담배거세미나방은 NCPMS 고추 예찰·예측 대상이 아님(고추는 담배나방, 담배거세미나방은 콩 예찰) → 교체 여부 결정 필요. 확대 1·2순위 후보는 `docs/ncpms-research.md` 5절
+- 고추 담배거세미나방 → 담배나방 교체 완료(11-10). 담배나방 파라미터는 이대홍 외(2025) 근거, 단 기산일·구간 폭(ramp_dd)·상한온도는 TODO. 확대 1·2순위 후보는 `docs/ncpms-research.md` 5절
 - `pipeline/fetch/kma.py`: 중기예보(getMidTa/getMidLandFcst, regId) 미구현
 - `pipeline/fetch/ncpms.py`: 방제정보 응답 태그(`developmentCondition` 등)는 가이드 기준 추정 → 실응답으로 확인
 - `models/*/*/model.yaml`: `ncpms_key` 비어 있음, `references` 일반 문구
