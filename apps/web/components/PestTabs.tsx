@@ -246,9 +246,7 @@ export default function PestTabs({
 
         {tab === "eval" && (
           <section role="tabpanel" id="panel-eval" aria-labelledby="tab-eval" className="space-y-4 text-sm">
-            {surveyEvalModels.map((m) => (
-              <SurveyEvalCard key={m.model_id} model={m} defaultLabel={defaultLabel} />
-            ))}
+            {surveyEvalModels.length > 0 && <SurveyEvalCard models={surveyEvalModels} defaultLabel={defaultLabel} />}
             {surveyEvalModels.length > 0 && <div className="pt-2 text-xs font-semibold text-slate-500">기본 모델({defaultLabel}) 백테스트</div>}
             {pest.eval.status === "evaluated" && pest.eval.years ? (
               <div className="-mx-3 overflow-x-auto">

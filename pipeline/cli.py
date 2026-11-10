@@ -20,7 +20,7 @@ if str(ROOT) not in sys.path:
 
 from models._base import DailyWeather  # noqa: E402
 from models._base.registry import discover  # noqa: E402
-from pipeline import config  # noqa: E402
+from pipeline import config, survey_live  # noqa: E402
 from pipeline.phenology import load_default as load_phenology  # noqa: E402
 from pipeline.publish import publish  # noqa: E402
 from pipeline.run_models import run_all  # noqa: E402
@@ -135,8 +135,11 @@ def cmd_run(args: argparse.Namespace) -> int:
         filled[code] = series
         missing[code] = rate
     assessments: dict = {}
-    rows = run_all(spots, filled, models, issued, horizon, phenology=phen, assessments=assessments)
-    status = publish(rows, spots, filled, models, issued, horizon, missing, mode, warnings, assessments=assessments, phenology_info=phen_info)
+    # 예찰값을 쓰는 모델(예찰 학습형 + 직전 예찰)에 지점별 예찰 이력 — 운영은 NCPMS 실시간, 데모는 전년도 실제값
+    survey_hist, survey_info = survey_live.build(models, spots, issued, mode, warnings)
+    rows = run_all(spots, filled, models, issued, horizon, phenology=phen, assessments=assessments, survey_history=survey_hist)
+    status = publish(rows, spots, filled, models, issued, horizon, missing, mode, warnings, assessments=assessments,
+                     phenology_info=phen_info, survey_info=survey_info)
     print(json.dumps(status, ensure_ascii=False, indent=1))
     return 0 if status["ok"] else 1
 

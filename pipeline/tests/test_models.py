@@ -34,9 +34,9 @@ def test_discover_finds_eight_models():
     # 병해충 8종 = 기본 모델 8개 + 실제 추가 모델(variants, demo_only 제외)
     assert len({m.card.pest_id for m in models}) == 8
     assert sum(1 for m in models if m.is_default) == 8
-    assert len(ids) == 9
+    assert len(ids) == 10
     assert "apple_anthracnose" in ids
-    assert "pepper_anthracnose__survey_logit" in ids
+    assert "pepper_anthracnose__survey_logit" in ids and "pepper_anthracnose__survey_hist" in ids
     assert all(m.card.type in {"A", "B", "C"} for m in models)
 
 

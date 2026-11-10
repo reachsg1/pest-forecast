@@ -45,3 +45,9 @@
 
 국립농업과학원 농업기상 관측지점 상세정보(공공데이터포털 15073274) 206지점의 코드·이름·설치 주소·위경도·고도·기후지대. 예찰 시군과 관측소를 짝지을 때(`pipeline/survey_train.py`) 쓴다.
 갱신: `python scripts/fetch_weather_all.py --stations --years 2025-2025 --months 9-9` (일자료는 캐시가 있으면 호출 없음) (2026-11-10 수집). 설치 주소가 옛 행정명인 지점이 있다(여주군·당진군·청원군 → 학습 코드에서 보정).
+
+## sigungu_centroids.csv — 시군 대표 좌표
+
+관측소·예찰이 없는 시군을 '가장 가까운 시군'으로 대체할 때 거리 계산에 쓴다(`pipeline/regions.py`). 208개 시군(재배면적 표 + 예찰 수집본).
+좌표는 OpenStreetMap Nominatim 행정구역 검색의 대표점(© OpenStreetMap contributors, ODbL). 세종시는 검색되지 않아 그 시군 관측소 좌표 평균을 쓴다.
+갱신: `python scripts/fetch_sigungu_centroids.py` (1초 1건, 캐시 data/cache/geocode).

@@ -8,7 +8,9 @@
 
 매칭: 관측소 설치 주소(data/reference/agri_stations.csv, 관측지점 상세정보 15073274)의 '시도 시군'과
 예찰의 '시도 시군'이 같으면 짝짓고, 시군 안 관측소가 여럿이면 날짜별 평균을 쓴다. 목록에 없는 옛
-관측소는 이름 첫 낱말로 시군을 정한다. 관측소가 없는 시군은 뺀다(인접 시군 대체는 하지 않음).
+관측소는 이름 첫 낱말로 시군을 정한다. 그 시기에 관측 자료가 없는 시군은 자료가 있는 시군 중
+가장 가까운 곳(시군 대표 좌표 거리, pipeline/regions.py)으로 대체하고 거리를 기록한다.
+--max-km 를 주면 그보다 먼 대체는 뺀다.
 
 정답: 조사값 > 0 → 발생(1). 피처는 조사일 전날까지의 기상(models._base.stat.compute_features).
 검증은 연도 단위로 나눠(학습/시험 연도 분리) 다음과 비교한다.
@@ -40,9 +42,7 @@ from models._base.registry import discover  # noqa: E402
 from models._base.stat import compute_features  # noqa: E402
 from pipeline import config  # noqa: E402
 from pipeline.fetch.agriweather import to_daily_weather  # noqa: E402
-from pipeline.phenology import norm_sido, region_key  # noqa: E402
-
-STATIONS_CSV = config.REFERENCE_DIR / "agri_stations.csv"  # 관측지점 상세정보(15073274): 코드·주소·좌표
+from pipeline import regions  # noqa: E402
 
 FEATURES = [
     "tavg_14d", "rh_14d", "rain_14d", "rain_days_14d", "lwd_14d", "lwd_30d",
@@ -56,22 +56,9 @@ def _years(s: str) -> list[int]:
     return list(range(a, b + 1))
 
 
-# 관측소 설치 주소가 옛 행정구역명으로 남은 경우 → 현재 시군(예찰 자료 표기)
-# 여주군→여주시(2013.9 시 승격), 당진군→당진시(2012.1 시 승격), 청원군→청주시(2014.7 통합)
-ADMIN_RENAMES = {"여주군": "여주시", "당진군": "당진시", "청원군": "청주시"}
-
-
 def station_regions() -> dict[str, str]:
     """관측소 코드 → '시도 시군'(예: '경기 이천시'). 관측지점 상세정보의 설치 주소 기준."""
-    out: dict[str, str] = {}
-    if STATIONS_CSV.exists():
-        with STATIONS_CSV.open(encoding="utf-8") as f:
-            for r in csv.DictReader(f):
-                sd, sg = region_key(r["address"])
-                sg = ADMIN_RENAMES.get(sg, sg)
-                if sd and sg:
-                    out[r["spot_code"]] = f"{sd} {sg}"
-    return out
+    return {code: st["key"] for code, st in regions.stations().items() if st["key"]}
 
 
 def load_weather_by_sigungu(years: list[int], extra_regions: list[str] | None = None) -> dict[str, dict[date, DailyWeather]]:
@@ -80,9 +67,9 @@ def load_weather_by_sigungu(years: list[int], extra_regions: list[str] | None = 
     관측소 시군은 관측지점 상세정보의 설치 주소로 정한다. 목록에 없는(폐쇄 등) 관측소는
     관측소명 첫 낱말을 시군으로 보고, 그 이름이 (관측소 주소·예찰 자료를 통틀어) 한 시도에만
     있을 때만 그 시도로 정한다."""
-    regions = station_regions()
+    stn_regions = station_regions()
     sidos_of: dict[str, set] = defaultdict(set)
-    for key in list(regions.values()) + list(extra_regions or []):
+    for key in list(stn_regions.values()) + list(extra_regions or []):
         sd, sg = key.split(" ", 1)
         sidos_of[sg].add(sd)
     raw_by_stn: dict[str, list[dict]] = defaultdict(list)
@@ -97,8 +84,8 @@ def load_weather_by_sigungu(years: list[int], extra_regions: list[str] | None = 
                 if not code:
                     continue
                 raw_by_stn[code].append(r)
-                if code in regions:
-                    stn_sgg[code] = regions[code]
+                if code in stn_regions:
+                    stn_sgg[code] = stn_regions[code]
                 else:
                     name = (r.get("stn_Name") or "").split()
                     sg = name[0] if name else ""
@@ -137,7 +124,7 @@ def load_survey(pest: str) -> list[dict]:
             v = float(r["value"])
         except ValueError:
             continue
-        out.append({**r, "key": f"{norm_sido(r['sido'])} {name}", "value": v,
+        out.append({**r, "key": regions.key_of(r["sido"], name), "value": v,
                     "date": datetime.strptime(r["survey_date"], "%Y-%m-%d").date()})
     return out
 
@@ -173,6 +160,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--pest", required=True)
     ap.add_argument("--train", default="2015-2022")
     ap.add_argument("--test", default="2023-2025")
+    ap.add_argument("--max-km", type=float, default=0.0,
+                    help="관측소 없는 시군을 가까운 시군으로 대체할 때 최대 거리(km). 0이면 제한 없음")
     ap.add_argument("--export", default="",
                     help="variant 폴더(예: models/pepper/anthracnose/variants/survey_logit) — model.yaml params와 eval.json을 이 결과로 갱신")
     ap.add_argument("--with-history", action="store_true",
@@ -188,6 +177,13 @@ def main(argv: list[str] | None = None) -> int:
 
     survey = load_survey(args.pest)
     wx = load_weather_by_sigungu(sorted(set(train_years + test_years)), extra_regions=sorted({r["key"] for r in survey}))
+    stn_locs: dict[str, tuple[float, float]] = {}
+    _pts: dict[str, list] = defaultdict(list)
+    for st in regions.stations().values():
+        if st["key"] and st["lat"] is not None:
+            _pts[st["key"]].append((st["lat"], st["lon"]))
+    for k, pts in _pts.items():
+        stn_locs[k] = regions.location_of(k, pts)
     default = next(m for m in discover(include_demo=False) if m.card.pest_id == args.pest and m.is_default)
 
     # 기본 모델은 시군·연도 시계열로 한 번씩 돌린다(연초~조사일)
@@ -203,21 +199,40 @@ def main(argv: list[str] | None = None) -> int:
     samples = []
     skipped = defaultdict(int)
     for r in survey:
-        sgg, d = r["key"], r["date"]
-        if sgg not in wx:
-            skipped["관측소 없음"] += 1
-            continue
-        days = wx[sgg]
-        window = [days[d - timedelta(days=k)] for k in range(WINDOW_DAYS, 0, -1) if (d - timedelta(days=k)) in days]
-        if len(window) < 25 or window[-1].date < d - timedelta(days=3):
-            skipped["기상 부족"] += 1
-            continue
+        key, d = r["key"], r["date"]
+
+        def window_of(k: str):
+            days = wx.get(k)
+            if not days:
+                return None
+            win = [days[d - timedelta(days=j)] for j in range(WINDOW_DAYS, 0, -1) if (d - timedelta(days=j)) in days]
+            if len(win) < 25 or win[-1].date < d - timedelta(days=3):
+                return None
+            return win
+
+        window = window_of(key)
+        src = regions.Source(key, 0.0) if window is not None else None
+        if window is None:
+            # 그 시기에 자기 시군 관측 자료가 없으면 자료가 있는 가장 가까운 시군으로 대체
+            avail = [k for k, days in wx.items() if (d - timedelta(days=1)) in days and (d - timedelta(days=40)) in days]
+            src = regions.resolve(key, avail, available_locs=stn_locs)
+            if src is None:
+                skipped["좌표 없음"] += 1
+                continue
+            if args.max_km and src.distance_km > args.max_km:
+                skipped[f"대체 거리 {args.max_km:g}km 초과"] += 1
+                continue
+            window = window_of(src.key)
+            if window is None:
+                skipped["기상 부족"] += 1
+                continue
         f = compute_features(window)
         samples.append({
-            "sigungu": sgg, "sido": r["sido"], "date": d, "year": d.year, "hm": half_month(d),
+            "sigungu": key, "sido": r["sido"], "date": d, "year": d.year, "hm": half_month(d),
+            "wx_key": src.key, "wx_km": src.distance_km,
             "y": 1 if r["value"] > 0 else 0, "value": r["value"],
             "x": [f.get(k, float("nan")) for k in FEATURES], "feats": f,
-            "default": default_index(sgg, d),
+            "default": default_index(src.key, d),
         })
 
     # 직전 회차 조사값(같은 시군·같은 해) — '예찰 이력만으로 맞히기' 참고치
@@ -315,6 +330,12 @@ def main(argv: list[str] | None = None) -> int:
         "train_years": args.train, "test_years": args.test,
         "n_sigungu": len({s["sigungu"] for s in samples}),
         "skipped": dict(skipped),
+        "substituted": {
+            "n": sum(1 for x in samples if x["wx_km"] > 0),
+            "n_sigungu": len({x["sigungu"] for x in samples if x["wx_km"] > 0}),
+            "max_km": max((x["wx_km"] for x in samples), default=0.0),
+            "pairs": sorted({f"{x['sigungu']} → {x['wx_key']} ({x['wx_km']}km)" for x in samples if x["wx_km"] > 0}),
+        },
         "features": feat_names,
         "with_history": args.with_history,
         "train": evaluate(tr),
@@ -341,23 +362,29 @@ def export_variant(folder: Path, result: dict) -> None:
     직전 예찰값 참고판(eval_<pest>_survey_history.json)이 있으면 eval.json에 참고로 붙인다."""
     import yaml
 
-    if result.get("with_history"):
-        raise SystemExit("--with-history 결과는 운영 모델로 내보내지 않습니다(예찰 실시간 연동 전).")
     my = folder / "model.yaml"
     card = yaml.safe_load(my.read_text(encoding="utf-8"))
-    card["params"] = result["params"]
+    survey_spec = (card.get("params") or {}).get("survey")
+    if result.get("with_history") and not survey_spec:
+        raise SystemExit("직전 예찰값 모델은 model.yaml params.survey(kncr·examin·item)가 있어야 운영 연동됩니다.")
+    card["params"] = dict(result["params"])
+    if survey_spec:
+        card["params"]["survey"] = survey_spec
     my.write_text(yaml.safe_dump(card, allow_unicode=True, sort_keys=False), encoding="utf-8")
     ev = {
         "model_id": card["id"], "version": card.get("version", ""), "evaluated_at": result["generated"],
         "status": "survey_evaluated",
+        "uses_survey": bool(result.get("with_history")),
         "method": f"연도 분리 검증: 학습 {result['train_years']}, 시험 {result['test_years']}. 정답 = 시군구 예찰값 > 0.",
         "n_sigungu": result["n_sigungu"], "skipped": result["skipped"],
         "test": _pick(result["test"]),
         "test_by_year": {y: _pick(v) for y, v in result["test_by_year"].items()},
         "note": "AUC 1.0=완벽, 0.5=무작위. '같은 회차 변별력'은 같은 조사일의 시군끼리 비교한 AUC로, 계절(시기) 효과를 뺀 성능입니다.",
     }
+    if result.get("substituted"):
+        ev["substituted"] = {k: v for k, v in result["substituted"].items() if k != "pairs"}
     hist = config.DATA_DIR / "survey" / f"eval_{result['pest_id']}_survey_history.json"
-    if hist.exists():
+    if not result.get("with_history") and hist.exists():
         h = json.loads(hist.read_text(encoding="utf-8"))
         ev["with_history_reference"] = {"note": "직전 회차 예찰값을 피처로 더한 판(운영엔 예찰 실시간 연동 필요)", "test": _pick(h["test"])}
     (folder / "eval.json").write_text(json.dumps(ev, ensure_ascii=False, indent=2), encoding="utf-8")

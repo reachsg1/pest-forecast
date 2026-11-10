@@ -55,6 +55,8 @@ NCPMS 시군구 예찰값을 정답으로, 같은 시군 농업기상 관측소 
 3. `python -m pipeline.survey_train --pest <pest_id>` — 학습/시험 연도를 나눠 기본 모델·계절 평균과 비교하고 `params`를 냅니다
 4. `params`를 variant의 `model.yaml`에, 결과 요약을 `eval.json`(`status: survey_evaluated`)에 옮기면 검증 탭에 비교표가 나옵니다
 
+예찰값을 입력으로 쓰려면(직전 회차 예찰값이 가장 강한 단서였음) `--with-history`로 학습하고, variant의 `model.yaml`에 `params.survey: {kncr, examin, predictn, item}`을 먼저 적은 뒤 `--export`합니다. 배치가 매일 NCPMS 예찰을 받아 지점별로 넘깁니다(`pepper/anthracnose/variants/survey_hist` 참고).
+
 판단 기준: 전체 AUC만 보지 말고 **같은 회차 변별력**(같은 조사일의 시군끼리 비교)을 함께 봅니다. 계절 평균(0.5)보다 높아야 기상이 실제로 기여한 것입니다.
 
 ## 3. model.py

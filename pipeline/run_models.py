@@ -23,6 +23,7 @@ def run_all(
     history_days: int = config.HISTORY_DAYS_SHOWN,
     phenology: Phenology | None = None,
     assessments: dict[tuple[str, str], SpotCrop] | None = None,
+    survey_history: dict[str, dict[str, list]] | None = None,
 ) -> list[dict]:
     """반환 행: spot_code, pest_id, model_id, model_version, issued_date, target_date,
     offset_days(음수=과거), index, grade, is_forecast, inputs, na_reason, raw_index
@@ -30,6 +31,7 @@ def run_all(
     생물계절 판정(phenology)에서 작물이 포장에 없다고 나온 날은 index/grade를 None으로 두고
     na_reason(not_grown | off_season)을 채운다. raw_index는 검증·디버깅용 원래 모델 값이다.
     assessments가 주어지면 (spot_code, crop)별 판정 결과를 거기에 기록한다.
+    survey_history[model_id][spot_code]는 예찰 이력(pipeline/survey_live.py)으로, 예찰값을 쓰는 모델에 넘긴다.
     """
     models = list(models)
     rows: list[dict] = []
@@ -45,7 +47,8 @@ def run_all(
             if sc is not None and assessments is not None:
                 assessments[(code, crop)] = sc
             try:
-                pts = lm.model.predict(wx)
+                hist = (survey_history or {}).get(lm.id)
+                pts = lm.model.predict(wx, hist.get(code, []) if hist is not None else None)
             except Exception as e:  # noqa: BLE001
                 log.exception("모델 %s 지점 %s 실패: %s", lm.id, code, e)
                 continue

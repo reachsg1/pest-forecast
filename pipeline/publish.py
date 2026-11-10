@@ -61,6 +61,7 @@ def publish(
     control_info: dict[str, Any] | None = None,
     assessments: dict[tuple[str, str], Any] | None = None,
     phenology_info: dict[str, Any] | None = None,
+    survey_info: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     assessments = assessments or {}
     config.ensure_dirs()
@@ -145,6 +146,8 @@ def publish(
                     "max_index_7d": _max_or_none(x["index"] for x in fut if x["offset_days"] <= 7),
                     "max_index_10d": _max_or_none(x["index"] for x in fut),
                     "phenology": sc.to_dict() if sc is not None else None,
+                    # 예찰값을 쓰는 모델: 오늘 계산에 쓴 예찰(시군·날짜·값·대체 거리)
+                    "survey_ref": (today.get("inputs") or {}).get("survey_ref"),
                 }
             )
         # 위험 높은 순, 해당 없음은 맨 뒤
@@ -163,6 +166,8 @@ def publish(
             "offsets": list(range(0, horizon + 1)),
             "spots": entries,
         }
+        if survey_info and lm.id in survey_info:
+            risk_doc["survey"] = {k: v for k, v in survey_info[lm.id].items() if k != "spots"}
         _dump(web / "risk" / "models" / f"{lm.id}.json", risk_doc)  # 지도에서 모델을 골라 볼 때
         if not is_default:
             continue
@@ -262,6 +267,7 @@ def publish(
         "warnings": warnings,
         "grades": [{"name": g[0], "min": g[1], "max": g[2]} for g in GRADES],
         "phenology": phenology_info or {},
+        "survey": {mid: {k: v for k, v in inf.items() if k != "spots"} for mid, inf in (survey_info or {}).items()},
     }
     _dump(web / "status.json", status)
 

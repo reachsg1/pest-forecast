@@ -39,7 +39,20 @@ FEATURE_HELP = {
     "rain_days_season": "6월 1일 이후 강수일수(≥1mm)",
     "wet_warm_days_season": "6월 1일 이후 20~30℃이면서 비(≥1mm)가 온 날 수",
     "doy": "연중 일차(계절 진행)",
+    "prev_survey_log": "최근 예찰 조사값(같은 해, 그날 이전 최신 회차) log(1+값)",
 }
+
+
+def survey_asof(history: Optional[list], d) -> Optional[dict]:
+    """history(예찰 이력: date·value·sigungu·distance_km 사전 목록)에서 d 이전(같은 해) 가장 최근 회차."""
+    best = None
+    for h in history or []:
+        hd = h.get("date")
+        if hd is None or hd >= d or hd.year != d.year:
+            continue
+        if best is None or hd > best["date"]:
+            best = h
+    return best
 
 
 def _vals(seq, attr):
@@ -107,11 +120,25 @@ class StatModel(BaseModel):
     def predict(self, weather: Sequence[DailyWeather], history: Optional[list] = None) -> list[RiskPoint]:
         n = int(self.params.get("window_days", 30))
         seq = sorted(weather, key=lambda x: x.date)
+        uses_survey = any(f.get("name") == "prev_survey_log" for f in self.params.get("features", []))
         out: list[RiskPoint] = []
         for i, w in enumerate(seq):
             window = seq[max(0, i - n + 1): i + 1]
             feats = compute_features(window)
+            ref = None
+            if uses_survey:
+                # 학습과 같은 규칙: 그날 이전(같은 해) 최신 예찰값, 아직 조사 전이면 0
+                ref = survey_asof(history, w.date)
+                feats["prev_survey_log"] = math.log1p(max(0.0, float(ref["value"]))) if ref else 0.0
             prob, detail = self.score(feats)
+            if uses_survey:
+                if history is None:
+                    detail["survey_missing"] = True
+                elif ref:
+                    detail["survey_ref"] = {
+                        "date": ref["date"].isoformat(), "value": ref["value"],
+                        "sigungu": ref.get("sigungu", ""), "distance_km": ref.get("distance_km", 0.0),
+                    }
             index = 100.0 * prob
             if len(window) < max(7, n // 2):
                 index = min(index, 24.0)   # 자료가 짧으면 판단 보류

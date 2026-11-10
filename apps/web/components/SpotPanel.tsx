@@ -6,7 +6,7 @@ import RiskBadge from "./RiskBadge";
 import Sparkline from "./Sparkline";
 import { Icon } from "./ui";
 import { NA_REASONS, pestFullName, windowText } from "@/lib/grades";
-import type { ModelLite, SpotFile } from "@/lib/types";
+import type { ModelLite, SpotFile, SurveyRef } from "@/lib/types";
 
 type PestLite = { pest_id: string; name_ko: string; crop: string; crop_ko: string };
 
@@ -53,6 +53,8 @@ export default function SpotPanel({ code, pestId, model, pests, horizon, onClose
   const phen = pest ? data.phenology?.[pest.crop] : undefined;
   const season = windowText(phen);
   const isNa = today != null && today.grade == null;
+  const surveyRef = (today?.inputs?.survey_ref ?? null) as SurveyRef | null;
+  const surveyMissing = today?.inputs?.survey_missing === true;
 
   const wx = [
     { k: "강우", v: `${rainSum.toFixed(1)}`, u: "mm", sub: `${rainDays}일` },
@@ -88,6 +90,14 @@ export default function SpotPanel({ code, pestId, model, pests, horizon, onClose
         <div className="mt-2">{today ? <RiskBadge grade={today.grade} index={today.index} na={today.na_reason} size="lg" /> : <span className="text-slate-500">예측 없음</span>}</div>
         {isNa && today?.na_reason && <p className="mt-3 text-xs leading-relaxed text-slate-600">{NA_REASONS[today.na_reason].long(pest?.crop_ko ?? "이 작물")}</p>}
         {season && <p className="mt-2 text-xs text-slate-500">재배 기간 {season}</p>}
+        {!isNa && surveyRef && (
+          <p className="mt-2 text-xs leading-relaxed text-slate-500">
+            반영한 예찰 <span className="font-medium text-slate-700">{surveyRef.sigungu.split(" ").slice(-1)[0]}</span> {surveyRef.date.slice(5).replace("-", "/")} · 피해과율{" "}
+            <span className="num font-medium text-slate-700">{surveyRef.value}%</span>
+            {surveyRef.distance_km > 0 && <span className="text-slate-400"> · 가까운 시군 대체({Math.round(surveyRef.distance_km)}km)</span>}
+          </p>
+        )}
+        {!isNa && surveyMissing && <p className="mt-2 text-xs text-amber-700">예찰 자료를 받지 못해 기상만으로 계산했습니다.</p>}
         {future.length > 0 && future.some((p) => p.index != null) && (
           <div className="mt-4 border-t border-slate-200/70 pt-3">
             <div className="flex items-baseline justify-between text-[11px] text-slate-400">

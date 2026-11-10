@@ -13,7 +13,6 @@ from __future__ import annotations
 
 import argparse
 import csv
-import json
 import sys
 from pathlib import Path
 
@@ -22,29 +21,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from pipeline import config  # noqa: E402
-from pipeline.fetch import ncpms  # noqa: E402
-
-CACHE = config.CACHE_DIR / "ncpms" / "survey"
-
-
-class Budget:
-    def __init__(self, limit: int):
-        self.limit, self.used = limit, 0
-
-    def take(self) -> None:
-        if self.used >= self.limit:
-            raise SystemExit(f"호출 상한({self.limit}) 도달 — 캐시는 저장됨. 내일 같은 명령으로 이어 받으세요.")
-        self.used += 1
-
-
-def cached(path: Path, budget: Budget, fn):
-    if path.exists():
-        return json.loads(path.read_text(encoding="utf-8"))
-    budget.take()
-    data = fn()
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
-    return data
+from pipeline.fetch.survey import Budget, BudgetExceeded, SurveySpec, collect  # noqa: E402
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -63,32 +40,13 @@ def main(argv: list[str] | None = None) -> int:
         print("NCPMS_API_KEY 가 없습니다(.env 또는 환경변수).")
         return 2
     y0, y1 = (int(x) for x in args.years.split("-"))
+    spec = SurveySpec(kncr=args.crop, examin=args.examin, item=args.item, predictn=args.predictn)
     budget = Budget(args.max_calls)
-    out_rows: list[dict] = []
-
-    for year in range(y0, y1 + 1):
-        rounds = cached(CACHE / f"rounds_{args.predictn}_{args.crop}_{year}.json", budget,
-                        lambda: ncpms.survey_search(key, year, predictn_code=args.predictn, kncr_code=args.crop, display=100))
-        rounds = [r for r in rounds if r.get("examinSpchcknCode") == args.examin]
-        for rd in sorted(rounds, key=lambda r: int(r.get("examinTmrd") or 0)):
-            ik = rd["insectKey"]
-            sido_rows = cached(CACHE / ik / "sido.json", budget, lambda: ncpms.survey_by_sido(key, ik))
-            sidos = sorted({(r["sidoCode"], r["sidoNm"]) for r in sido_rows if r.get("sidoCode")})
-            for sc, sn in sidos:
-                sg = cached(CACHE / ik / f"sgg_{sc}.json", budget, lambda: ncpms.survey_by_sigungu(key, ik, sc))
-                for r in sg:
-                    item = r.get("dbyhsNm", "")
-                    if args.item not in item:
-                        continue
-                    d = rd.get("inputStdrDatetm", "")
-                    out_rows.append({
-                        "year": year, "round": rd.get("examinTmrd"),
-                        "survey_date": f"{d[:4]}-{d[4:6]}-{d[6:8]}",
-                        "sido_code": sc, "sido": sn,
-                        "sigungu_code": r.get("sigunguCode", ""), "sigungu": r.get("sigunguNm", ""),
-                        "item": item, "value": r.get("inqireValue", ""),
-                    })
-        print(f"{year}: 누적 {len(out_rows)}행, 호출 {budget.used}")
+    try:
+        out_rows = collect(key, spec, list(range(y0, y1 + 1)), budget)
+    except BudgetExceeded as e:
+        print(f"{e} — 캐시는 저장됨. 내일 같은 명령으로 이어 받으세요.")
+        return 3
 
     out = config.DATA_DIR / "survey" / f"ncpms_{args.pest}_sigungu.csv"
     with out.open("w", encoding="utf-8", newline="") as f:

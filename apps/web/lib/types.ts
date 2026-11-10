@@ -44,6 +44,8 @@ export interface EvalSummary {
   test?: SurveyEvalBlock;
   test_by_year?: Record<string, SurveyEvalBlock>;
   with_history_reference?: { note: string; test: SurveyEvalBlock };
+  uses_survey?: boolean; // 최근 예찰값을 입력으로 쓰는 모델
+  substituted?: { n: number; n_sigungu: number; max_km: number };
   years?: Record<
     string,
     {
@@ -120,6 +122,15 @@ export interface RiskSpotEntry {
   max_index_7d: number | null;
   max_index_10d: number | null;
   phenology?: PhenologyInfo | null;
+  survey_ref?: SurveyRef | null;
+}
+
+// 예찰값을 쓰는 모델이 그날 계산에 쓴 예찰(시군·조사일·값·대체 거리)
+export interface SurveyRef {
+  date: string;
+  value: number;
+  sigungu: string;
+  distance_km: number;
 }
 
 export interface RiskFile {
