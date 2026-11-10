@@ -13,9 +13,26 @@ import type { Grade, NaReason, RiskFile, RiskSpotEntry, Spot } from "@/lib/types
 
 type PestLite = { pest_id: string; name_ko: string; crop: string; crop_ko: string; horizon_days: number };
 
+// 배경지도: 위성(기본) / 일반. 두 소스를 한 스타일에 넣고 레이어 표시만 바꾼다(위험도 레이어 유지).
+// 개발용 타일: 위성 Esri World Imagery, 일반 OSM. 운영 전 VWorld(위성·하이브리드·기본) 타일로 교체(HANDOFF TODO).
+type Basemap = "satellite" | "street";
+const BASEMAP_LAYERS: Record<Basemap, string[]> = { satellite: ["sat", "sat-labels"], street: ["osm"] };
 const MAP_STYLE = {
   version: 8 as const,
   sources: {
+    sat: {
+      type: "raster" as const,
+      tiles: ["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"],
+      tileSize: 256,
+      maxzoom: 18,
+      attribution: "위성영상 © Esri, Maxar, Earthstar Geographics",
+    },
+    "sat-labels": {
+      type: "raster" as const,
+      tiles: ["https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"],
+      tileSize: 256,
+      maxzoom: 18,
+    },
     osm: {
       type: "raster" as const,
       tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
@@ -23,7 +40,11 @@ const MAP_STYLE = {
       attribution: "© OpenStreetMap contributors",
     },
   },
-  layers: [{ id: "osm", type: "raster" as const, source: "osm" }],
+  layers: [
+    { id: "sat", type: "raster" as const, source: "sat", paint: { "raster-saturation": -0.15, "raster-contrast": 0.05 } },
+    { id: "sat-labels", type: "raster" as const, source: "sat-labels", paint: { "raster-opacity": 0.85 } },
+    { id: "osm", type: "raster" as const, source: "osm", layout: { visibility: "none" as const } },
+  ],
 };
 
 function addDays(iso: string, n: number): string {
@@ -49,6 +70,16 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
   const mapRef = useRef<MLMap | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [mapReady, setMapReady] = useState(false);
+  const [basemap, setBasemap] = useState<Basemap>("satellite");
+
+  // 배경지도 전환: 레이어 표시만 바꾼다
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady) return;
+    (Object.keys(BASEMAP_LAYERS) as Basemap[]).forEach((b) =>
+      BASEMAP_LAYERS[b].forEach((id) => map.getLayer(id) && map.setLayoutProperty(id, "visibility", b === basemap ? "visible" : "none")),
+    );
+  }, [basemap, mapReady]);
 
   const setParams = useCallback(
     (patch: Record<string, string | null>) => {
@@ -93,33 +124,52 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
       map.addControl(new ml.AttributionControl({ compact: true }));
       map.on("load", () => {
         map.addSource("spots", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
+        const color = ["match", ["get", "grade"], "경보", GRADES[3].color, "주의보", GRADES[2].color, "예보", GRADES[1].color, "정상", GRADES[0].color, "#ffffff"] as unknown as string;
+        // 위성 위에서 잘 보이도록 등급색 은은한 번짐(halo)
+        map.addLayer({
+          id: "spots-halo",
+          type: "circle",
+          source: "spots",
+          filter: [">=", ["get", "rank"], 1],
+          paint: {
+            "circle-radius": ["match", ["get", "rank"], 3, 24, 2, 18, 14] as unknown as number,
+            "circle-color": color,
+            "circle-opacity": 0.28,
+            "circle-blur": 0.9,
+          },
+        });
         map.addLayer({
           id: "spots-circle",
           type: "circle",
           source: "spots",
           paint: {
             // rank -1 = 해당 없음: 작은 흰 원 + 회색 테두리(등급색과 섞이지 않게)
-            "circle-radius": ["match", ["get", "rank"], 3, 11, 2, 9, 1, 7, -1, 4.5, 5],
-            "circle-color": ["match", ["get", "grade"], "경보", GRADES[3].color, "주의보", GRADES[2].color, "예보", GRADES[1].color, "정상", GRADES[0].color, "#ffffff"],
-            "circle-opacity": ["case", ["==", ["get", "rank"], -1], 0.95, 0.85],
+            "circle-radius": ["match", ["get", "rank"], 3, 11, 2, 9, 1, 7, -1, 5, 6],
+            "circle-color": color,
+            "circle-opacity": ["case", ["==", ["get", "rank"], -1], 0.9, 0.95],
             "circle-stroke-color": ["case", ["==", ["get", "rank"], -1], NA.stroke, "#ffffff"],
-            "circle-stroke-width": ["case", ["get", "selected"], 3, ["==", ["get", "rank"], -1], 1.5, 1.2],
+            "circle-stroke-width": ["case", ["get", "selected"], 3.5, 2],
           },
         });
-        map.addLayer({
-          id: "spots-label",
-          type: "symbol",
-          source: "spots",
-          minzoom: 7.5,
-          layout: { "text-field": ["get", "name"], "text-size": 11, "text-offset": [0, 1.4], "text-anchor": "top" },
-          paint: { "text-halo-color": "#fff", "text-halo-width": 1.2 },
-        });
+        // 마우스를 올리면 지점명·등급 툴팁
+        const popup = new ml.Popup({ closeButton: false, closeOnClick: false, offset: 14, className: "spot-tip" });
         map.on("click", "spots-circle", (e) => {
           const f = e.features?.[0];
           if (f) setParamsRef.current({ spot: String(f.properties?.spot_code ?? "") });
         });
-        map.on("mouseenter", "spots-circle", () => (map.getCanvas().style.cursor = "pointer"));
-        map.on("mouseleave", "spots-circle", () => (map.getCanvas().style.cursor = ""));
+        map.on("mousemove", "spots-circle", (e) => {
+          const f = e.features?.[0];
+          if (!f) return;
+          map.getCanvas().style.cursor = "pointer";
+          const p = f.properties as { name: string; grade: string; index: number };
+          const geom = f.geometry as unknown as { coordinates: [number, number] };
+          const idx = p.index >= 0 ? ` <b>${Math.round(p.index)}</b>` : "";
+          popup.setLngLat(geom.coordinates).setHTML(`<div class="spot-tip-name">${p.name}</div><div class="spot-tip-grade">${p.grade}${idx}</div>`).addTo(map);
+        });
+        map.on("mouseleave", "spots-circle", () => {
+          map.getCanvas().style.cursor = "";
+          popup.remove();
+        });
         mapRef.current = map;
         setMapReady(true);
       });
@@ -172,81 +222,102 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
 
   return (
     <div className="space-y-4">
-      {/* 조건 바 */}
-      <div className="card flex flex-wrap items-end gap-x-5 gap-y-3 p-4" role="group" aria-label="예측 조건">
-        <label className="min-w-[110px]">
-          <span className="field-label">작물</span>
-          <select className="field py-1.5" value={crop} onChange={(e) => setParams({ crop: e.target.value, pest: null, spot: null })}>
-            {crops.map((c) => (
-              <option key={c} value={c}>
-                {pests.find((p) => p.crop === c)?.crop_ko ?? c}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="min-w-[170px]">
-          <span className="field-label">병해충</span>
-          <select className="field py-1.5" value={pestId} onChange={(e) => setParams({ pest: e.target.value })}>
-            {cropPests.map((p) => (
-              <option key={p.pest_id} value={p.pest_id}>
-                {p.name_ko}
-              </option>
-            ))}
-          </select>
-        </label>
-        <div>
-          <span className="field-label" id="horizon-label">
-            전망
-          </span>
-          <div className="segmented" role="radiogroup" aria-labelledby="horizon-label">
-            {[0, 3, 7, 10].filter((d) => d <= horizon).map((d) => (
-              <button key={d} role="radio" aria-checked={offset === d} onClick={() => setParams({ d: String(d) })} className="segmented-item">
-                {d === 0 ? "오늘" : `+${d}일`}
+      {/* 지도 + 패널 */}
+      <div className="grid gap-4 lg:grid-cols-[1fr_360px]">
+        <div className="relative h-[calc(100vh-12rem)] min-h-[560px] overflow-hidden rounded-3xl bg-slate-900 shadow-lift ring-1 ring-black/5">
+          <div ref={containerRef} className="h-full w-full" aria-label={`${pestName} 위험도 지도`} role="application" />
+
+          {/* 조건 패널 (지도 위에 떠 있는 유리 패널) */}
+          <div className="glass-dark absolute left-3 right-14 top-3 space-y-3 p-3.5 sm:right-auto sm:w-[380px]" role="group" aria-label="예측 조건">
+            <div className="grid grid-cols-[1fr_1.5fr] gap-2">
+              <label>
+                <span className="mb-1 block text-[11px] font-medium text-white/60">작물</span>
+                <select className="field-glass" value={crop} onChange={(e) => setParams({ crop: e.target.value, pest: null, spot: null })}>
+                  {crops.map((c) => (
+                    <option key={c} value={c}>
+                      {pests.find((p) => p.crop === c)?.crop_ko ?? c}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                <span className="mb-1 block text-[11px] font-medium text-white/60">병해충</span>
+                <select className="field-glass" value={pestId} onChange={(e) => setParams({ pest: e.target.value })}>
+                  {cropPests.map((p) => (
+                    <option key={p.pest_id} value={p.pest_id}>
+                      {p.name_ko}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            <div className="flex items-center justify-between gap-2">
+              <div className="segmented-glass" role="radiogroup" aria-label="전망">
+                {[0, 3, 7, 10].filter((d) => d <= horizon).map((d) => (
+                  <button key={d} role="radio" aria-checked={offset === d} onClick={() => setParams({ d: String(d) })}>
+                    {d === 0 ? "오늘" : `+${d}일`}
+                  </button>
+                ))}
+              </div>
+              <button className="hidden whitespace-nowrap rounded-lg px-2 py-1 text-xs font-medium text-white/70 hover:bg-white/10 hover:text-white sm:block" onClick={share} title="현재 조건이 담긴 링크를 복사">
+                {copied ? "복사됨" : "링크 공유"}
+              </button>
+            </div>
+            <label className="block">
+              <span className="flex items-baseline justify-between text-[11px] text-white/60">
+                <span>날짜</span>
+                <span className="num text-sm font-semibold text-white">{addDays(issuedDate, offset)}</span>
+              </span>
+              <input
+                type="range"
+                min={0}
+                max={horizon}
+                value={offset}
+                onChange={(e) => setParams({ d: e.target.value })}
+                aria-valuetext={addDays(issuedDate, offset)}
+                className="mt-1 h-5 w-full accent-emerald-400"
+              />
+            </label>
+          </div>
+
+          {/* 배경지도 전환 */}
+          <div className="glass-dark absolute right-3 top-[94px] flex flex-col gap-0.5 p-1 text-xs" role="radiogroup" aria-label="배경지도">
+            {(
+              [
+                ["satellite", "위성"],
+                ["street", "일반"],
+              ] as [Basemap, string][]
+            ).map(([b, label]) => (
+              <button
+                key={b}
+                role="radio"
+                aria-checked={basemap === b}
+                onClick={() => setBasemap(b)}
+                className={`rounded-lg px-2 py-1.5 font-medium transition ${basemap === b ? "bg-white text-slate-900" : "text-white/70 hover:text-white"}`}
+              >
+                {label}
               </button>
             ))}
           </div>
-        </div>
-        <label className="min-w-[200px] flex-1">
-          <span className="field-label">
-            날짜 <span className="num ml-1 font-bold text-slate-900">{addDays(issuedDate, offset)}</span>
-          </span>
-          <input
-            type="range"
-            min={0}
-            max={horizon}
-            value={offset}
-            onChange={(e) => setParams({ d: e.target.value })}
-            aria-valuetext={addDays(issuedDate, offset)}
-            className="h-9 w-full accent-brand-600"
-          />
-        </label>
-        <button className="btn-secondary btn-sm h-9" onClick={share} title="현재 조건이 담긴 링크를 복사">
-          {copied ? "복사됨" : "링크 공유"}
-        </button>
-      </div>
 
-      {/* 지도 + 패널 */}
-      <div className="grid gap-4 lg:grid-cols-[1fr_340px]">
-        <div className="card relative h-[62vh] min-h-[440px] overflow-hidden bg-slate-100 p-0">
-          <div ref={containerRef} className="h-full w-full" aria-label={`${pestName} 위험도 지도`} role="application" />
-          {loading && (
-            <div className="absolute left-1/2 top-3 -translate-x-1/2 rounded-full bg-white/90 px-3 py-1 text-xs text-slate-500 shadow-card backdrop-blur">불러오는 중…</div>
-          )}
-          <div className="absolute bottom-3 left-3 max-w-[calc(100%-1.5rem)] rounded-xl border border-white/60 bg-white/85 px-3.5 py-2.5 text-xs shadow-lift backdrop-blur-md" aria-label="범례">
-            <div className="mb-1.5 font-semibold text-slate-800">
-              {pestName} <span className="font-normal text-slate-400">· {offset === 0 ? "오늘" : `+${offset}일`}</span>
+          {loading && <div className="glass-dark absolute left-1/2 top-3 -translate-x-1/2 rounded-full px-3 py-1 text-xs">불러오는 중…</div>}
+
+          {/* 범례 */}
+          <div className="glass-dark absolute bottom-9 left-3 max-w-[calc(100%-1.5rem)] px-3.5 py-2.5 text-xs sm:bottom-3 sm:max-w-[calc(100%-16rem)]" aria-label="범례">
+            <div className="mb-1.5 font-semibold">
+              {pestName} <span className="font-normal text-white/50">· {offset === 0 ? "오늘" : `+${offset}일`}</span>
             </div>
-            <ul className="flex flex-wrap items-center gap-x-3 gap-y-1 text-slate-600">
+            <ul className="flex flex-wrap items-center gap-x-3 gap-y-1 text-white/75">
               {counts.map((g) => (
                 <li key={g.name} className="flex items-center gap-1.5">
-                  <span className="inline-block rounded-full ring-2 ring-white" style={{ width: 8 + gradeRank(g.name) * 2.5, height: 8 + gradeRank(g.name) * 2.5, background: g.color }} aria-hidden="true" />
-                  {g.name} <b className="num text-slate-900">{g.n}</b>
+                  <span className="inline-block rounded-full ring-2 ring-white/80" style={{ width: 8 + gradeRank(g.name) * 2.5, height: 8 + gradeRank(g.name) * 2.5, background: g.color }} aria-hidden="true" />
+                  {g.name} <b className="num text-white">{g.n}</b>
                 </li>
               ))}
               {naCount > 0 && (
-                <li className="flex items-center gap-1.5 text-slate-400" title="비재배지·재배 시기 아님">
+                <li className="flex items-center gap-1.5 text-white/50" title="비재배지·재배 시기 아님">
                   <span className="inline-block h-2 w-2 rounded-full border-[1.5px] bg-white" style={{ borderColor: NA.stroke }} aria-hidden="true" />
-                  {NA.label} <b className="num text-slate-500">{naCount}</b>
+                  {NA.label} <b className="num text-white/70">{naCount}</b>
                 </li>
               )}
             </ul>

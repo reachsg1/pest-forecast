@@ -1,7 +1,7 @@
 import Link from "next/link";
 import RiskBadge from "@/components/RiskBadge";
 import Sparkline from "@/components/Sparkline";
-import { GradeBar, Icon, PageHeader } from "@/components/ui";
+import { GradeBar, Icon } from "@/components/ui";
 import { getSummary } from "@/lib/data";
 import { CROP_LABEL, GRADES, NA, gradeMeta } from "@/lib/grades";
 
@@ -27,62 +27,94 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
 
   return (
     <div className="space-y-10">
-      {/* 머리 */}
-      <PageHeader
-        eyebrow={`기준일 ${summary.issued_date} · ${summary.horizon_days}일 전망`}
-        title="오늘의 병해충 발생 위험"
-        desc={`관측지점 ${summary.n_spots}곳의 농업기상으로 병해충 ${summary.n_models}종의 발생 위험을 매일 계산합니다.`}
-        actions={
-          <>
-            <Link href="/farm" className="btn-secondary">
-              <Icon name="farm" /> 내 농장
-            </Link>
-            <Link href="/map" className="btn-primary">
-              <Icon name="map" /> 예측 지도 열기
-            </Link>
-          </>
-        }
-      />
+      {/* 히어로: 오늘의 전국 위험 */}
+      <section aria-labelledby="today" className="hero-dark">
+        {/* 한반도 위성 영상(장식). 개발용 Esri 영상, 운영 전 VWorld로 교체 */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 right-0 hidden w-[58%] bg-cover bg-center opacity-45 mix-blend-luminosity md:block"
+          style={{
+            backgroundImage:
+              "url(https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/export?bbox=124.2,33.0,131.2,38.8&bboxSR=4326&imageSR=3857&size=900,860&format=jpg&f=image)",
+            maskImage: "linear-gradient(to right, transparent 0%, black 45%, black 80%, transparent 100%), linear-gradient(to bottom, black 55%, transparent 95%)",
+            maskComposite: "intersect",
+            WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 45%, black 80%, transparent 100%)",
+          }}
+        />
+        <div className="relative px-6 pb-6 pt-8 sm:px-10 sm:pb-8 sm:pt-12">
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <div className="max-w-2xl">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-medium text-emerald-100 backdrop-blur">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+                </span>
+                <span className="num">
+                  기준일 {summary.issued_date} · {summary.horizon_days}일 전망
+                </span>
+              </span>
+              <h1 id="today" className="mt-5 text-3xl font-bold leading-tight tracking-tight sm:text-5xl sm:leading-[1.1]">
+                오늘의 병해충
+                <br className="hidden sm:block" /> 발생 위험
+              </h1>
+              <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/65 sm:text-base">
+                관측지점 {summary.n_spots}곳의 농업기상으로 병해충 {summary.n_models}종의 발생 위험을 매일 계산합니다. 작물을 재배하지 않는 지역·시기는 자동으로 제외합니다.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Link href="/farm" className="btn-glass">
+                <Icon name="farm" /> 내 농장
+              </Link>
+              <Link href="/map" className="btn-light">
+                <Icon name="map" /> 예측 지도 열기
+              </Link>
+            </div>
+          </div>
 
-      {/* 전국 요약 */}
-      <section aria-labelledby="overview" className="card overflow-hidden">
-        <div className="flex flex-wrap items-baseline justify-between gap-2 px-5 pt-5 sm:px-6 sm:pt-6">
-          <h2 id="overview" className="section-title">
-            전국 위험 현황
-          </h2>
-          <p className="num text-xs text-slate-400">
-            지점 × 병해충 {applicable}건{na > 0 && ` · ${NA.label} ${na}건 제외`} · 갱신 {summary.generated_at.replace("T", " ")}
+          {/* 분포 막대 */}
+          <div className="mt-10">
+            <div className="flex flex-wrap items-baseline justify-between gap-2 text-xs text-white/55">
+              <span className="font-medium text-white/80">전국 위험 분포</span>
+              <span className="num">
+                지점 × 병해충 {applicable}건{na > 0 && ` · ${NA.label} ${na}건 제외`}
+              </span>
+            </div>
+            <div className="mt-2.5 flex h-2.5 w-full overflow-hidden rounded-full bg-white/10" role="img" aria-label={order.map((g) => `${g.name} ${counts[g.name] ?? 0}`).join(", ")}>
+              {order.map((g) => ((counts[g.name] ?? 0) > 0 ? <span key={g.name} style={{ width: `${((counts[g.name] ?? 0) / Math.max(1, applicable)) * 100}%`, background: g.color }} /> : null))}
+            </div>
+          </div>
+
+          {/* 등급 타일 */}
+          <ul className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4" aria-label="등급별 지점·병해충 조합 수">
+            {order.map((g) => {
+              const n = counts[g.name] ?? 0;
+              return (
+                <li key={g.name} className="glass-tile p-4 sm:p-5">
+                  <div className="flex items-center justify-between">
+                    <span className="flex items-center gap-1.5 text-sm font-semibold text-white/90">
+                      <span aria-hidden="true" style={{ color: g.color }}>
+                        {g.icon}
+                      </span>
+                      {g.name}
+                    </span>
+                    <span className="num text-xs text-white/45">{applicable ? Math.round((n / applicable) * 100) : 0}%</span>
+                  </div>
+                  <div className="num mt-3 text-4xl font-bold tracking-tight">{n}</div>
+                  <div className="mt-1 text-xs text-white/55">{g.action}</div>
+                </li>
+              );
+            })}
+          </ul>
+
+          <p className="num mt-5 flex flex-wrap items-center gap-x-1.5 text-xs text-white/40">
+            {na > 0 && (
+              <>
+                <Icon name="info" className="h-3.5 w-3.5" /> {NA.label} {na}건은 비재배지·재배 시기 아님으로 집계에서 제외 ·
+              </>
+            )}
+            갱신 {summary.generated_at.replace("T", " ")}
           </p>
         </div>
-        <div className="px-5 pt-4 sm:px-6">
-          <GradeBar counts={counts} naCount={na} legend={false} />
-        </div>
-        <ul className="mt-5 grid grid-cols-2 border-t border-slate-100 md:grid-cols-4" aria-label="등급별 지점·병해충 조합 수">
-          {order.map((g, i) => {
-            const n = counts[g.name] ?? 0;
-            return (
-              <li key={g.name} className={`px-5 py-5 sm:px-6 ${i % 2 === 1 ? "border-l" : ""} ${i >= 2 ? "border-t md:border-t-0" : ""} ${i === 2 ? "md:border-l" : ""} border-slate-100`}>
-                <div className={`flex items-center gap-1.5 text-sm font-semibold ${g.text}`}>
-                  <span aria-hidden="true" style={{ color: g.color }}>
-                    {g.icon}
-                  </span>
-                  {g.name}
-                </div>
-                <div className="mt-2 flex items-baseline gap-1.5">
-                  <span className="num text-3xl font-bold tracking-tight text-slate-900">{n}</span>
-                  <span className="num text-xs text-slate-400">{applicable ? Math.round((n / applicable) * 100) : 0}%</span>
-                </div>
-                <div className="mt-1 text-xs text-slate-500">{g.action}</div>
-              </li>
-            );
-          })}
-        </ul>
-        {na > 0 && (
-          <p className="flex items-center gap-1.5 border-t border-slate-100 bg-slate-50/60 px-5 py-3 text-xs text-slate-500 sm:px-6">
-            <Icon name="info" className="h-3.5 w-3.5 text-slate-400" />
-            {NA.label} {na}건은 작물을 재배하지 않는 지역이거나 재배 시기가 아니어서 등급 집계에서 뺐습니다.
-          </p>
-        )}
       </section>
 
       {/* 병해충별 */}

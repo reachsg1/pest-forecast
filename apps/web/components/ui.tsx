@@ -1,17 +1,27 @@
 import { GRADES, NA } from "@/lib/grades";
 import type { Grade } from "@/lib/types";
 
-/** 페이지 머리: 작은 분류 문구 + 제목 + 설명 + 오른쪽 동작 */
-export function PageHeader({ eyebrow, title, desc, actions }: { eyebrow?: React.ReactNode; title: React.ReactNode; desc?: React.ReactNode; actions?: React.ReactNode }) {
+/** 페이지 머리: 짙은 그라데이션 띠 위에 분류 문구 + 제목 + 설명 + 오른쪽 동작(홈 히어로의 축소판) */
+export function PageHeader({ eyebrow, title, desc, actions, children }: { eyebrow?: React.ReactNode; title: React.ReactNode; desc?: React.ReactNode; actions?: React.ReactNode; children?: React.ReactNode }) {
   return (
-    <div className="flex flex-wrap items-end justify-between gap-4">
-      <div className="min-w-0">
-        {eyebrow && <div className="eyebrow">{eyebrow}</div>}
-        <h1 className="page-title mt-1">{title}</h1>
-        {desc && <p className="page-desc">{desc}</p>}
+    <header className="hero-dark">
+      <div className="relative px-6 py-8 sm:px-10 sm:py-10">
+        <div className="flex flex-wrap items-end justify-between gap-5">
+          <div className="min-w-0 max-w-3xl">
+            {eyebrow && (
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-2.5 py-0.5 text-xs font-medium text-emerald-100 backdrop-blur">
+                <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                {eyebrow}
+              </span>
+            )}
+            <h1 className="mt-3 text-2xl font-bold tracking-tight text-white sm:text-4xl">{title}</h1>
+            {desc && <p className="mt-2.5 text-sm leading-relaxed text-white/65">{desc}</p>}
+          </div>
+          {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
+        </div>
+        {children && <div className="mt-6">{children}</div>}
       </div>
-      {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
-    </div>
+    </header>
   );
 }
 

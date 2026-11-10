@@ -42,42 +42,44 @@ export default async function PestDetailPage({ params, searchParams }: { params:
         <span>/</span>
         <span className="text-slate-600">{pest.name_ko}</span>
       </nav>
-      <header className="card overflow-hidden">
-        <div className="flex flex-wrap items-start justify-between gap-6 p-6">
+      <header className="hero-dark">
+        <div className="relative flex flex-wrap items-end justify-between gap-6 px-6 py-8 sm:px-10 sm:py-10">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-1.5">
-              <span className="chip bg-brand-50 text-brand-700">{pest.crop_ko}</span>
-              <span className="chip">{pest.kind === "insect" ? "해충" : "병"}</span>
-              <span className="chip">유형 {pest.type}</span>
+              {[pest.crop_ko, pest.kind === "insect" ? "해충" : "병", `유형 ${pest.type}`].map((t) => (
+                <span key={t} className="rounded-full border border-white/15 bg-white/10 px-2.5 py-0.5 text-xs font-medium text-emerald-100">
+                  {t}
+                </span>
+              ))}
             </div>
-            <h1 className="page-title mt-3">{pestFullName(pest.crop_ko, pest.name_ko)}</h1>
-            <p className="mt-1.5 text-sm text-slate-500">
+            <h1 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">{pestFullName(pest.crop_ko, pest.name_ko)}</h1>
+            <p className="mt-2 text-sm text-white/60">
               <span className="italic">{pest.name_sci}</span>
-              <span className="mx-1.5 text-slate-300">·</span>
-              <a className="font-medium text-brand-600 hover:text-brand-700" href={ncpmsUrl} target="_blank" rel="noreferrer">
+              <span className="mx-1.5 text-white/30">·</span>
+              <a className="font-medium text-emerald-300 hover:text-emerald-200" href={ncpmsUrl} target="_blank" rel="noreferrer">
                 NCPMS 도감 ↗
               </a>
             </p>
           </div>
-          <div className="flex shrink-0 gap-6 sm:gap-8">
-            <div>
-              <div className="text-xs text-slate-400">오늘 전국 최고 등급</div>
-              <div className="mt-1.5">
+          <div className="flex shrink-0 gap-3">
+            <div className="glass-tile px-5 py-4">
+              <div className="text-xs text-white/55">오늘 전국 최고 등급</div>
+              <div className="mt-2">
                 <RiskBadge grade={maxGrade} size="lg" />
               </div>
             </div>
-            <div>
-              <div className="text-xs text-slate-400">주의보 이상</div>
-              <div className="num mt-1 text-2xl font-bold tracking-tight">
+            <div className="glass-tile px-5 py-4">
+              <div className="text-xs text-white/55">주의보 이상</div>
+              <div className="num mt-1.5 text-3xl font-bold tracking-tight text-white">
                 {alertN}
-                <span className="text-sm font-medium text-slate-400"> / {applicable.length}곳</span>
+                <span className="text-sm font-medium text-white/50"> / {applicable.length}곳</span>
               </div>
             </div>
           </div>
-        </div>
-        <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 bg-slate-50/60 px-6 py-2.5 text-xs text-slate-500">
-          <span className="num">기준일 {risk?.issued_date ?? "-"}</span>
-          {entries.length > applicable.length && <span className="text-slate-400">해당 없음 {entries.length - applicable.length}곳 제외</span>}
+          <p className="num w-full text-xs text-white/40">
+            기준일 {risk?.issued_date ?? "-"}
+            {entries.length > applicable.length && ` · 해당 없음 ${entries.length - applicable.length}곳 제외`}
+          </p>
         </div>
       </header>
       <PestTabs

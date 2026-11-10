@@ -112,6 +112,56 @@ summary:focus-visible {
     @apply border-b-0;
   }
 
+  /* 유리(반투명) 패널 — 위성지도·짙은 히어로 위에 띄우는 요소 */
+  .glass-dark {
+    @apply rounded-2xl border border-white/10 bg-slate-950/55 text-white shadow-lift backdrop-blur-xl;
+  }
+  .glass-light {
+    @apply rounded-2xl border border-white/60 bg-white/80 shadow-lift backdrop-blur-xl;
+  }
+  .field-glass {
+    @apply w-full rounded-xl border border-white/15 bg-white/10 px-3 py-1.5 text-sm text-white transition focus:border-emerald-300 focus:outline-none focus:ring-4 focus:ring-emerald-400/20;
+  }
+  .field-glass option {
+    @apply text-slate-900;
+  }
+  .segmented-glass {
+    @apply inline-flex items-center gap-0.5 rounded-xl bg-white/10 p-1;
+  }
+  .segmented-glass > * {
+    @apply whitespace-nowrap rounded-lg px-2.5 py-1 text-sm font-medium text-white/70 transition hover:text-white sm:px-3;
+  }
+  .segmented-glass > [aria-checked="true"] {
+    @apply bg-white text-slate-900 shadow-sm;
+  }
+
+  /* 짙은 히어로 배경: 깊은 녹·청록 그라데이션 + 은은한 빛 번짐 + 점 격자 */
+  .hero-dark {
+    @apply relative overflow-hidden rounded-3xl text-white shadow-lift;
+    background:
+      radial-gradient(60% 80% at 85% 10%, rgba(52, 211, 153, 0.28) 0%, transparent 60%),
+      radial-gradient(50% 70% at 10% 100%, rgba(45, 212, 191, 0.18) 0%, transparent 60%),
+      linear-gradient(135deg, #062a1f 0%, #0b3b2c 45%, #0e2f3a 100%);
+  }
+  .hero-dark::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+    background-size: 22px 22px;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent 85%);
+    pointer-events: none;
+  }
+  .glass-tile {
+    @apply rounded-2xl border border-white/10 bg-white/[0.07] backdrop-blur-md transition hover:bg-white/[0.11];
+  }
+  .btn-light {
+    @apply btn bg-white text-slate-900 shadow-sm hover:bg-emerald-50;
+  }
+  .btn-glass {
+    @apply btn border border-white/20 bg-white/10 text-white backdrop-blur hover:bg-white/20;
+  }
+
   .chip {
     @apply inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600;
   }
@@ -132,4 +182,20 @@ summary:focus-visible {
 }
 .maplibregl-popup-content {
   @apply rounded-lg px-3 py-2 text-sm shadow-lg;
+}
+/* 지점 툴팁 */
+.spot-tip .maplibregl-popup-content {
+  @apply rounded-xl border border-white/10 bg-slate-950/80 px-3 py-2 text-white shadow-lift backdrop-blur-md;
+}
+.spot-tip .maplibregl-popup-tip {
+  display: none;
+}
+.spot-tip-name {
+  @apply text-xs font-semibold;
+}
+.spot-tip-grade {
+  @apply mt-0.5 text-[11px] text-white/70;
+}
+.maplibregl-ctrl-attrib {
+  @apply !bg-white/70 backdrop-blur;
 }

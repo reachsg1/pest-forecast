@@ -15,6 +15,8 @@
 - **작물 생물계절을 항상 고려한다.** 작물이 재배되지 않는 지역·재배 기간이 아닌 날에 위험도를 내면 오답이다. `pipeline/phenology.py`가 `data/reference/cultivation.csv`(시군 재배면적)·`crop_calendar.yaml`(권역·시도·시군 재배 기간)로 판정해 `index=null`, `na_reason`(not_grown | off_season)으로 발행한다. '해당 없음'은 등급이 아니며(정상과 다름) 등급 집계에서 뺀다. 새 화면·API·집계를 만들 때 null 위험지수를 반드시 처리할 것. 재배 기간·면적 값도 모델 파라미터와 같이 근거 없이 만들지 않는다.
 - **UI는 깔끔하고 세련되게, 한눈에 알아보기 쉽게.** 촌스러운 장식·과한 색을 피하고, 등급색은 의미 전달에만 쓴다. 정보 위계(핵심 크게, 보조는 작고 회색), 넉넉한 여백, 기존 화면과 같은 톤. 바꾼 화면은 브라우저에서 데스크톱·모바일(375px) 모두 직접 확인한다.
   - 디자인 기반: 글꼴 Pretendard(npm `pretendard`), 색·그림자 토큰 `tailwind.config.ts`(brand-50~900, canvas, shadow-card/lift), 공통 클래스 `app/globals.css`(`.card` `.btn-primary` `.btn-secondary` `.segmented` `.field` `.table-clean` `.chip` `.page-title` 등), 공통 컴포넌트 `components/ui.tsx`(`PageHeader`, `GradeBar`, `Icon`). 새 화면은 이것을 재사용하고 임의 회색(gray-*) 대신 slate-* 를 쓴다.
+  - 톤: 페이지 머리는 짙은 녹·청록 그라데이션 히어로(`.hero-dark`, `PageHeader`) + 반투명 유리 요소(`.glass-tile` `.glass-dark` `.btn-light` `.btn-glass`), 본문은 밝은 카드. 지도는 위성(기본)/일반 전환, 조건·범례는 지도 위 유리 패널. 사용자가 "구식"이라 한 흰 카드 나열형으로 되돌리지 않는다.
+  - 위성 타일(Esri World Imagery)·홈 히어로 위성 배경은 개발용. 운영 전 VWorld 위성·하이브리드 타일로 교체(한글 지명).
   - Tailwind 설정(`tailwind.config.ts`)을 바꾸면 dev 서버를 재시작해야 반영된다. `npm run build`는 dev 서버의 `.next`를 덮어쓰므로 dev 서버를 멈추고 빌드 후 `.next`를 지우고 다시 띄운다.
 - 외부 API 키는 환경변수(`NCPMS_API_KEY`, `DATA_GO_KR_KEY`, `KMA_API_KEY`)로만. 코드·커밋·로그에 절대 넣지 않는다. 공공데이터포털 키는 `config.normalize_key()`가 디코딩한다.
 - 모델 파라미터(`model.yaml`)는 담당 연구자 검토 대상. 값을 바꾸면 `references`에 근거를 적고 `status`를 유지/갱신한다. 임의로 "그럴듯한" 수치를 만들지 말고, 모르면 TODO로 남긴다.

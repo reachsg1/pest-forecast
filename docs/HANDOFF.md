@@ -20,7 +20,7 @@ Claude(프로젝트 대화)에서 설계와 초기 구축을 마치고 Claude Co
 |---|---|---|
 | Python 모델·파이프라인 | **검증됨** | `pytest` 21개 통과, `cli.py run --demo` 실행 성공, 데모 JSON 생성됨(`apps/web/public/data`, 기준일 2026-07-15). 11-10 로컬 PC(Windows 11, Python 3.14.7, `.venv`)에서 재확인: 21개 통과, 데모 재생성 결과가 기존 JSON과 동일(`generated_at`만 다름) |
 | Next.js 웹 | **검증됨(로컬)** | 11-10 로컬 PC(Node 26.13.0, Next 15.5.29)에서 `npm install`·`typecheck`·`build` 수정 없이 통과. `npm run dev`로 `/`, `/map`(지도·마커·지점 클릭 패널), `/pests/apple_anthracnose`, `/farm` 데모 데이터 정상 표시, 콘솔 오류 없음. 수정 2건: 지도 날짜 표시가 KST에서 하루 앞당겨지던 문제(`MapView.tsx` addDays를 UTC 계산으로), 상세 제목 '사과 사과 탄저병' 중복(`pests/[id]/page.tsx`). Vercel 배포는 미확인 |
-| 웹 디자인 | **개편됨(11-10)** | 전 화면(홈·지도·지점 패널·병해충 목록/상세·내 농장·데이터·소개, 헤더·푸터)을 공통 디자인 기반(Pretendard, 카드·버튼·세그먼트·표 클래스, `components/ui.tsx`)으로 재구성. 데스크톱·모바일(375px) 확인, 가로 넘침 없음, typecheck·build 통과 |
+| 웹 디자인 | **개편됨(11-10)** | 전 화면(홈·지도·지점 패널·병해충 목록/상세·내 농장·데이터·소개, 헤더·푸터)을 공통 디자인 기반(Pretendard, 카드·버튼·세그먼트·표 클래스, `components/ui.tsx`)으로 재구성. 2차: 짙은 그라데이션 히어로 + 유리 카드, 홈 히어로에 한반도 위성 영상, 지도 위성(기본)/일반 전환·지도 위 유리 패널·지점 툴팁. 데스크톱·모바일(375px) 확인, 가로 넘침 없음, typecheck·build 통과 |
 | 생물계절 판정 | **재배지: 자료 연결됨 / 재배 시기: 자료 없음** | 11-10 구현. 테스트 8개(총 29개 통과), 데모에서 가상 재배현황으로 비재배지 표시 확인, 임시 재배 기간으로 '재배 시기 아님' 화면 확인(임시값은 되돌림). `cultivation.csv`는 2025년 농업경영체 등록정보로 채움, 기준 1 ha 이하 = 비재배지. 데모도 같은 실제 자료로 판정(데모 12개 지점 중 제주시 사과·벼만 비재배지). `crop_calendar.yaml`은 비어 있어 재배 시기 판정은 생략 중 |
 | 외부 API 연동 | **미확인** | 농업기상 API 응답 태그명은 후보 목록(`pipeline/config.py` FIELD_CANDIDATES). NCPMS 예찰·예측·발생정보 서비스 코드 미확인. 기상청 단기예보 파서는 공개 스펙 기준으로 작성했으나 실호출 안 함 |
 | GitHub Actions | **미실행** | 워크플로 문법은 표준 액션만 사용. 저장소 push 후 수동 실행으로 확인 필요 |
@@ -43,6 +43,7 @@ Claude(프로젝트 대화)에서 설계와 초기 구축을 마치고 Claude Co
 
 - 로컬 PC 환경: Python은 `.venv`(`.\.venv\Scripts\python.exe`), Node.js·git 설치 완료. 6절 지시문 1)~4) 완료(11-10). 다음은 GitHub 원격 저장소 생성·push → Actions 수동 실행 → Vercel 연결
 - 웹 의존성: `recharts@2.x`는 지원 종료(deprecated) 경고 → v3 이전 검토
+- 지도 타일: 위성은 개발용 Esri World Imagery(지명 영문), 일반은 OSM. 운영 전 VWorld 위성·하이브리드·기본 타일(API 키)로 교체 — `components/MapView.tsx` MAP_STYLE, 홈 히어로 배경 `app/page.tsx`
 - 생물계절 자료(우선): ① ~~시군 재배면적 수집~~ 11-10 완료(`scripts/fetch_cultivation.py`, 2025년, `cultivation.csv`). 비재배지 기준 면적 `config.MIN_CULTIVATION_HA = 1.0` 으로 확정(11-10 사용자 결정) → 비재배지 시군(전국 209): 사과 44·벼 31·고추 21. 참고로 0 ha → 14·24·0, 10 ha → 104·39·39 ② 사과·벼·고추 재배 기간을 근거와 함께 `crop_calendar.yaml`에 입력(권역 정의도 확정) ③ 연도별로 변하는 시기 자동화: 사과 만개일 API(data.go.kr 15041539), 과수 휴면타파시기 API(15168306, 67개 지점) 수집기 → 재배 기간 시작일 갱신
 - 정적 JSON 브라우저 캐시 `max-age=600`(`next.config.ts`): 배치 직후 최대 10분간 파일별로 어제·오늘 데이터가 섞여 보일 수 있음. 운영 전 파일명에 기준일 버전을 붙이거나 캐시 시간 조정 검토
 
