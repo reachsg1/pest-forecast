@@ -42,7 +42,7 @@ Claude(프로젝트 대화)에서 설계와 초기 구축을 마치고 Claude Co
 
 ## 4. 알려진 미완·TODO (코드 안 TODO와 동일)
 
-- 로컬 PC 환경: Python은 `.venv`(`.\.venv\Scripts\python.exe`), Node.js·git 설치 완료. 6절 지시문 1)~4) 완료(11-10). 다음은 GitHub 원격 저장소 생성·push → Actions 수동 실행 → Vercel 연결
+- 로컬 PC 환경: Python은 `.venv`(`.\.venv\Scripts\python.exe`), Node.js·git 설치 완료. 6절 지시문 1)~4) 완료(11-10). GitHub 원격 저장소 https://github.com/reachsg1/pest-forecast (main, 11-10 push). 다음: Actions Secrets 등록(NCPMS_API_KEY, DATA_GO_KR_KEY) → daily-forecast 수동 실행 → Vercel 연결
 - 웹 의존성: `recharts@2.x`는 지원 종료(deprecated) 경고 → v3 이전 검토
 - 지도 타일: 위성은 개발용 Esri World Imagery(지명 영문), 일반은 OSM. 운영 전 VWorld 위성·하이브리드·기본 타일(API 키)로 교체 — `components/MapView.tsx` MAP_STYLE, 홈 히어로 배경 `app/page.tsx`
 - 생물계절 자료(우선): ① ~~시군 재배면적 수집~~ 11-10 완료(`scripts/fetch_cultivation.py`, 2025년, `cultivation.csv`). 비재배지 기준 면적 `config.MIN_CULTIVATION_HA = 1.0` 으로 확정(11-10 사용자 결정) → 비재배지 시군(전국 209): 사과 44·벼 31·고추 21. 참고로 0 ha → 14·24·0, 10 ha → 104·39·39 ② 사과·벼·고추 재배 기간을 근거와 함께 `crop_calendar.yaml`에 입력(권역 정의도 확정) ③ 연도별로 변하는 시기 자동화: 사과 만개일 API(data.go.kr 15041539), 과수 휴면타파시기 API(15168306, 67개 지점) 수집기 → 재배 기간 시작일 갱신
