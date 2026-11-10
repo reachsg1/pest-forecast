@@ -80,6 +80,21 @@ def test_missing_files_mean_no_gating(tmp_path):
     assert len(ph.coverage_warnings({"apple"})) == 2
 
 
+def test_reference_cultivation_csv_loads():
+    """저장소의 실제 cultivation.csv(농업경영체 등록정보)가 판정에 쓰일 수 있는지."""
+    if not config.CULTIVATION_CSV.exists() or config.CULTIVATION_CSV.stat().st_size < 100:
+        return  # 자료 없는 환경
+    ph = Phenology.load(config.CULTIVATION_CSV, config.CROP_CALENDAR_YAML, min_area_ha=0.0)
+    assert {"apple", "rice", "pepper"} <= ph.crops_with_cultivation()
+    cs = ph.assess("apple", "경북 청송군")          # 사과 주산지
+    assert cs.cultivation == "grown" and cs.area_ha > 1000
+    assert ph.assess("rice", "강원특별자치도 철원군").cultivation == "grown"   # 시도 정식 명칭도 매칭
+    assert ph.assess("apple", "경기도 수원시 장안구").area_ha > 0             # 구 단위 주소는 시로 합산
+    # 기준 면적을 올리면 소규모 재배지는 비재배지가 된다
+    ph10 = Phenology.load(config.CULTIVATION_CSV, config.CROP_CALENDAR_YAML, min_area_ha=10.0)
+    assert ph10.assess("apple", "제주 제주시").cultivation == "not_grown"
+
+
 def test_demo_run_marks_not_grown_as_na(tmp_path, monkeypatch):
     monkeypatch.setattr(config, "WEB_DATA_DIR", tmp_path / "web")
     monkeypatch.setattr(config, "PREDICTIONS_DIR", tmp_path / "pred")

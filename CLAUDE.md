@@ -27,6 +27,7 @@ python -m pipeline.cli run --demo --date 2026-07-15     # 데모 데이터 생�
 python -m pipeline.cli probe && python -m pipeline.cli spots
 python -m pipeline.cli run --spots 20                    # 라이브(키 필요)
 python -m pipeline.backtest                              # data/survey/survey.csv 있을 때
+python scripts/fetch_cultivation.py --year 2025          # 시군별 노지 재배면적 → data/reference/cultivation.csv
 cd apps/web && npm install && npm run typecheck && npm run build && npm run dev
 ```
 
@@ -35,7 +36,7 @@ cd apps/web && npm install && npm run typecheck && npm run build && npm run dev
 2. `probe`로 태그 확인 → `config.py` 수정 → `spots` → `run --spots 20` 성공
 3. NCPMS 서비스 코드·도감 키(`ncpms_key`) 입력 → 방제 정보 탭 자동 연동
 4. 예찰조사 원본 정제(`data/survey/README.md` 형식) → 백테스트 → 검증 탭 채우기
-4-1. 생물계절 자료 채우기: 농업경영체 등록정보 시군별 재배면적 → `cultivation.csv`, 담당 연구자 확인 재배 기간 → `crop_calendar.yaml` (`data/reference/README.md`)
+4-1. 생물계절 자료: 시군 재배면적은 수집 완료(2025) — 비재배지 기준 면적 `MIN_CULTIVATION_HA` 확정 필요. 재배 기간 → `crop_calendar.yaml` 입력 필요 (`data/reference/README.md`)
 5. 운영 전: OSM 타일을 VWorld로 교체(`components/MapView.tsx` MAP_STYLE), 푸터 문의처
 
 ## 하지 말 것
