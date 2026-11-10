@@ -32,6 +32,24 @@ CROP_CALENDAR_YAML = REFERENCE_DIR / "crop_calendar.yaml"  # 권역·시도·시
 MIN_CULTIVATION_HA = 1.0
 
 
+def _load_dotenv(path: Path = ROOT / ".env") -> None:
+    """로컬 개발용: 프로젝트 루트 `.env`(git 제외)의 KEY=VALUE를 환경변수로 올린다.
+
+    이미 설정된 환경변수(GitHub Actions secrets 등)가 우선한다. 값은 로그에 쓰지 않는다.
+    """
+    if not path.exists():
+        return
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        k, v = line.split("=", 1)
+        os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+
+
+_load_dotenv()
+
+
 def _env(name: str, default: str = "") -> str:
     return os.environ.get(name, default).strip()
 
@@ -58,13 +76,19 @@ def kma_key() -> str:
 # --- 국립농업과학원 농업기상 (농업날씨365) ---------------------------------
 AGRI_BASE = "https://apis.data.go.kr/1390802/AgriWeather"
 AGRI_SPOT_LIST = f"{AGRI_BASE}/getObsrSpotList"
-AGRI_DAILY_MONTH = f"{AGRI_BASE}/WeatherObsrInfo/V2/GnrlWeather/getWeatherMonDayList"
-AGRI_DAILY_RANGE = f"{AGRI_BASE}/WeatherObsrInfo/V2/GnrlWeather/getWeatherTermDayList"  # 기간 조회(확인 필요)
+# 기본 관측데이터 조회(공공데이터포털 15078057) V3 — 2026-11-10 실호출 확인.
+# 오퍼레이션명 끝에 '3'이 붙는다. 월별 일자료는 지점코드를 빼면 전국 전 지점을 한 번에 준다.
+# 관측지점 목록(getObsrSpotList)은 별도 서비스(15073274)라 활용신청이 따로 필요하다.
+AGRI_GNRL = f"{AGRI_BASE}/WeatherObsrInfo/V3/GnrlWeather"
+AGRI_DAILY_MONTH = f"{AGRI_GNRL}/getWeatherMonDayList3"   # search_Year, search_Month, (obsr_Spot_Cd)
+AGRI_DAILY_RANGE = f"{AGRI_GNRL}/getWeatherTermDayList3"  # begin_Date, end_Date(1~365일), obsr_Spot_Cd
 AGRI_PAGE_SIZE = 100
+AGRI_PAGE_SIZE_BULK = 5000  # 전국 월자료 1회 호출(2015-07 기준 4,858행)
 
-# 응답 XML 태그 → 내부 필드. 후보를 순서대로 찾는다. (probe로 확인 후 수정)
+# 응답 XML 태그 → 내부 필드. 후보를 순서대로 찾는다. 일자료 태그는 V3 실응답으로 확인(11-10):
+# stn_Cd stn_Name date temp hghst_Artmp lowst_Artmp hum widdir wind max_Wind rn sun_Time srqty condens_Time gr_Temp soil_Temp soil_Wt
 FIELD_CANDIDATES: dict[str, list[str]] = {
-    "spot_code": ["obsr_Spot_Code", "stn_Code", "spot_Code", "stnCode"],
+    "spot_code": ["stn_Cd", "obsr_Spot_Code", "stn_Code", "spot_Code", "stnCode"],
     "spot_name": ["obsr_Spot_Nm", "stn_Name", "spot_Name", "stnName"],
     "lat": ["lat", "latitude", "stn_Lat", "obsr_Lat"],
     "lon": ["lon", "lng", "longitude", "stn_Lon", "obsr_Lon"],
@@ -73,13 +97,13 @@ FIELD_CANDIDATES: dict[str, list[str]] = {
     "zone_code": ["zone_Code", "zoneCode"],
     "date": ["date", "obsr_Date", "ymd", "obsr_Ymd"],
     "tavg": ["temp", "avg_Temp", "tavg", "temp_Avg"],
-    "tmax": ["max_Temp", "tmax", "temp_Max"],
-    "tmin": ["min_Temp", "tmin", "temp_Min"],
+    "tmax": ["hghst_Artmp", "max_Temp", "tmax", "temp_Max"],
+    "tmin": ["lowst_Artmp", "min_Temp", "tmin", "temp_Min"],
     "rh": ["hum", "avg_Hum", "rh", "hum_Avg"],
-    "rain": ["rain", "sum_Rain", "rainfall", "rain_Sum"],
+    "rain": ["rn", "rain", "sum_Rain", "rainfall", "rain_Sum"],
     "wind": ["wind", "avg_Wind", "wind_Avg"],
     "sunshine": ["sun_Time", "sunshine", "sum_Sun_Time"],
-    "radiation": ["sun_Qy", "radiation", "sum_Sun_Qy"],
+    "radiation": ["srqty", "sun_Qy", "radiation", "sum_Sun_Qy"],
     "condens_hours": ["condens_Time", "dew_Time", "lwd"],
     "soil_moist": ["soil_Wt", "soil_Moist", "soil_Wt_10"],
 }
