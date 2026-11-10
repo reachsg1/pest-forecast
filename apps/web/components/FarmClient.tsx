@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import RiskBadge from "./RiskBadge";
-import { gradeMeta } from "@/lib/grades";
+import { NA, NA_REASONS, fmtIndex, gradeMeta } from "@/lib/grades";
 import type { SpotFile, Spot } from "@/lib/types";
 
 type PestLite = { pest_id: string; name_ko: string; crop: string; crop_ko: string };
@@ -193,12 +193,17 @@ export default function FarmClient({ spots, pests, horizon }: { spots: Spot[]; p
                               {p.name_ko}
                             </Link>
                           </td>
-                          <td className="py-1.5 pr-2">{today ? <RiskBadge grade={today.grade} index={today.index} size="sm" /> : "-"}</td>
+                          <td className="py-1.5 pr-2">{today ? <RiskBadge grade={today.grade} index={today.index} na={today.na_reason} size="sm" /> : "-"}</td>
                           <td className="py-1.5">
-                            <div className="flex gap-0.5" role="img" aria-label={s.map((x) => `${x.offset}일 ${x.grade}`).join(", ")}>
-                              {s.map((x) => (
-                                <span key={x.offset} title={`+${x.offset}일 ${x.grade} ${Math.round(x.index)}`} className="h-4 flex-1 rounded-sm" style={{ background: gradeMeta(x.grade).color, opacity: x.offset === 0 ? 1 : 0.75 }} />
-                              ))}
+                            <div className="flex gap-0.5" role="img" aria-label={s.map((x) => `${x.offset}일 ${x.grade ?? NA.label}`).join(", ")}>
+                              {s.map((x) =>
+                                x.grade == null ? (
+                                  // 해당 없음: 빈 칸(점선 테두리)으로 등급색과 구분
+                                  <span key={x.offset} title={`+${x.offset}일 ${NA.label}${x.na_reason ? " · " + NA_REASONS[x.na_reason].short : ""}`} className="h-4 flex-1 rounded-sm border border-dashed border-gray-300 bg-white" />
+                                ) : (
+                                  <span key={x.offset} title={`+${x.offset}일 ${x.grade} ${fmtIndex(x.index)}`} className="h-4 flex-1 rounded-sm" style={{ background: gradeMeta(x.grade).color, opacity: x.offset === 0 ? 1 : 0.75 }} />
+                                ),
+                              )}
                             </div>
                           </td>
                         </tr>

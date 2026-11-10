@@ -20,6 +20,7 @@ Claude(프로젝트 대화)에서 설계와 초기 구축을 마치고 Claude Co
 |---|---|---|
 | Python 모델·파이프라인 | **검증됨** | `pytest` 21개 통과, `cli.py run --demo` 실행 성공, 데모 JSON 생성됨(`apps/web/public/data`, 기준일 2026-07-15). 11-10 로컬 PC(Windows 11, Python 3.14.7, `.venv`)에서 재확인: 21개 통과, 데모 재생성 결과가 기존 JSON과 동일(`generated_at`만 다름) |
 | Next.js 웹 | **검증됨(로컬)** | 11-10 로컬 PC(Node 26.13.0, Next 15.5.29)에서 `npm install`·`typecheck`·`build` 수정 없이 통과. `npm run dev`로 `/`, `/map`(지도·마커·지점 클릭 패널), `/pests/apple_anthracnose`, `/farm` 데모 데이터 정상 표시, 콘솔 오류 없음. 수정 2건: 지도 날짜 표시가 KST에서 하루 앞당겨지던 문제(`MapView.tsx` addDays를 UTC 계산으로), 상세 제목 '사과 사과 탄저병' 중복(`pests/[id]/page.tsx`). Vercel 배포는 미확인 |
+| 생물계절 판정 | **로직 검증됨, 자료 없음** | 11-10 구현. 테스트 7개 추가(총 28개 통과), 데모에서 가상 재배현황으로 비재배지 표시 확인, 임시 재배 기간으로 '재배 시기 아님' 화면 확인(임시값은 되돌림). **실제 `cultivation.csv`·`crop_calendar.yaml`은 비어 있어 라이브에서는 아직 판정 생략** |
 | 외부 API 연동 | **미확인** | 농업기상 API 응답 태그명은 후보 목록(`pipeline/config.py` FIELD_CANDIDATES). NCPMS 예찰·예측·발생정보 서비스 코드 미확인. 기상청 단기예보 파서는 공개 스펙 기준으로 작성했으나 실호출 안 함 |
 | GitHub Actions | **미실행** | 워크플로 문법은 표준 액션만 사용. 저장소 push 후 수동 실행으로 확인 필요 |
 | 모델 파라미터 | **초안** | 일반 문헌 범위의 초기값. 담당 연구자 검토 전(`status: draft`) |
@@ -35,11 +36,14 @@ Claude(프로젝트 대화)에서 설계와 초기 구축을 마치고 Claude Co
 - 잎젖음시간은 관측이 없으면 습도·강우로 추정(`DailyWeather.estimated_lwd`)
 - 지도 OSM 래스터 타일(개발용) → 운영 전 VWorld 교체
 - 내 농장은 1단계에서 브라우저 localStorage만(서버 저장 없음)
+- **생물계절 판정(11-10)**: 작물이 재배되지 않는 시군·재배 기간 밖이면 위험지수 대신 '해당 없음'(사유 not_grown / off_season)으로 발행(`pipeline/phenology.py`). 해당 없음은 4단계 등급이 아니며 집계에서 제외, 화면은 무채색·점선 테두리. 모델 `season`(병해충 활동 시기, 밖이면 정상으로 캡)과는 별개. 근거 자료가 없는 작물은 판정 생략 + `status.json` 경고
 
 ## 4. 알려진 미완·TODO (코드 안 TODO와 동일)
 
 - 로컬 PC 환경: Python은 `.venv`(`.\.venv\Scripts\python.exe`), Node.js·git 설치 완료. 6절 지시문 1)~4) 완료(11-10). 다음은 GitHub 원격 저장소 생성·push → Actions 수동 실행 → Vercel 연결
 - 웹 의존성: `recharts@2.x`는 지원 종료(deprecated) 경고 → v3 이전 검토
+- 생물계절 자료(우선): ① 농업경영체 등록정보 농작물 재배현황(uni.agrix.go.kr, 시군×품목 노지 재배면적 2015~2025)을 내려받아 `data/reference/cultivation.csv`로 정리, 비재배지 기준 면적 `config.MIN_CULTIVATION_HA`(현재 0) 담당 연구자와 확정 ② 사과·벼·고추 재배 기간을 근거와 함께 `crop_calendar.yaml`에 입력(권역 정의도 확정) ③ 연도별로 변하는 시기 자동화: 사과 만개일 API(data.go.kr 15041539), 과수 휴면타파시기 API(15168306, 67개 지점) 수집기 → 재배 기간 시작일 갱신
+- 정적 JSON 브라우저 캐시 `max-age=600`(`next.config.ts`): 배치 직후 최대 10분간 파일별로 어제·오늘 데이터가 섞여 보일 수 있음. 운영 전 파일명에 기준일 버전을 붙이거나 캐시 시간 조정 검토
 
 - `pipeline/config.py`: FIELD_CANDIDATES 실제 태그로 확정, NCPMS_SERVICE_CODES 빈 값 3개
 - `pipeline/fetch/kma.py`: 중기예보(getMidTa/getMidLandFcst, regId) 미구현

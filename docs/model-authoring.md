@@ -22,7 +22,8 @@ models/<작물>/<병해충>/
 `models/apple/anthracnose/model.yaml`을 복사해 고칩니다. 꼭 채울 항목:
 
 - `id`, `pest_id`: 영문 소문자+밑줄, 저장소 전체에서 유일
-- `season`: 적용 월. 시즌 밖에서는 지수를 24(정상) 이하로 자릅니다
+- `season`: **병해충이 활동하는** 월. 시즌 밖에서는 지수를 24(정상) 이하로 자릅니다
+  - 작물이 **포장에 있는지**(재배 지역·재배 기간)는 모델이 아니라 파이프라인이 판정합니다(`pipeline/phenology.py`). 작물이 없으면 '정상'이 아니라 '해당 없음'으로 발행됩니다. 재배 기간은 `data/reference/crop_calendar.yaml`, 재배 지역은 `data/reference/cultivation.csv`에 근거와 함께 적습니다(`data/reference/README.md`)
 - `params`: 유형별 파라미터. **초기값 출처를 `references`에 반드시 적습니다**
 - `owner`: 담당 연구자 이름, `status`: `draft` → 검토 후 `reviewed` → 운영 `active`
 - `ncpms_key`: NCPMS 도감 키(sickKey/insectKey)를 넣으면 방제 정보가 자동 연동됩니다

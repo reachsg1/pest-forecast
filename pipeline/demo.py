@@ -80,6 +80,29 @@ def synth_weather(spot: dict, start: date, end: date, issued: date, seed: int = 
     return out
 
 
+def demo_phenology():
+    """데모용 생물계절 자료. **실제 통계가 아닌 가상값**이며 화면 동작 확인용이다.
+
+    '해당 없음(비재배지)' 표시를 보여주기 위해 일부 지점에서 일부 작물을 재배하지 않는 것으로 둔다.
+    재배 기간 자료는 넣지 않는다(근거 없는 날짜를 만들지 않기 위함). 실제 운영은
+    data/reference/cultivation.csv, crop_calendar.yaml 을 읽는다.
+    """
+    from pipeline.phenology import Phenology, region_key
+
+    not_grown = {  # 작물 → 재배하지 않는 것으로 둘 데모 지점(시군)
+        "apple": {"제주 제주시", "전남 나주시"},
+        "rice": {"제주 제주시"},
+        "pepper": {"제주 제주시"},
+    }
+    ph = Phenology(label="데모용 가상 재배현황(실제 통계 아님)")
+    src = "데모용 가상값"
+    for crop, excluded in not_grown.items():
+        for _c, _n, _la, _lo, sg in DEMO_SPOTS:
+            sido, sigungu = region_key(sg)
+            ph.cultivation[(crop, sido, sigungu)] = (0.0 if sg in excluded else 100.0, 2025, src)
+    return ph
+
+
 def demo_weather(spots: list[dict], issued: date, horizon: int) -> dict[str, list[DailyWeather]]:
     start = date(issued.year, 1, 1)
     end = issued + timedelta(days=horizon)

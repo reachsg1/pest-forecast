@@ -1,4 +1,4 @@
-import type { Grade } from "./types";
+import type { Grade, NaReason, PhenologyInfo } from "./types";
 
 // 설계서 3.2 위험도 등급. 색·아이콘·텍스트를 항상 함께 쓴다(접근성).
 export const GRADES: { name: Grade; min: number; max: number; color: string; bg: string; text: string; icon: string; action: string }[] = [
@@ -20,8 +20,35 @@ export function gradeMeta(grade: Grade) {
   return GRADES.find((g) => g.name === grade) ?? GRADES[0];
 }
 
-export function gradeRank(grade: Grade): number {
-  return GRADE_ORDER.indexOf(grade);
+export function gradeRank(grade: Grade | null | undefined): number {
+  return grade ? GRADE_ORDER.indexOf(grade) : -1;
+}
+
+// '해당 없음' — 작물이 포장에 없어 위험도를 내지 않은 상태. 4단계 등급과 섞이지 않도록 무채색·점선으로만 표시한다.
+export const NA = { label: "해당 없음", icon: "–", color: "#cbd5e1", stroke: "#94a3b8" };
+
+export const NA_REASONS: Record<NaReason, { short: string; long: (crop: string) => string }> = {
+  not_grown: { short: "비재배지", long: (crop) => `이 지역은 ${crop} 재배지가 아니어서 위험도를 제공하지 않습니다.` },
+  off_season: { short: "재배 시기 아님", long: (crop) => `지금은 이 지역의 ${crop} 재배 기간이 아니어서 위험도를 제공하지 않습니다.` },
+};
+
+const LEVEL_LABEL: Record<string, string> = { sigungu: "시군", sido: "시도", zone: "권역", national: "전국" };
+
+/** 재배 기간 설명 한 줄. 예: "04-05~11-20 · 경북 청송군 기준" */
+export function windowText(p: PhenologyInfo | null | undefined): string | null {
+  if (!p?.window) return null;
+  const where = p.window_level === "national" ? "전국 기준" : `${p.window_region ?? ""} ${LEVEL_LABEL[p.window_level ?? ""] ?? ""} 기준`.trim();
+  return `${p.window.replace("~", " ~ ")} · ${where}`;
+}
+
+/** '사과 탄저병'처럼 이름에 작물명이 이미 있으면 다시 붙이지 않는다. '복숭아순나방' → '사과 복숭아순나방' */
+export function pestFullName(cropKo: string, nameKo: string): string {
+  return nameKo.startsWith(cropKo) ? nameKo : `${cropKo} ${nameKo}`;
+}
+
+/** 위험지수 표시용. 해당 없음이면 대시. */
+export function fmtIndex(v: number | null | undefined): string {
+  return v == null ? "–" : String(Math.round(v));
 }
 
 export const CROP_LABEL: Record<string, string> = { rice: "벼", apple: "사과", pepper: "고추", pear: "배", peach: "복숭아" };

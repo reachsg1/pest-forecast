@@ -1,20 +1,36 @@
-// 작은 추이선. values[0]이 오늘, 이후는 예측(점선).
-export default function Sparkline({ values, width = 160, height = 40, label }: { values: number[]; width?: number; height?: number; label?: string }) {
-  if (!values.length) return null;
+// 작은 추이선. values[0]이 오늘(실선), 이후는 예측(점선). null(해당 없음)인 날은 선을 끊는다.
+export default function Sparkline({ values, width = 160, height = 40, label }: { values: (number | null)[]; width?: number; height?: number; label?: string }) {
+  if (!values.length || values.every((v) => v == null)) return null;
   const max = 100;
   const step = width / Math.max(1, values.length - 1);
-  const pt = (v: number, i: number) => `${(i * step).toFixed(1)},${(height - (Math.max(0, Math.min(max, v)) / max) * height).toFixed(1)}`;
-  const first = values.slice(0, 2).map(pt).join(" ");
-  const rest = values.slice(1).map((v, i) => pt(v, i + 1)).join(" ");
+  const pad = 3; // 0·100 값이 테두리에 붙어 잘리지 않도록
+  const y = (v: number) => pad + (1 - Math.max(0, Math.min(max, v)) / max) * (height - pad * 2);
+
+  // [from, to] 구간을 null에서 끊어 SVG path로
+  const path = (from: number, to: number) => {
+    let d = "";
+    let pen = false;
+    for (let i = from; i <= to && i < values.length; i++) {
+      const v = values[i];
+      if (v == null) {
+        pen = false;
+        continue;
+      }
+      d += `${pen ? "L" : "M"}${(i * step).toFixed(1)},${y(v).toFixed(1)}`;
+      pen = true;
+    }
+    return d;
+  };
   const thresholds = [25, 50, 75];
+  const aria = label ?? `위험지수 추이 ${values.map((v) => (v == null ? "해당 없음" : Math.round(v))).join(", ")}`;
   return (
-    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={label ?? `위험지수 추이 ${values.map((v) => Math.round(v)).join(", ")}`}>
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={aria}>
       {thresholds.map((t) => (
-        <line key={t} x1="0" x2={width} y1={height - (t / max) * height} y2={height - (t / max) * height} stroke="#e5e7eb" strokeDasharray="2 2" />
+        <line key={t} x1="0" x2={width} y1={y(t)} y2={y(t)} stroke="#e5e7eb" strokeDasharray="2 2" />
       ))}
-      <polyline points={first} fill="none" stroke="#1f6f4a" strokeWidth="2" />
-      <polyline points={rest} fill="none" stroke="#1f6f4a" strokeWidth="2" strokeDasharray="4 3" />
-      <circle cx={0} cy={height - (Math.max(0, Math.min(max, values[0])) / max) * height} r="3" fill="#1f6f4a" />
+      <path d={path(0, 1)} fill="none" stroke="#1f6f4a" strokeWidth="2" />
+      <path d={path(1, values.length - 1)} fill="none" stroke="#1f6f4a" strokeWidth="2" strokeDasharray="4 3" />
+      {values[0] != null && <circle cx={0} cy={y(values[0])} r="3" fill="#1f6f4a" />}
     </svg>
   );
 }

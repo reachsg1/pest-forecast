@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import RiskBadge from "@/components/RiskBadge";
 import { getPests, getStatus } from "@/lib/data";
-import { GRADES, TYPE_LABEL } from "@/lib/grades";
+import { CROP_LABEL, GRADES, TYPE_LABEL, pestFullName } from "@/lib/grades";
 
 export const metadata: Metadata = { title: "검증·소개" };
 
@@ -47,6 +47,30 @@ export default async function AboutPage() {
       </section>
 
       <section>
+        <h2 className="text-lg font-bold">작물 재배 여부 반영 (생물계절)</h2>
+        <p className="mt-1 text-sm text-gray-700">
+          작물이 자라지 않는 곳이나 시기에 위험도를 내면 잘못된 정보가 됩니다. 그래서 위험도를 발행하기 전에 두 가지를 확인하고, 해당하지 않으면 등급 대신 <RiskBadge grade={null} size="sm" />으로 표시합니다.
+        </p>
+        <dl className="mt-3 grid gap-3 text-sm sm:grid-cols-2">
+          <div className="rounded-lg border bg-white p-3">
+            <dt className="font-semibold">재배 지역</dt>
+            <dd className="mt-1 text-gray-600">관측지점이 있는 시군에 그 작물 재배면적이 없으면 &lsquo;비재배지&rsquo;로 봅니다. 근거: 시군별 작물 재배면적(농업경영체 등록정보)</dd>
+          </div>
+          <div className="rounded-lg border bg-white p-3">
+            <dt className="font-semibold">재배 시기</dt>
+            <dd className="mt-1 text-gray-600">정식·이앙 전이나 수확 후처럼 작물이 포장에 없는 기간은 &lsquo;재배 시기 아님&rsquo;으로 봅니다. 근거: 권역·시도·시군별 재배 기간</dd>
+          </div>
+        </dl>
+        {status?.phenology && (
+          <p className="mt-2 text-xs text-gray-500">
+            현재 반영 자료 · 재배 지역: {status.phenology.cultivation_crops.length ? status.phenology.cultivation_crops.map((c) => CROP_LABEL[c] ?? c).join(", ") : "없음"} · 재배 시기:{" "}
+            {status.phenology.calendar_crops.length ? status.phenology.calendar_crops.map((c) => CROP_LABEL[c] ?? c).join(", ") : "없음"}
+            {status.mode === "demo" && " (데모 데이터는 가상 재배현황을 씁니다)"}
+          </p>
+        )}
+      </section>
+
+      <section>
         <h2 className="text-lg font-bold">모델 검증 현황</h2>
         <table className="w-full text-sm">
           <thead>
@@ -63,7 +87,7 @@ export default async function AboutPage() {
               <tr key={p.pest_id} className="border-b">
                 <td className="py-1">
                   <Link href={`/pests/${p.pest_id}?tab=eval`} className="hover:underline">
-                    {p.crop_ko} {p.name_ko}
+                    {pestFullName(p.crop_ko, p.name_ko)}
                   </Link>
                 </td>
                 <td className="py-1">{TYPE_LABEL[p.type]}</td>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import RiskBadge from "./RiskBadge";
 import Sparkline from "./Sparkline";
+import { NA_REASONS, pestFullName, windowText } from "@/lib/grades";
 import type { SpotFile } from "@/lib/types";
 
 type PestLite = { pest_id: string; name_ko: string; crop: string; crop_ko: string };
@@ -38,7 +39,11 @@ export default function SpotPanel({ code, pestId, pests, horizon, onClose }: { c
     const v = recent.map((w) => w[k]).filter((x): x is number => x != null);
     return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null;
   };
-  const pestName = pests.find((p) => p.pest_id === pestId)?.name_ko ?? pestId;
+  const pest = pests.find((p) => p.pest_id === pestId);
+  const pestName = pest?.name_ko ?? pestId;
+  const phen = pest ? data.phenology?.[pest.crop] : undefined;
+  const season = windowText(phen);
+  const isNa = today != null && today.grade == null;
 
   return (
     <div className="space-y-3 text-sm">
@@ -59,10 +64,14 @@ export default function SpotPanel({ code, pestId, pests, horizon, onClose }: { c
 
       <div>
         <div className="text-xs text-gray-600">{pestName} · 오늘</div>
-        {today ? <RiskBadge grade={today.grade} index={today.index} size="lg" /> : <span className="text-gray-500">예측 없음</span>}
+        {today ? <RiskBadge grade={today.grade} index={today.index} na={today.na_reason} size="lg" /> : <span className="text-gray-500">예측 없음</span>}
+        {isNa && today?.na_reason && (
+          <p className="mt-2 rounded-md bg-gray-50 px-3 py-2 text-xs leading-relaxed text-gray-600">{NA_REASONS[today.na_reason].long(pest?.crop_ko ?? "이 작물")}</p>
+        )}
+        {season && <p className="mt-1.5 text-xs text-gray-500">재배 기간 {season}</p>}
       </div>
 
-      {future.length > 0 && (
+      {future.length > 0 && future.some((p) => p.index != null) && (
         <div>
           <div className="text-xs font-semibold">위험지수 {horizon}일 추이 (예측은 점선)</div>
           <Sparkline values={future.map((p) => p.index)} width={280} height={56} />
@@ -99,9 +108,9 @@ export default function SpotPanel({ code, pestId, pests, horizon, onClose }: { c
               return (
                 <li key={p.pest_id} className="flex items-center justify-between">
                   <Link href={`/map?crop=${p.crop}&pest=${p.pest_id}&spot=${code}`} className="hover:underline">
-                    {p.crop_ko} {p.name_ko}
+                    {pestFullName(p.crop_ko, p.name_ko)}
                   </Link>
-                  {t && <RiskBadge grade={t.grade} index={t.index} size="sm" />}
+                  {t && <RiskBadge grade={t.grade} index={t.index} na={t.na_reason} size="sm" />}
                 </li>
               );
             })}

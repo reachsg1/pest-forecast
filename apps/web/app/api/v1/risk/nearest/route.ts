@@ -23,7 +23,14 @@ export async function GET(req: Request) {
   const pests = (await getPests()).filter((p) => !crop || p.crop === crop);
   const risks = pests.map((p) => {
     const s = file?.series[p.pest_id] ?? [];
-    return { pest_id: p.pest_id, name_ko: p.name_ko, crop: p.crop, timeline: s.filter((x) => x.offset >= 0).map((x) => ({ date: x.date, offset: x.offset, index: x.index, grade: x.grade })) };
+    return {
+      pest_id: p.pest_id,
+      name_ko: p.name_ko,
+      crop: p.crop,
+      phenology: file?.phenology?.[p.crop] ?? null,
+      // index/grade=null 이면 해당 없음, na_reason에 사유(not_grown | off_season)
+      timeline: s.filter((x) => x.offset >= 0).map((x) => ({ date: x.date, offset: x.offset, index: x.index, grade: x.grade, na_reason: x.na_reason ?? null })),
+    };
   });
   return NextResponse.json({ spot: { spot_code: best.spot_code, name: best.name, sigungu: best.sigungu, lat: best.lat, lon: best.lon, distance_km: Math.round(bestD * 10) / 10 }, issued_date: file?.issued_date, risks });
 }

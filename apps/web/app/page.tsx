@@ -2,7 +2,7 @@ import Link from "next/link";
 import RiskBadge from "@/components/RiskBadge";
 import Sparkline from "@/components/Sparkline";
 import { getSummary } from "@/lib/data";
-import { CROP_LABEL, GRADES, gradeMeta } from "@/lib/grades";
+import { CROP_LABEL, GRADES, NA, gradeMeta } from "@/lib/grades";
 
 export default async function HomePage({ searchParams }: { searchParams: Promise<{ crop?: string }> }) {
   const { crop } = await searchParams;
@@ -48,6 +48,12 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
             </li>
           ))}
         </ul>
+        {(summary.na_all ?? 0) > 0 && (
+          <p className="mt-2 flex items-center gap-1.5 text-xs text-gray-500">
+            <span aria-hidden="true" className="inline-block h-2.5 w-2.5 rounded-full border border-dashed" style={{ borderColor: NA.stroke }} />
+            {NA.label} {summary.na_all}건 — 작물을 재배하지 않는 지역이거나 재배 시기가 아니어서 등급 집계에서 뺐습니다.
+          </p>
+        )}
       </section>
 
       <section aria-labelledby="by-pest">
@@ -68,7 +74,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
         </div>
         <ul className="mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
           {pests.map((p) => {
-            const m = gradeMeta(p.max_grade);
+            const accent = p.max_grade ? gradeMeta(p.max_grade).color : NA.color;
             return (
               <li key={p.pest_id} className="rounded-lg border bg-white p-4">
                 <div className="flex items-start justify-between gap-2">
@@ -89,11 +95,17 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                         <dd className="text-base font-semibold">{p.grade_counts[g.name] ?? 0}</dd>
                       </div>
                     ))}
+                    {(p.na_count ?? 0) > 0 && (
+                      <div className="border-l border-gray-200 pl-3 text-center text-gray-400" title="비재배지·재배 시기 아님">
+                        <dt>{NA.label}</dt>
+                        <dd className="text-base font-semibold">{p.na_count}</dd>
+                      </div>
+                    )}
                   </dl>
                   <Sparkline values={p.trend_7d} width={120} height={36} label={`${p.name_ko} 전국 평균 위험지수 7일 추이`} />
                 </div>
                 {p.top_spots.length > 0 && (
-                  <p className="mt-2 truncate text-xs text-gray-600" style={{ borderLeft: `3px solid ${m.color}`, paddingLeft: 6 }}>
+                  <p className="mt-2 truncate text-xs text-gray-600" style={{ borderLeft: `3px solid ${accent}`, paddingLeft: 6 }}>
                     상위: {p.top_spots.slice(0, 3).map((s) => `${s.name} ${Math.round(s.index)}`).join(" · ")}
                   </p>
                 )}
@@ -119,6 +131,9 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
               <RiskBadge grade={g.name} size="sm" /> 위험지수 {g.min}~{g.max}: {g.action}
             </li>
           ))}
+          <li className="md:col-span-2">
+            <RiskBadge grade={null} size="sm" /> 작물을 재배하지 않는 지역이거나 재배 기간이 아닌 날. 위험도를 계산하지 않습니다.
+          </li>
         </ul>
         <p className="mt-2 text-xs text-gray-500">
           위험지수는 각 병해충 모델이 기상 조건으로 계산한 0~100 값입니다. 모델 카드와 검증 지표는 병해충 상세 화면에서 볼 수 있습니다.

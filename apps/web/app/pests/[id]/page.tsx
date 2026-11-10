@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import PestTabs from "@/components/PestTabs";
 import RiskBadge from "@/components/RiskBadge";
 import { getPest, getPests, getRisk, getSpotFile } from "@/lib/data";
-import { gradeRank } from "@/lib/grades";
+import { gradeRank, pestFullName } from "@/lib/grades";
 import type { Grade } from "@/lib/types";
 
 type Params = Promise<{ id: string }>;
@@ -22,7 +22,9 @@ export default async function PestDetailPage({ params, searchParams }: { params:
   const [pest, risk, pests] = await Promise.all([getPest(id), getRisk(id), getPests()]);
   if (!pest) notFound();
   const entries = risk?.spots ?? [];
-  const maxGrade = entries.reduce<Grade>((g, e) => (gradeRank(e.grade_today) > gradeRank(g) ? e.grade_today : g), "정상");
+  // '해당 없음' 지점은 등급 비교·집계에서 뺀다
+  const applicable = entries.filter((e) => e.grade_today != null);
+  const maxGrade = applicable.reduce<Grade | null>((g, e) => (gradeRank(e.grade_today) > gradeRank(g) ? e.grade_today : g), null);
   const selectedCode = spot && entries.some((e) => e.spot_code === spot) ? spot : entries[0]?.spot_code ?? "";
   const spotFile = selectedCode ? await getSpotFile(selectedCode) : null;
   const ncpmsUrl = "https://ncpms.rda.go.kr/npms/Main.np";
@@ -38,8 +40,7 @@ export default async function PestDetailPage({ params, searchParams }: { params:
       <header className="flex flex-wrap items-start justify-between gap-3 rounded-lg border bg-white p-4">
         <div>
           <h1 className="text-2xl font-bold">
-            {/* name_ko에 작물명이 이미 들어 있으면(예: '사과 탄저병') 앞에 다시 붙이지 않는다 */}
-            {pest.name_ko.startsWith(pest.crop_ko) ? pest.name_ko : `${pest.crop_ko} ${pest.name_ko}`}
+            {pestFullName(pest.crop_ko, pest.name_ko)}
           </h1>
           <p className="text-sm text-gray-600">
             <span className="italic">{pest.name_sci}</span> · 기주: {pest.crop_ko} ·{" "}
@@ -51,7 +52,10 @@ export default async function PestDetailPage({ params, searchParams }: { params:
         <div className="text-right">
           <div className="text-xs text-gray-600">오늘 전국 최고 등급 · 기준일 {risk?.issued_date ?? "-"}</div>
           <RiskBadge grade={maxGrade} size="lg" />
-          <div className="mt-1 text-xs text-gray-600">주의보 이상 {entries.filter((e) => gradeRank(e.grade_today) >= 2).length}곳 / {entries.length}곳</div>
+          <div className="mt-1 text-xs text-gray-600">
+            주의보 이상 {applicable.filter((e) => gradeRank(e.grade_today) >= 2).length}곳 / {applicable.length}곳
+            {entries.length > applicable.length && <span className="text-gray-400"> · 해당 없음 {entries.length - applicable.length}곳</span>}
+          </div>
         </div>
       </header>
       <PestTabs

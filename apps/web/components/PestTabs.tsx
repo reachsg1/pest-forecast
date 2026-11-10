@@ -6,7 +6,7 @@ import { useState } from "react";
 import ModelCard from "./ModelCard";
 import RiskBadge from "./RiskBadge";
 import TrendChart from "./TrendChart";
-import { GRADES } from "@/lib/grades";
+import { GRADES, NA, NA_REASONS, fmtIndex } from "@/lib/grades";
 import type { PestCard, RiskSpotEntry, SpotFile } from "@/lib/types";
 
 const TABS = [
@@ -38,6 +38,7 @@ export default function PestTabs({
   const [tab, setTab] = useState(TABS.some((t) => t.id === initialTab) ? initialTab : "now");
   const series = spotFile?.series[pest.pest_id] ?? [];
   const counts = GRADES.map((g) => ({ ...g, n: entries.filter((e) => e.grade_today === g.name).length }));
+  const naCount = entries.filter((e) => e.grade_today == null).length;
 
   return (
     <div className="rounded-lg border bg-white">
@@ -71,6 +72,11 @@ export default function PestTabs({
                   </li>
                 ))}
             </ul>
+            {naCount > 0 && (
+              <p className="text-xs text-gray-500">
+                {NA.label} {naCount}곳은 {pest.crop_ko} 비재배지이거나 재배 시기가 아니어서 위 집계에서 뺐습니다.
+              </p>
+            )}
             <div>
               <h3 className="text-sm font-semibold">위험 상위 지점 (오늘)</h3>
               <table className="mt-1 w-full text-sm">
@@ -84,7 +90,7 @@ export default function PestTabs({
                   </tr>
                 </thead>
                 <tbody>
-                  {entries.slice(0, 10).map((e) => (
+                  {entries.filter((e) => e.grade_today != null).slice(0, 10).map((e) => (
                     <tr key={e.spot_code} className="border-b">
                       <td className="py-1">
                         <button className="underline" onClick={() => { router.replace(`/pests/${pest.pest_id}?spot=${e.spot_code}&tab=trend`); setTab("trend"); }}>
@@ -93,10 +99,10 @@ export default function PestTabs({
                       </td>
                       <td className="py-1 text-gray-600">{e.sigungu}</td>
                       <td className="py-1">
-                        <RiskBadge grade={e.grade_today} index={e.index_today} size="sm" />
+                        <RiskBadge grade={e.grade_today} index={e.index_today} na={e.na_today} size="sm" />
                       </td>
-                      <td className="py-1 tabular-nums">{Math.round(e.max_index_7d)}</td>
-                      <td className="py-1 tabular-nums">{Math.round(e.max_index_10d)}</td>
+                      <td className="py-1 tabular-nums">{fmtIndex(e.max_index_7d)}</td>
+                      <td className="py-1 tabular-nums">{fmtIndex(e.max_index_10d)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -119,18 +125,18 @@ export default function PestTabs({
               >
                 {entries.map((e) => (
                   <option key={e.spot_code} value={e.spot_code}>
-                    {e.name} ({e.grade_today} {Math.round(e.index_today)})
+                    {e.name} ({e.grade_today ? `${e.grade_today} ${fmtIndex(e.index_today)}` : `${NA.label}${e.na_today ? " · " + NA_REASONS[e.na_today].short : ""}`})
                   </option>
                 ))}
               </select>
             </label>
             {spotFile ? (
-              <TrendChart series={series} weather={spotFile.weather} issuedDate={spotFile.issued_date} />
+              <TrendChart series={series} weather={spotFile.weather} issuedDate={spotFile.issued_date} cropKo={pest.crop_ko} />
             ) : (
               <p className="text-sm text-gray-500">지점 자료가 없습니다.</p>
             )}
             <p className="text-xs text-gray-500">
-              실선은 관측 기상으로 계산한 값, 점선은 예보·지속성 가정으로 계산한 값입니다. 배경 음영은 주의보(50~)·경보(75~) 구간입니다.
+              실선은 관측 기상으로 계산한 값, 점선은 예보·지속성 가정으로 계산한 값입니다. 배경 음영은 주의보(50~)·경보(75~) 구간이고, 회색 빗금은 재배 기간이 아니어서 계산하지 않은 날입니다.
             </p>
           </section>
         )}

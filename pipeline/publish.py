@@ -35,10 +35,17 @@ def _dump(path: Path, obj: Any) -> None:
 
 
 def _grade_counts(entries: list[dict], key: str = "grade_today") -> dict[str, int]:
+    """등급별 지점 수. '해당 없음'(grade=None)은 등급이 아니므로 세지 않는다."""
     c = {g[0]: 0 for g in GRADES}
     for e in entries:
-        c[e[key]] = c.get(e[key], 0) + 1
+        if e[key] is not None:
+            c[e[key]] = c.get(e[key], 0) + 1
     return c
+
+
+def _max_or_none(vals) -> float | None:
+    vals = [v for v in vals if v is not None]
+    return max(vals) if vals else None
 
 
 def publish(
@@ -52,7 +59,10 @@ def publish(
     mode: str,
     warnings: list[str],
     control_info: dict[str, Any] | None = None,
+    assessments: dict[tuple[str, str], Any] | None = None,
+    phenology_info: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
+    assessments = assessments or {}
     config.ensure_dirs()
     web = config.WEB_DATA_DIR
     spot_meta = {s["spot_code"]: s for s in spots}
@@ -100,6 +110,7 @@ def publish(
             if today is None:
                 continue
             sm = spot_meta.get(code, {})
+            sc = assessments.get((code, lm.card.crop))
             entries.append(
                 {
                     "spot_code": code,
@@ -108,15 +119,20 @@ def publish(
                     "lon": sm.get("lon"),
                     "sigungu": sm.get("sigungu", ""),
                     "data_poor": missing_rate_by_spot.get(code, 0.0) > 0.3,
-                    "index_today": today["index"],
+                    "index_today": today["index"],                       # None = 해당 없음
                     "grade_today": today["grade"],
+                    "na_today": today.get("na_reason"),                  # not_grown | off_season | None
                     "index_by_offset": [x["index"] for x in fut],      # 0..horizon
                     "grade_by_offset": [x["grade"] for x in fut],
-                    "max_index_7d": max((x["index"] for x in fut if x["offset_days"] <= 7), default=today["index"]),
-                    "max_index_10d": max((x["index"] for x in fut), default=today["index"]),
+                    "na_by_offset": [x.get("na_reason") for x in fut],
+                    "max_index_7d": _max_or_none(x["index"] for x in fut if x["offset_days"] <= 7),
+                    "max_index_10d": _max_or_none(x["index"] for x in fut),
+                    "phenology": sc.to_dict() if sc is not None else None,
                 }
             )
-        entries.sort(key=lambda e: -e["index_today"])
+        # 위험 높은 순, 해당 없음은 맨 뒤
+        entries.sort(key=lambda e: (e["index_today"] is None, -(e["index_today"] or 0)))
+        applicable = [e for e in entries if e["index_today"] is not None]
         _dump(
             web / "risk" / f"{pid}.json",
             {
@@ -138,8 +154,11 @@ def publish(
                 "type": lm.card.type,
                 "in_season": lm.model.in_season(issued),
                 "grade_counts": _grade_counts(entries),
-                "max_grade": max((e["grade_today"] for e in entries), key=lambda g: [x[0] for x in GRADES].index(g), default="정상"),
-                "top_spots": [{"spot_code": e["spot_code"], "name": e["name"], "index": e["index_today"], "grade": e["grade_today"]} for e in entries[:5]],
+                "na_count": len(entries) - len(applicable),
+                "n_applicable": len(applicable),
+                # 모든 지점이 해당 없음이면 None
+                "max_grade": max((e["grade_today"] for e in applicable), key=lambda g: [x[0] for x in GRADES].index(g), default=None),
+                "top_spots": [{"spot_code": e["spot_code"], "name": e["name"], "index": e["index_today"], "grade": e["grade_today"]} for e in applicable[:5]],
                 "trend_7d": _national_trend(entries, 7),
             }
         )
@@ -152,9 +171,11 @@ def publish(
             rs = by_pest_spot.get(lm.card.pest_id, {}).get(code, [])
             if rs:
                 series[lm.card.pest_id] = [
-                    {"date": r["target_date"], "offset": r["offset_days"], "index": r["index"], "grade": r["grade"], "is_forecast": r["is_forecast"], "inputs": r["inputs"]}
+                    {"date": r["target_date"], "offset": r["offset_days"], "index": r["index"], "grade": r["grade"], "na_reason": r.get("na_reason"),
+                     "is_forecast": r["is_forecast"], "inputs": r["inputs"]}
                     for r in sorted(rs, key=lambda x: x["offset_days"])
                 ]
+        phen = {crop: sc.to_dict() for (c, crop), sc in assessments.items() if c == code}
         wx = [
             {
                 "date": w.date.isoformat(),
@@ -177,6 +198,7 @@ def publish(
                 "spot": {k: v for k, v in s.items() if k != "raw"},
                 "issued_date": issued.isoformat(),
                 "missing_rate": round(missing_rate_by_spot.get(code, 0.0), 3),
+                "phenology": phen,   # 작물별 재배 여부·재배 기간 판정 근거
                 "series": series,
                 "weather": wx,
             },
@@ -190,6 +212,7 @@ def publish(
         "horizon_days": horizon,
         "mode": mode,
         "grade_counts_all": _grade_counts(all_entries),
+        "na_all": sum(1 for e in all_entries if e["index_today"] is None),
         "n_spots": len(spots),
         "n_models": len(models),
         "pests": sorted(summary_pests, key=lambda p: -max(p["grade_counts"].get("경보", 0) * 100 + p["grade_counts"].get("주의보", 0) * 10 + p["grade_counts"].get("예보", 0), 0)),
@@ -207,6 +230,7 @@ def publish(
         "data_poor_spots": sorted(c for c, m in missing_rate_by_spot.items() if m > 0.3),
         "warnings": warnings,
         "grades": [{"name": g[0], "min": g[1], "max": g[2]} for g in GRADES],
+        "phenology": phenology_info or {},
     }
     _dump(web / "status.json", status)
 
@@ -214,9 +238,10 @@ def publish(
     snap = config.PREDICTIONS_DIR / f"{issued.isoformat()}.csv"
     with snap.open("w", newline="", encoding="utf-8") as f:
         wr = csv.writer(f)
-        wr.writerow(["spot_code", "pest_id", "model_id", "model_version", "issued_date", "target_date", "offset_days", "index", "grade", "is_forecast"])
+        wr.writerow(["spot_code", "pest_id", "model_id", "model_version", "issued_date", "target_date", "offset_days", "index", "grade", "is_forecast", "na_reason", "raw_index"])
         for r in rows:
-            wr.writerow([r["spot_code"], r["pest_id"], r["model_id"], r["model_version"], r["issued_date"], r["target_date"], r["offset_days"], r["index"], r["grade"], int(r["is_forecast"])])
+            wr.writerow([r["spot_code"], r["pest_id"], r["model_id"], r["model_version"], r["issued_date"], r["target_date"], r["offset_days"],
+                         "" if r["index"] is None else r["index"], r["grade"] or "", int(r["is_forecast"]), r.get("na_reason") or "", r.get("raw_index", "")])
     try:
         import pandas as pd  # noqa: WPS433
 
@@ -231,12 +256,13 @@ def _r(v: float | None, nd: int = 1) -> float | None:
     return None if v is None else round(v, nd)
 
 
-def _national_trend(entries: list[dict], days: int) -> list[float]:
-    """전국 평균 위험지수 추이(오늘~days일)."""
+def _national_trend(entries: list[dict], days: int) -> list[float | None]:
+    """전국 평균 위험지수 추이(오늘~days일). 그날 해당 없음인 지점은 평균에서 뺀다."""
     if not entries:
         return []
     n = min(days + 1, min(len(e["index_by_offset"]) for e in entries))
-    out = []
+    out: list[float | None] = []
     for i in range(n):
-        out.append(round(sum(e["index_by_offset"][i] for e in entries) / len(entries), 1))
+        vals = [e["index_by_offset"][i] for e in entries if e["index_by_offset"][i] is not None]
+        out.append(round(sum(vals) / len(vals), 1) if vals else None)
     return out

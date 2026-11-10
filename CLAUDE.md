@@ -12,6 +12,8 @@
 
 ## 꼭 지킬 규칙
 - 위험도 등급은 4단계 고정: 정상 0~24 / 예보 25~49 / 주의보 50~74 / 경보 75~100. 화면에서 색만으로 등급을 구분하지 말 것(아이콘+텍스트 병기).
+- **작물 생물계절을 항상 고려한다.** 작물이 재배되지 않는 지역·재배 기간이 아닌 날에 위험도를 내면 오답이다. `pipeline/phenology.py`가 `data/reference/cultivation.csv`(시군 재배면적)·`crop_calendar.yaml`(권역·시도·시군 재배 기간)로 판정해 `index=null`, `na_reason`(not_grown | off_season)으로 발행한다. '해당 없음'은 등급이 아니며(정상과 다름) 등급 집계에서 뺀다. 새 화면·API·집계를 만들 때 null 위험지수를 반드시 처리할 것. 재배 기간·면적 값도 모델 파라미터와 같이 근거 없이 만들지 않는다.
+- **UI는 깔끔하고 세련되게, 한눈에 알아보기 쉽게.** 촌스러운 장식·과한 색을 피하고, 등급색은 의미 전달에만 쓴다. 정보 위계(핵심 크게, 보조는 작고 회색), 넉넉한 여백, 기존 화면과 같은 톤. 바꾼 화면은 브라우저에서 직접 확인한다.
 - 외부 API 키는 환경변수(`NCPMS_API_KEY`, `DATA_GO_KR_KEY`, `KMA_API_KEY`)로만. 코드·커밋·로그에 절대 넣지 않는다. 공공데이터포털 키는 `config.normalize_key()`가 디코딩한다.
 - 모델 파라미터(`model.yaml`)는 담당 연구자 검토 대상. 값을 바꾸면 `references`에 근거를 적고 `status`를 유지/갱신한다. 임의로 "그럴듯한" 수치를 만들지 말고, 모르면 TODO로 남긴다.
 - 농업기상 API 응답 태그명은 미확인 상태(`pipeline/config.py` FIELD_CANDIDATES). `python -m pipeline.cli probe` 결과로 맞춘다. NCPMS 예찰·예측·발생정보 서비스 코드도 미확인(`NCPMS_SERVICE_CODES`).
@@ -33,9 +35,11 @@ cd apps/web && npm install && npm run typecheck && npm run build && npm run dev
 2. `probe`로 태그 확인 → `config.py` 수정 → `spots` → `run --spots 20` 성공
 3. NCPMS 서비스 코드·도감 키(`ncpms_key`) 입력 → 방제 정보 탭 자동 연동
 4. 예찰조사 원본 정제(`data/survey/README.md` 형식) → 백테스트 → 검증 탭 채우기
+4-1. 생물계절 자료 채우기: 농업경영체 등록정보 시군별 재배면적 → `cultivation.csv`, 담당 연구자 확인 재배 기간 → `crop_calendar.yaml` (`data/reference/README.md`)
 5. 운영 전: OSM 타일을 VWorld로 교체(`components/MapView.tsx` MAP_STYLE), 푸터 문의처
 
 ## 하지 말 것
 - `apps/web/public/data`를 손으로 편집하지 않는다(배치가 덮어씀).
 - `data/cache/`는 git 제외. 커밋에 포함시키지 않는다.
+- 데모(`pipeline/demo.py`)의 가상 재배현황을 실제 자료처럼 쓰거나 `cultivation.csv`에 옮기지 않는다.
 - 테스트(`pipeline/tests`)를 삭제하거나 건너뛰지 않는다. 모델을 추가하면 `test_discover_finds_eight_models`의 개수를 갱신한다.

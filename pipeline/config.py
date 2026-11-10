@@ -23,6 +23,13 @@ REQUEST_TIMEOUT = 20
 RETRIES = 3
 RETRY_BACKOFF_SEC = 2.0
 
+# 생물계절(재배 여부·재배 시기) 판정 — pipeline/phenology.py
+CULTIVATION_CSV = REFERENCE_DIR / "cultivation.csv"      # 시군별 작물 재배면적
+CROP_CALENDAR_YAML = REFERENCE_DIR / "crop_calendar.yaml"  # 권역·시도·시군별 재배 기간
+# 시군 재배면적이 이 값(ha) 이하이면 '비재배지'로 본다. 정책값이므로 담당 연구자와 확정할 것(TODO).
+# 0.0 = 재배 기록이 조금이라도 있으면 재배지로 간주(가장 보수적).
+MIN_CULTIVATION_HA = 0.0
+
 
 def _env(name: str, default: str = "") -> str:
     return os.environ.get(name, default).strip()

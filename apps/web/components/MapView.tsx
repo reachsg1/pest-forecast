@@ -7,8 +7,8 @@ import type { Map as MLMap } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import RiskBadge from "./RiskBadge";
 import SpotPanel from "./SpotPanel";
-import { GRADES, gradeOf, gradeRank } from "@/lib/grades";
-import type { Grade, RiskFile, RiskSpotEntry, Spot } from "@/lib/types";
+import { GRADES, NA, fmtIndex, gradeOf, gradeRank } from "@/lib/grades";
+import type { Grade, NaReason, RiskFile, RiskSpotEntry, Spot } from "@/lib/types";
 
 type PestLite = { pest_id: string; name_ko: string; crop: string; crop_ko: string; horizon_days: number };
 
@@ -97,11 +97,12 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
           type: "circle",
           source: "spots",
           paint: {
-            "circle-radius": ["match", ["get", "rank"], 3, 11, 2, 9, 1, 7, 5],
-            "circle-color": ["match", ["get", "grade"], "경보", GRADES[3].color, "주의보", GRADES[2].color, "예보", GRADES[1].color, GRADES[0].color],
-            "circle-opacity": 0.85,
-            "circle-stroke-color": "#ffffff",
-            "circle-stroke-width": ["case", ["get", "selected"], 3, 1.2],
+            // rank -1 = 해당 없음: 작은 흰 원 + 회색 테두리(등급색과 섞이지 않게)
+            "circle-radius": ["match", ["get", "rank"], 3, 11, 2, 9, 1, 7, -1, 4.5, 5],
+            "circle-color": ["match", ["get", "grade"], "경보", GRADES[3].color, "주의보", GRADES[2].color, "예보", GRADES[1].color, "정상", GRADES[0].color, "#ffffff"],
+            "circle-opacity": ["case", ["==", ["get", "rank"], -1], 0.95, 0.85],
+            "circle-stroke-color": ["case", ["==", ["get", "rank"], -1], NA.stroke, "#ffffff"],
+            "circle-stroke-width": ["case", ["get", "selected"], 3, ["==", ["get", "rank"], -1], 1.5, 1.2],
           },
         });
         map.addLayer({
@@ -129,10 +130,13 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
 
   // 데이터·전망일·선택이 바뀌면 마커 갱신
   const entries = useMemo(() => {
-    if (!risk) return [] as (RiskSpotEntry & { index: number; grade: Grade })[];
+    if (!risk) return [] as (RiskSpotEntry & { index: number | null; grade: Grade | null; na: NaReason | null })[];
     return risk.spots.map((s) => {
-      const idx = s.index_by_offset[offset] ?? s.index_today;
-      return { ...s, index: idx, grade: gradeOf(idx) };
+      // null(해당 없음)을 오늘 값으로 대체하지 않도록 범위 안이면 그 날 값을 그대로 쓴다
+      const inRange = offset < s.index_by_offset.length;
+      const idx = inRange ? s.index_by_offset[offset] : s.index_today;
+      const na = (inRange ? s.na_by_offset?.[offset] : s.na_today) ?? null;
+      return { ...s, index: idx, grade: idx == null ? null : gradeOf(idx), na: idx == null ? na : null };
     });
   }, [risk, offset]);
 
@@ -148,13 +152,14 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
         .map((e) => ({
           type: "Feature" as const,
           geometry: { type: "Point" as const, coordinates: [e.lon as number, e.lat as number] },
-          properties: { spot_code: e.spot_code, name: e.name, grade: e.grade, index: e.index, rank: gradeRank(e.grade), selected: e.spot_code === selected },
+          properties: { spot_code: e.spot_code, name: e.name, grade: e.grade ?? NA.label, index: e.index ?? -1, rank: gradeRank(e.grade), selected: e.spot_code === selected },
         })),
     });
   }, [entries, selected, mapReady]);
 
   const pestName = pests.find((p) => p.pest_id === pestId)?.name_ko ?? "";
   const counts = GRADES.map((g) => ({ ...g, n: entries.filter((e) => e.grade === g.name).length }));
+  const naCount = entries.filter((e) => e.grade == null).length;
 
   return (
     <div className="space-y-3">
@@ -230,6 +235,12 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
                   {g.name} <b>{g.n}</b>
                 </li>
               ))}
+              {naCount > 0 && (
+                <li className="flex items-center gap-1 text-gray-500" title="비재배지·재배 시기 아님">
+                  <span className="inline-block h-2 w-2 rounded-full border bg-white" style={{ borderColor: NA.stroke }} aria-hidden="true" />
+                  {NA.label} <b>{naCount}</b>
+                </li>
+              )}
             </ul>
           </div>
         </div>
@@ -240,7 +251,7 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
             <div className="text-sm text-gray-600">
               <p className="font-semibold text-gray-800">지점을 선택하세요</p>
               <p className="mt-1">지도의 원을 클릭하면 위험지수 추이, 입력 기상, 다른 병해충 등급을 볼 수 있습니다.</p>
-              <p className="mt-3 text-xs">원이 클수록·붉을수록 위험이 높습니다. 회색은 정상입니다.</p>
+              <p className="mt-3 text-xs">원이 클수록·붉을수록 위험이 높습니다. 회색은 정상, 테두리만 있는 작은 흰 원은 작물을 재배하지 않거나 재배 시기가 아니어서 계산하지 않은 지점입니다.</p>
             </div>
           )}
         </aside>
@@ -268,7 +279,7 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
             <tbody>
               {entries
                 .slice()
-                .sort((a, b) => b.index - a.index)
+                .sort((a, b) => (a.index == null ? 1 : 0) - (b.index == null ? 1 : 0) || (b.index ?? 0) - (a.index ?? 0))
                 .map((e) => (
                   <tr key={e.spot_code} className={`border-b ${e.spot_code === selected ? "bg-brand-light" : ""}`}>
                     <td className="py-1 pr-2">
@@ -278,11 +289,11 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
                     </td>
                     <td className="py-1 pr-2 text-gray-600">{e.sigungu}</td>
                     <td className="py-1 pr-2">
-                      <RiskBadge grade={e.grade} size="sm" />
+                      <RiskBadge grade={e.grade} na={e.na} size="sm" />
                     </td>
-                    <td className="py-1 pr-2 tabular-nums">{Math.round(e.index)}</td>
-                    <td className="py-1 pr-2 tabular-nums">{Math.round(e.max_index_7d)}</td>
-                    <td className="py-1 pr-2 tabular-nums">{Math.round(e.max_index_10d)}</td>
+                    <td className="py-1 pr-2 tabular-nums">{fmtIndex(e.index)}</td>
+                    <td className="py-1 pr-2 tabular-nums">{fmtIndex(e.max_index_7d)}</td>
+                    <td className="py-1 pr-2 tabular-nums">{fmtIndex(e.max_index_10d)}</td>
                     <td className="py-1 pr-2 text-xs text-gray-500">{e.data_poor ? "자료 부족" : ""}</td>
                   </tr>
                 ))}

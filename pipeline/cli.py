@@ -21,6 +21,7 @@ if str(ROOT) not in sys.path:
 from models._base import DailyWeather  # noqa: E402
 from models._base.registry import discover  # noqa: E402
 from pipeline import config  # noqa: E402
+from pipeline.phenology import load_default as load_phenology  # noqa: E402
 from pipeline.publish import publish  # noqa: E402
 from pipeline.run_models import run_all  # noqa: E402
 from pipeline.transform.interpolate import fill_gaps  # noqa: E402
@@ -99,10 +100,11 @@ def cmd_run(args: argparse.Namespace) -> int:
         return 2
 
     if args.demo:
-        from pipeline.demo import demo_spots, demo_weather
+        from pipeline.demo import demo_phenology, demo_spots, demo_weather
 
         spots = demo_spots()
         weather = demo_weather(spots, issued, horizon)
+        phen = demo_phenology()
         mode = "demo"
     else:
         spots_path = config.REFERENCE_DIR / "spots.json"
@@ -114,7 +116,17 @@ def cmd_run(args: argparse.Namespace) -> int:
         if args.spots:
             spots = spots[: int(args.spots)]
         weather = _live_weather(spots, issued, horizon, warnings)
+        phen = load_phenology()
         mode = "live"
+
+    crops = {m.card.crop for m in models}
+    warnings.extend(phen.coverage_warnings(crops))
+    phen_info = {
+        "source": phen.label or "data/reference/cultivation.csv, crop_calendar.yaml",
+        "min_area_ha": phen.min_area_ha,
+        "cultivation_crops": sorted(phen.crops_with_cultivation() & crops),
+        "calendar_crops": sorted(phen.crops_with_calendar() & crops),
+    }
 
     missing: dict[str, float] = {}
     filled: dict[str, list[DailyWeather]] = {}
@@ -122,8 +134,9 @@ def cmd_run(args: argparse.Namespace) -> int:
         series, rate = fill_gaps(wx, end=issued + timedelta(days=horizon))
         filled[code] = series
         missing[code] = rate
-    rows = run_all(spots, filled, models, issued, horizon)
-    status = publish(rows, spots, filled, models, issued, horizon, missing, mode, warnings)
+    assessments: dict = {}
+    rows = run_all(spots, filled, models, issued, horizon, phenology=phen, assessments=assessments)
+    status = publish(rows, spots, filled, models, issued, horizon, missing, mode, warnings, assessments=assessments, phenology_info=phen_info)
     print(json.dumps(status, ensure_ascii=False, indent=1))
     return 0 if status["ok"] else 1
 
