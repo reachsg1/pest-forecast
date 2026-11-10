@@ -19,3 +19,6 @@ apps/web/next-env.d.ts.bak
 
 # os
 .DS_Store
+
+# 일별 예측 스냅샷: CSV는 하루 수 MB라 로컬에만 두고, 같은 내용의 Parquet만 커밋
+data/predictions/*.csv

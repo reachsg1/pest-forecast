@@ -66,7 +66,9 @@ def cmd_spots(_: argparse.Namespace) -> int:
 
 
 def _live_weather(spots: list[dict], issued: date, horizon: int, warnings: list[str]) -> dict[str, list[DailyWeather]]:
-    from pipeline.fetch.agriweather import fetch_range_daily
+    from collections import defaultdict
+
+    from pipeline.fetch.agriweather import fetch_month_all, to_daily_weather
     from pipeline.fetch.kma import MidForecaster, extend_forecast, fetch_vilage_fcst, latlon_to_grid
 
     key = config.data_go_kr_key()
@@ -75,16 +77,30 @@ def _live_weather(spots: list[dict], issued: date, horizon: int, warnings: list[
     out: dict[str, list[DailyWeather]] = {}
     mid = MidForecaster(kkey) if kkey else None
     mid_failed = False
+
+    # 관측: 월 1회 호출로 전국 전 지점 일자료(지난 달은 캐시) → 지점별로 나눈다. 연초~기준일 약 1~12건 호출
+    raw_by_stn: dict[str, list[dict]] = defaultdict(list)
+    for m in range(1, issued.month + 1):
+        try:
+            for r in fetch_month_all(key, issued.year, m):
+                raw_by_stn[r.get("stn_Cd", "")].append(r)
+        except Exception as e:  # noqa: BLE001
+            warnings.append(f"농업기상 {issued.year}-{m:02d} 전국 일자료 실패: {str(e)[:200]}")
+    log.info("농업기상 일자료: %d개 관측소", len(raw_by_stn))
+
+    fc_cache: dict[tuple[int, int], list[DailyWeather]] = {}  # 같은 격자는 한 번만 호출
     for i, sp in enumerate(spots, 1):
         code = sp["spot_code"]
-        obs = fetch_range_daily(key, code, start, issued)
+        obs = [w for w in to_daily_weather(raw_by_stn.get(code, [])) if start <= w.date <= issued]
         fc: list[DailyWeather] = []
         if kkey and sp.get("lat") and sp.get("lon"):
             try:
                 nx, ny = latlon_to_grid(float(sp["lat"]), float(sp["lon"]))
-                fc = fetch_vilage_fcst(kkey, nx, ny)
+                if (nx, ny) not in fc_cache:
+                    fc_cache[(nx, ny)] = fetch_vilage_fcst(kkey, nx, ny)
+                fc = fc_cache[(nx, ny)]
             except Exception as e:  # noqa: BLE001
-                warnings.append(f"{code} 단기예보 실패: {e}")
+                warnings.append(f"{code} 단기예보 실패: {str(e)[:200]}")
         mid_days: list = []
         if mid and not mid_failed and sp.get("lat") and sp.get("lon"):
             try:
