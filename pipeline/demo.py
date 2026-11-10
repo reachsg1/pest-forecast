@@ -81,25 +81,15 @@ def synth_weather(spot: dict, start: date, end: date, issued: date, seed: int = 
 
 
 def demo_phenology():
-    """데모용 생물계절 자료. **실제 통계가 아닌 가상값**이며 화면 동작 확인용이다.
+    """데모용 생물계절 자료: 라이브와 같은 실제 참조 자료를 쓴다.
 
-    '해당 없음(비재배지)' 표시를 보여주기 위해 일부 지점에서 일부 작물을 재배하지 않는 것으로 둔다.
-    재배 기간 자료는 넣지 않는다(근거 없는 날짜를 만들지 않기 위함). 실제 운영은
-    data/reference/cultivation.csv, crop_calendar.yaml 을 읽는다.
+    기상은 합성값이지만 재배 여부는 data/reference/cultivation.csv(농업경영체 등록정보 시군 재배면적)와
+    config.MIN_CULTIVATION_HA 로 판정하므로, 데모 지점의 '해당 없음 · 비재배지'는 실제 자료 기준이다.
     """
-    from pipeline.phenology import Phenology, region_key
+    from pipeline.phenology import load_default
 
-    not_grown = {  # 작물 → 재배하지 않는 것으로 둘 데모 지점(시군)
-        "apple": {"제주 제주시", "전남 나주시"},
-        "rice": {"제주 제주시"},
-        "pepper": {"제주 제주시"},
-    }
-    ph = Phenology(label="데모용 가상 재배현황(실제 통계 아님)")
-    src = "데모용 가상값"
-    for crop, excluded in not_grown.items():
-        for _c, _n, _la, _lo, sg in DEMO_SPOTS:
-            sido, sigungu = region_key(sg)
-            ph.cultivation[(crop, sido, sigungu)] = (0.0 if sg in excluded else 100.0, 2025, src)
+    ph = load_default()
+    ph.label = "실제 재배현황(data/reference) · 데모 지점·합성 기상"
     return ph
 
 

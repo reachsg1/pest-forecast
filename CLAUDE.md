@@ -42,5 +42,4 @@ cd apps/web && npm install && npm run typecheck && npm run build && npm run dev
 ## 하지 말 것
 - `apps/web/public/data`를 손으로 편집하지 않는다(배치가 덮어씀).
 - `data/cache/`는 git 제외. 커밋에 포함시키지 않는다.
-- 데모(`pipeline/demo.py`)의 가상 재배현황을 실제 자료처럼 쓰거나 `cultivation.csv`에 옮기지 않는다.
 - 테스트(`pipeline/tests`)를 삭제하거나 건너뛰지 않는다. 모델을 추가하면 `test_discover_finds_eight_models`의 개수를 갱신한다.

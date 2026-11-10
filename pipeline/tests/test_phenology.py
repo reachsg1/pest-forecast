@@ -107,9 +107,11 @@ def test_demo_run_marks_not_grown_as_na(tmp_path, monkeypatch):
     assert jeju["index_today"] is None and jeju["grade_today"] is None and jeju["na_today"] == "not_grown"
     assert all(v is None for v in jeju["index_by_offset"]) and jeju["max_index_7d"] is None
     assert risk["spots"][-1]["index_today"] is None          # 해당 없음은 맨 뒤
+    naju = next(s for s in risk["spots"] if s["spot_code"] == "DEMO_NAJU")
+    assert naju["index_today"] is not None and naju["phenology"]["cultivation"] == "grown"  # 나주 사과 12.7 ha
     summary = json.loads((tmp_path / "web" / "summary.json").read_text(encoding="utf-8"))
     p = summary["pests"][0]
-    assert p["na_count"] == 2 and sum(p["grade_counts"].values()) == 10   # 제주·나주 제외
+    assert p["na_count"] == 1 and sum(p["grade_counts"].values()) == 11   # 제주시만 제외(사과 0.66 ha ≤ 1 ha)
     assert all(s["index"] is not None for s in p["top_spots"])
     spot = json.loads((tmp_path / "web" / "spot" / "DEMO_JEJU.json").read_text(encoding="utf-8"))
     assert spot["phenology"]["apple"]["cultivation"] == "not_grown"

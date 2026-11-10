@@ -65,7 +65,7 @@ export default async function AboutPage() {
           <p className="mt-2 text-xs text-gray-500">
             현재 반영 자료 · 재배 지역: {status.phenology.cultivation_crops.length ? status.phenology.cultivation_crops.map((c) => CROP_LABEL[c] ?? c).join(", ") : "없음"} · 재배 시기:{" "}
             {status.phenology.calendar_crops.length ? status.phenology.calendar_crops.map((c) => CROP_LABEL[c] ?? c).join(", ") : "없음"}
-            {status.mode === "demo" && " (데모 데이터는 가상 재배현황을 씁니다)"}
+            {status.phenology.cultivation_crops.length > 0 && ` · 기준: 시군 노지 재배면적 ${status.phenology.min_area_ha} ha 이하는 비재배지(농업경영체 등록정보)`}
           </p>
         )}
       </section>
