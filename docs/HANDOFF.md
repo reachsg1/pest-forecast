@@ -50,6 +50,7 @@ Claude(프로젝트 대화)에서 설계와 초기 구축을 마치고 Claude Co
 
 - `pipeline/config.py`: FIELD_CANDIDATES 실제 태그로 확정. NCPMS 서비스 코드는 11-10 공식 명세로 확정(예찰 SVC51~53 추가, 발생정보는 OpenAPI 미제공) — 조사 결과·대상 확대안은 `docs/ncpms-research.md`
 - 고추 담배거세미나방 → 담배나방 교체 완료(11-10). 담배나방 파라미터는 이대홍 외(2025) 근거, 단 기산일·구간 폭(ramp_dd)·상한온도는 TODO. 확대 1·2순위 후보는 `docs/ncpms-research.md` 5절
+- 실 API 연결 확인(11-10, 키는 루트 `.env`·git 제외): NCPMS 예찰 SVC51~53 정상 — 2015~2025, 매월 1·16일 회차(6~9월), 시군구별 조사값(예: 탄저병 피해과율). 농업기상 V3 일자료 정상 — 월 1회 호출로 전국 약 210지점, 결로시간(분) 포함. **관측지점 목록 서비스(15073274)는 활용신청 필요**(현재 '등록되지 않은 서비스키'). 다음: 예찰 학습형 모델 파일럿(예찰 시군 ↔ 같은 시군 관측소 매칭)
 - 추가 모델(variants) 후보 조사 완료(11-10): `docs/model-candidates.md`. 바로 구현 가능 = 사과 탄저병 Magarey GIM, 잎도열병 BLASTAM. 복숭아순나방 Kim 2026은 식 표기 저자 확인 후, EPIRICE(도열·잎집)는 SEIR 새 유형 필요. 고추 3종은 원문 계수 확보가 먼저. 현재 지도 모델 선택은 데모 전용 가상 모형만 있음
 - `pipeline/fetch/kma.py`: 중기예보(getMidTa/getMidLandFcst, regId) 미구현
 - `pipeline/fetch/ncpms.py`: 방제정보 응답 태그(`developmentCondition` 등)는 가이드 기준 추정 → 실응답으로 확인
