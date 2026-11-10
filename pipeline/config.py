@@ -26,9 +26,10 @@ RETRY_BACKOFF_SEC = 2.0
 # 생물계절(재배 여부·재배 시기) 판정 — pipeline/phenology.py
 CULTIVATION_CSV = REFERENCE_DIR / "cultivation.csv"      # 시군별 작물 재배면적
 CROP_CALENDAR_YAML = REFERENCE_DIR / "crop_calendar.yaml"  # 권역·시도·시군별 재배 기간
-# 시군 재배면적이 이 값(ha) 이하이면 '비재배지'로 본다. 정책값이므로 담당 연구자와 확정할 것(TODO).
-# 0.0 = 재배 기록이 조금이라도 있으면 재배지로 간주(가장 보수적).
-MIN_CULTIVATION_HA = 0.0
+# 시군 재배면적이 이 값(ha) 이하이면 '비재배지'로 본다(정책값).
+# 2026-11-10 사용자 결정: 1 ha — 텃밭 수준의 소규모 등록만 걸러내는 보수적 기준.
+# 2025 농업경영체 등록정보 기준 전국 209개 시군 중 비재배지: 사과 44, 벼 31, 고추 21곳.
+MIN_CULTIVATION_HA = 1.0
 
 
 def _env(name: str, default: str = "") -> str:

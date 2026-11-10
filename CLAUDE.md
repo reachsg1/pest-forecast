@@ -36,7 +36,7 @@ cd apps/web && npm install && npm run typecheck && npm run build && npm run dev
 2. `probe`로 태그 확인 → `config.py` 수정 → `spots` → `run --spots 20` 성공
 3. NCPMS 서비스 코드·도감 키(`ncpms_key`) 입력 → 방제 정보 탭 자동 연동
 4. 예찰조사 원본 정제(`data/survey/README.md` 형식) → 백테스트 → 검증 탭 채우기
-4-1. 생물계절 자료: 시군 재배면적은 수집 완료(2025) — 비재배지 기준 면적 `MIN_CULTIVATION_HA` 확정 필요. 재배 기간 → `crop_calendar.yaml` 입력 필요 (`data/reference/README.md`)
+4-1. 생물계절 자료: 시군 재배면적 수집 완료(2025, 기준 1 ha 이하 = 비재배지). 재배 기간 → `crop_calendar.yaml` 입력 필요 (`data/reference/README.md`)
 5. 운영 전: OSM 타일을 VWorld로 교체(`components/MapView.tsx` MAP_STYLE), 푸터 문의처
 
 ## 하지 말 것
