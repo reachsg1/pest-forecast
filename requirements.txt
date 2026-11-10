@@ -1,0 +1,6 @@
+requests>=2.31
+PyYAML>=6.0
+pandas>=2.1
+numpy>=1.26
+pyarrow>=14.0        # 선택: 있으면 Parquet 스냅샷도 생성
+scikit-learn>=1.4    # 선택: train_template.py 에서만 사용

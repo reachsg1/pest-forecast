@@ -1,0 +1,8 @@
+{
+  "model_id": "rice_sheath_blight",
+  "version": "0.1.0",
+  "evaluated_at": "2026-11-09T21:58:14",
+  "years": {},
+  "status": "no_survey_data",
+  "note": "data/survey/survey.csv 가 없어 비교하지 못함. 예찰조사 적재 후 다시 실행."
+}

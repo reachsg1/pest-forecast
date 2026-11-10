@@ -1,0 +1,40 @@
+id: rice_sheath_blight
+pest_id: rice_sheath_blight
+name_ko: 벼 잎집무늬마름병
+name_sci: Rhizoctonia solani
+crop: rice
+kind: disease
+type: C
+version: 0.1.0
+horizon_days: 10
+season:
+  start_month: 7
+  end_month: 9
+inputs:
+- tavg_30d
+- rh_30d
+- rain_days_30d
+description: 고온다습(평균 25℃ 이상, 습도 85% 이상)이 지속되고 밀식·질소 과다일 때 수평·수직으로 확산.
+logic: 최근 30일 평균기온·습도·강수일수의 가중합을 로지스틱으로 변환한 휴리스틱. 예찰조사 적재 후 학습 계수로 교체.
+params:
+  window_days: 30
+  bias: -0.8
+  features:
+  - name: tavg_30d
+    center: 26
+    scale: 3
+    weight: 1.2
+  - name: rh_30d
+    center: 85
+    scale: 5
+    weight: 1.0
+  - name: rain_days_30d
+    center: 12
+    scale: 4
+    weight: 0.6
+references:
+- 담당 연구자 지정 예정 — 초기값은 일반 문헌 범위에서 설정, 검토 필요
+owner: ''
+status: draft
+ncpms_key: ''
+ncpms_kind: sick

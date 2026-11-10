@@ -1,0 +1,12 @@
+[project]
+name = "pest-forecast"
+version = "0.1.0"
+description = "병해충 발생 예측 서비스 — 배치 파이프라인과 모델 플러그인"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["pipeline/tests"]
+
+[tool.ruff]
+line-length = 140
+target-version = "py311"

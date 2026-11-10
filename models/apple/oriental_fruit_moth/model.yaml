@@ -1,0 +1,51 @@
+id: apple_oriental_fruit_moth
+pest_id: apple_oriental_fruit_moth
+name_ko: 복숭아순나방
+name_sci: Grapholita molesta
+crop: apple
+kind: insect
+type: B
+version: 0.1.0
+horizon_days: 10
+season:
+  start_month: 4
+  end_month: 10
+inputs:
+- tavg
+- tmax
+- tmin
+description: 연 4~5세대 발생. 각 세대 부화 유충기가 신초·과실 피해 시기.
+logic: 1월 1일부터 발육영점 10℃ 기준 유효적산온도를 누적하고, 세대별 부화·유충 DD 구간에서 지수 상승. 활동 적합 온도로 보정.
+params:
+  base_temp: 10.0
+  upper_temp: 35.0
+  biofix: 01-01
+  ramp_dd: 60
+  activity_temp:
+    min: 12
+    opt_low: 20
+    opt_high: 30
+    max: 36
+  generations:
+  - name: 월동세대 성충·1세대 부화
+    dd_from: 250
+    dd_to: 450
+    peak: 85
+  - name: 2세대 부화·유충
+    dd_from: 850
+    dd_to: 1050
+    peak: 100
+  - name: 3세대 부화·유충
+    dd_from: 1450
+    dd_to: 1650
+    peak: 100
+  - name: 4세대 부화·유충
+    dd_from: 2050
+    dd_to: 2250
+    peak: 90
+references:
+- 담당 연구자 지정 예정 — 초기값은 일반 문헌 범위에서 설정, 검토 필요
+owner: ''
+status: draft
+ncpms_key: ''
+ncpms_kind: insect

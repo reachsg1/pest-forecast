@@ -1,0 +1,44 @@
+id: pepper_anthracnose
+pest_id: pepper_anthracnose
+name_ko: 고추 탄저병
+name_sci: Colletotrichum acutatum / C. scovillei
+crop: pepper
+kind: disease
+type: A
+version: 0.1.0
+horizon_days: 7
+season:
+  start_month: 6
+  end_month: 9
+inputs:
+- tavg
+- rain
+- lwd_hours(추정)
+- rh
+description: 빗물로 전파되며 과실이 젖은 상태로 22~30℃가 유지될 때 감염. 장마 전후 예방 방제가 핵심.
+logic: 온도 적합도 × 잎젖음 충족도 누적(감염 부하). NCPMS 고추 탄저병 최초 감염위험시기 문자 서비스와 비교 검증 예정.
+params:
+  temp:
+    min: 15
+    opt_low: 22
+    opt_high: 30
+    max: 33
+  wetness_hours:
+  - temp: 15
+    hours: 12
+  - temp: 20
+    hours: 8
+  - temp: 25
+    hours: 6
+  - temp: 30
+    hours: 6
+  rain_trigger_mm: 1.0
+  rain_min_wet_hours: 8.0
+  decay: 0.7
+  load_sat: 2.5
+references:
+- 담당 연구자 지정 예정 — 초기값은 일반 문헌 범위에서 설정, 검토 필요
+owner: ''
+status: draft
+ncpms_key: ''
+ncpms_kind: sick

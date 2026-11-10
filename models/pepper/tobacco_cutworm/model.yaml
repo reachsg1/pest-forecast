@@ -1,0 +1,51 @@
+id: pepper_tobacco_cutworm
+pest_id: pepper_tobacco_cutworm
+name_ko: 담배거세미나방
+name_sci: Spodoptera litura
+crop: pepper
+kind: insect
+type: B
+version: 0.1.0
+horizon_days: 10
+season:
+  start_month: 6
+  end_month: 10
+inputs:
+- tavg
+- tmax
+- tmin
+description: 연 3~4세대, 8~9월 밀도 최고. 유충이 잎·과실을 식해. 광식성이라 인접 작물 밀도도 영향.
+logic: 발육영점 10℃ 기준 유효적산온도 누적, 세대별 유충기 DD 구간에서 지수 상승. 페로몬 트랩 채집 연동 시 biofix를 실측으로 전환.
+params:
+  base_temp: 10.0
+  upper_temp: 35.0
+  biofix: 01-01
+  ramp_dd: 80
+  activity_temp:
+    min: 14
+    opt_low: 22
+    opt_high: 32
+    max: 38
+  generations:
+  - name: 1세대 유충
+    dd_from: 400
+    dd_to: 600
+    peak: 70
+  - name: 2세대 유충
+    dd_from: 1000
+    dd_to: 1200
+    peak: 90
+  - name: 3세대 유충
+    dd_from: 1600
+    dd_to: 1800
+    peak: 100
+  - name: 4세대 유충
+    dd_from: 2200
+    dd_to: 2400
+    peak: 90
+references:
+- 담당 연구자 지정 예정 — 초기값은 일반 문헌 범위에서 설정, 검토 필요
+owner: ''
+status: draft
+ncpms_key: ''
+ncpms_kind: insect

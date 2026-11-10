@@ -1,0 +1,91 @@
+# 매일 새벽 05:00 KST(= 20:00 UTC 전날)에 예측을 계산해 정적 JSON을 커밋한다.
+# 커밋이 main에 올라가면 Vercel이 자동으로 재배포한다.
+name: daily-forecast
+
+on:
+  schedule:
+    - cron: "0 20 * * *"
+  workflow_dispatch:
+    inputs:
+      demo:
+        description: "합성 기상으로 실행(데모)"
+        type: boolean
+        default: false
+      date:
+        description: "기준일 YYYY-MM-DD (비우면 오늘)"
+        required: false
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: daily-forecast
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      TZ: Asia/Seoul
+      NCPMS_API_KEY: ${{ secrets.NCPMS_API_KEY }}
+      DATA_GO_KR_KEY: ${{ secrets.DATA_GO_KR_KEY }}
+      KMA_API_KEY: ${{ secrets.KMA_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: pip install -r requirements.txt
+
+      - name: Restore weather cache
+        uses: actions/cache@v4
+        with:
+          path: data/cache
+          key: agriweather-${{ github.run_id }}
+          restore-keys: agriweather-
+
+      - name: Fetch spots (live only)
+        if: ${{ !inputs.demo && env.DATA_GO_KR_KEY != '' }}
+        run: python -m pipeline.cli spots
+
+      - name: Run forecast
+        id: run
+        run: |
+          ARGS=""
+          if [ "${{ inputs.demo }}" = "true" ] || [ -z "$DATA_GO_KR_KEY" ]; then ARGS="--demo"; fi
+          if [ -n "${{ inputs.date }}" ]; then ARGS="$ARGS --date ${{ inputs.date }}"; fi
+          python -m pipeline.cli run $ARGS
+
+      - name: Commit results
+        run: |
+          git config user.name "forecast-bot"
+          git config user.email "forecast-bot@users.noreply.github.com"
+          git add apps/web/public/data data/predictions data/reference || true
+          if git diff --cached --quiet; then
+            echo "변경 없음"
+          else
+            git commit -m "chore(data): forecast $(date +%F)"
+            git push
+          fi
+
+      - name: Open issue on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `일일 배치 실패 ${new Date().toISOString().slice(0,10)}`;
+            const { data: issues } = await github.rest.issues.listForRepo({ owner: context.repo.owner, repo: context.repo.repo, state: 'open', labels: 'batch-failure' });
+            if (issues.some(i => i.title === title)) return;
+            await github.rest.issues.create({
+              owner: context.repo.owner, repo: context.repo.repo, title,
+              labels: ['batch-failure'],
+              body: `실행 로그: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}\n\n전날 결과가 그대로 서비스됩니다. 외부 API 상태와 키 만료 여부를 확인하세요.`
+            });

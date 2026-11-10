@@ -1,0 +1,47 @@
+id: pepper_phytophthora
+pest_id: pepper_phytophthora
+name_ko: 고추 역병
+name_sci: Phytophthora capsici
+crop: pepper
+kind: disease
+type: A
+version: 0.1.0
+horizon_days: 7
+season:
+  start_month: 6
+  end_month: 8
+inputs:
+- tavg
+- rain
+- lwd_hours(추정)
+- soil_moist(선택)
+description: 토양 전염성. 집중호우로 토양이 과습하고 25~30℃일 때 유주자가 퍼져 급격히 발병. 배수 불량지에서 심함.
+logic: 감염 조건 모델에 강우 가중과 토양수분 보정(상세 관측데이터 연동 시)을 추가. 10mm 이상 강우일을 강한 젖음 조건으로 간주.
+params:
+  temp:
+    min: 15
+    opt_low: 25
+    opt_high: 30
+    max: 35
+  wetness_hours:
+  - temp: 15
+    hours: 14
+  - temp: 20
+    hours: 10
+  - temp: 25
+    hours: 6
+  - temp: 30
+    hours: 6
+  rain_trigger_mm: 5.0
+  rain_min_wet_hours: 12.0
+  decay: 0.65
+  load_sat: 2.2
+  soil_moist_boost:
+    threshold: 30
+    factor: 1.3
+references:
+- 담당 연구자 지정 예정 — 초기값은 일반 문헌 범위에서 설정, 검토 필요
+owner: ''
+status: draft
+ncpms_key: ''
+ncpms_kind: sick

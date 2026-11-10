@@ -1,0 +1,9 @@
+pest_id,crop,name_ko,name_sci,kind,ncpms_kind,ncpms_key,season_start,season_end
+apple_anthracnose,apple,사과 탄저병,Colletotrichum spp.,disease,sick,,6,9
+apple_oriental_fruit_moth,apple,복숭아순나방,Grapholita molesta,insect,insect,,4,10
+rice_leaf_blast,rice,벼 잎도열병,Magnaporthe oryzae,disease,sick,,6,8
+rice_sheath_blight,rice,벼 잎집무늬마름병,Rhizoctonia solani,disease,sick,,7,9
+rice_planthoppers,rice,벼멸구·흰등멸구,"Nilaparvata lugens, Sogatella furcifera",insect,insect,,7,9
+pepper_anthracnose,pepper,고추 탄저병,Colletotrichum acutatum / C. scovillei,disease,sick,,6,9
+pepper_phytophthora,pepper,고추 역병,Phytophthora capsici,disease,sick,,6,8
+pepper_tobacco_cutworm,pepper,담배거세미나방,Spodoptera litura,insect,insect,,6,10

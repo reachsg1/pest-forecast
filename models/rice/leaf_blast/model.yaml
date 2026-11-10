@@ -1,0 +1,45 @@
+id: rice_leaf_blast
+pest_id: rice_leaf_blast
+name_ko: 벼 잎도열병
+name_sci: Magnaporthe oryzae
+crop: rice
+kind: disease
+type: A
+version: 0.1.0
+horizon_days: 7
+season:
+  start_month: 6
+  end_month: 8
+inputs:
+- tavg
+- rain
+- lwd_hours(추정)
+- rh
+- sunshine
+description: 20~28℃의 서늘하고 비·이슬이 잦아 잎이 오래 젖는 날이 이어질 때 감염 급증. 일조 부족·질소 과다 시 심해짐.
+logic: 온도 적합도 × 잎젖음 충족도 누적(감염 부하). NCPMS '도열병 방제결정지원'과 비교 검증 예정.
+params:
+  temp:
+    min: 15
+    opt_low: 20
+    opt_high: 27
+    max: 32
+  wetness_hours:
+  - temp: 15
+    hours: 14
+  - temp: 20
+    hours: 10
+  - temp: 25
+    hours: 8
+  - temp: 30
+    hours: 10
+  rain_trigger_mm: 1.0
+  rain_min_wet_hours: 10.0
+  decay: 0.75
+  load_sat: 3.0
+references:
+- 담당 연구자 지정 예정 — 초기값은 일반 문헌 범위에서 설정, 검토 필요
+owner: ''
+status: draft
+ncpms_key: ''
+ncpms_kind: sick

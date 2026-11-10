@@ -1,0 +1,21 @@
+# python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+data/cache/
+
+# node / next
+apps/web/node_modules/
+apps/web/.next/
+apps/web/out/
+apps/web/*.tsbuildinfo
+apps/web/next-env.d.ts.bak
+
+# env
+.env
+.env.local
+.env*.local
+
+# os
+.DS_Store

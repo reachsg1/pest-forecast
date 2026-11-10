@@ -1,0 +1,40 @@
+id: rice_planthoppers
+pest_id: rice_planthoppers
+name_ko: 벼멸구·흰등멸구
+name_sci: Nilaparvata lugens, Sogatella furcifera
+crop: rice
+kind: insect
+type: C
+version: 0.1.0
+horizon_days: 10
+season:
+  start_month: 7
+  end_month: 9
+inputs:
+- tavg_30d
+- tmin_7d
+- rain_days_30d
+description: 6~7월 중국 남부에서 비래 후 고온에서 세대 증식. 비래 정보(기류·유아등 채집)는 외부 입력으로 추가 예정.
+logic: 비래 후 증식 조건(고온·온난한 야간)을 최근 기상 통계로 근사한 휴리스틱. 비래량 관측치 연동 전까지 보조 지표로만 사용.
+params:
+  window_days: 30
+  bias: -1.2
+  features:
+  - name: tavg_30d
+    center: 27
+    scale: 2.5
+    weight: 1.0
+  - name: tmin_7d
+    center: 22
+    scale: 3
+    weight: 0.8
+  - name: rain_days_30d
+    center: 10
+    scale: 4
+    weight: -0.3
+references:
+- 담당 연구자 지정 예정 — 초기값은 일반 문헌 범위에서 설정, 검토 필요
+owner: ''
+status: draft
+ncpms_key: ''
+ncpms_kind: insect

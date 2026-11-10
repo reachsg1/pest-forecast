@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", system-ui, sans-serif;
+}
+
+body {
+  @apply bg-gray-50 text-gray-900 antialiased;
+}
+
+a:focus-visible,
+button:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  @apply outline outline-2 outline-offset-2 outline-brand;
+}
+
+.sr-only-focusable:focus {
+  @apply not-sr-only absolute left-2 top-2 z-50 rounded bg-white px-3 py-2 shadow;
+}
+
+/* MapLibre 팝업·컨트롤 글꼴 통일 */
+.maplibregl-popup-content {
+  @apply rounded-lg px-3 py-2 text-sm shadow-lg;
+}

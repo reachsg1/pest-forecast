@@ -1,0 +1,45 @@
+id: apple_anthracnose
+pest_id: apple_anthracnose
+name_ko: 사과 탄저병
+name_sci: Colletotrichum spp.
+crop: apple
+kind: disease
+type: A
+version: 0.1.0
+horizon_days: 7
+season:
+  start_month: 6
+  end_month: 9
+inputs:
+- tavg
+- rain
+- lwd_hours(추정)
+- rh
+description: 강우로 비산된 분생포자가 따뜻하고 젖은 과실 표면에서 감염. 장마·늦여름 고온다습기에 위험.
+logic: 온도 적합도(사다리꼴) × 잎젖음 충족도(온도별 요구 젖음시간 대비)를 일별 점수로 하고, 감소율 0.7로 누적한 감염 부하를 0~100으로
+  환산.
+params:
+  temp:
+    min: 15
+    opt_low: 22
+    opt_high: 28
+    max: 32
+  wetness_hours:
+  - temp: 15
+    hours: 12
+  - temp: 20
+    hours: 8
+  - temp: 25
+    hours: 5
+  - temp: 30
+    hours: 6
+  rain_trigger_mm: 2.0
+  rain_min_wet_hours: 8.0
+  decay: 0.7
+  load_sat: 2.5
+references:
+- 담당 연구자 지정 예정 — 초기값은 일반 문헌 범위에서 설정, 검토 필요
+owner: ''
+status: draft
+ncpms_key: ''
+ncpms_kind: sick
