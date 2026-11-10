@@ -25,9 +25,12 @@ def call(key: str, service_code: str, **params: Any) -> list[dict[str, str]]:
     return xml_items(r.text, item_tag="item")
 
 
+XML = config.NCPMS_SERVICE_TYPE_XML  # 검색·예찰 계열 필수 파라미터 serviceType
+
+
 def disease_search(key: str, crop_name: str = "", disease_name: str = "", display: int = 50) -> list[dict]:
-    """SVC01 병 검색. cropName/sickNameKor 파라미터는 NCPMS 가이드 기준."""
-    p: dict[str, Any] = {"displayCount": display}
+    """SVC01 병 검색 → cropName, sickNameKor, sickKey, thumbImg …"""
+    p: dict[str, Any] = {"serviceType": XML, "displayCount": display}
     if crop_name:
         p["cropName"] = crop_name
     if disease_name:
@@ -36,12 +39,13 @@ def disease_search(key: str, crop_name: str = "", disease_name: str = "", displa
 
 
 def disease_detail(key: str, sick_key: str) -> list[dict]:
-    """SVC05 병 상세(발생환경·증상·방제법·사진). sickKey 예: D00001596"""
+    """SVC05 병 상세 → infectionRoute, developmentCondition, symptoms, preventionMethod, imageList …"""
     return call(key, config.NCPMS_SERVICE_CODES["disease_detail"], sickKey=sick_key)
 
 
 def insect_search(key: str, crop_name: str = "", insect_name: str = "", display: int = 50) -> list[dict]:
-    p: dict[str, Any] = {"displayCount": display}
+    """SVC03 해충 검색 → cropName, insectKorName, speciesName, insectKey …"""
+    p: dict[str, Any] = {"serviceType": XML, "displayCount": display}
     if crop_name:
         p["cropName"] = crop_name
     if insect_name:
@@ -50,7 +54,30 @@ def insect_search(key: str, crop_name: str = "", insect_name: str = "", display:
 
 
 def insect_detail(key: str, insect_key: str) -> list[dict]:
+    """SVC07 해충 상세 → ecologyInfo, damageInfo, preventMethod, imageList …"""
     return call(key, config.NCPMS_SERVICE_CODES["insect_detail"], insectKey=insect_key)
+
+
+# --- 예찰(SVC51~53): 회차 목록 → 시도별 → 시군구별 조사값 ---------------------------
+def survey_search(key: str, year: int, predictn_code: str = "", kncr_code: str = "", display: int = 50, start: int = 1) -> list[dict]:
+    """SVC51 예찰 회차 목록 → insectKey(회차 상세키), examinYear, kncrNm, examinSpchcknNm, examinTmrd, inputStdrDatetm.
+    코드값(예찰구분·작물)은 data/reference/ncpms_survey_targets.csv."""
+    p: dict[str, Any] = {"serviceType": XML, "searchExaminYear": str(year), "displayCount": display, "startPoint": start}
+    if predictn_code:
+        p["searchPredictnSpchcknCode"] = predictn_code
+    if kncr_code:
+        p["searchKncrCode"] = kncr_code
+    return call(key, config.NCPMS_SERVICE_CODES["survey_search"], **p)
+
+
+def survey_by_sido(key: str, insect_key: str) -> list[dict]:
+    """SVC52 한 회차의 시도별 조사값 → sidoCode, sidoNm, dbyhsNm(병해충·지표명), inqireValue"""
+    return call(key, config.NCPMS_SERVICE_CODES["survey_by_sido"], serviceType=XML, insectKey=insect_key)
+
+
+def survey_by_sigungu(key: str, insect_key: str, sido_code: str) -> list[dict]:
+    """SVC53 한 회차·시도의 시군구별 조사값 → sigunguNm, dbyhsNm, inqireValue"""
+    return call(key, config.NCPMS_SERVICE_CODES["survey_by_sigungu"], serviceType=XML, insectKey=insect_key, sidoCode=sido_code)
 
 
 def control_info(key: str, kind: str, ncpms_key: str) -> Optional[dict]:
@@ -63,14 +90,14 @@ def control_info(key: str, kind: str, ncpms_key: str) -> Optional[dict]:
     if not rows:
         return None
     r = rows[0]
-    # 태그명은 NCPMS 가이드 기준 후보. 없으면 원문 사전을 그대로 둔다.
+    # 태그명은 NCPMS OpenAPI 상세 명세(SVC05·SVC07) 기준(11-10 확인). 실응답으로 한 번 더 검증할 것.
     return {
-        "name": r.get("sickNameKor") or r.get("insectKorName") or "",
+        "name": r.get("sickNameKor") or r.get("insectSpeciesKor") or r.get("insectKorName") or "",
         "crop": r.get("cropName") or "",
         "environment": r.get("developmentCondition") or r.get("ecologyInfo") or "",
         "symptoms": r.get("symptoms") or r.get("damageInfo") or "",
         "control": r.get("preventionMethod") or r.get("preventMethod") or "",
-        "image": r.get("imageList") or r.get("spcsImageList") or "",
+        "image": r.get("imageList") or "",
         "raw": r,
     }
 

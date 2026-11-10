@@ -47,7 +47,8 @@ Claude(프로젝트 대화)에서 설계와 초기 구축을 마치고 Claude Co
 - 생물계절 자료(우선): ① ~~시군 재배면적 수집~~ 11-10 완료(`scripts/fetch_cultivation.py`, 2025년, `cultivation.csv`). 비재배지 기준 면적 `config.MIN_CULTIVATION_HA = 1.0` 으로 확정(11-10 사용자 결정) → 비재배지 시군(전국 209): 사과 44·벼 31·고추 21. 참고로 0 ha → 14·24·0, 10 ha → 104·39·39 ② 사과·벼·고추 재배 기간을 근거와 함께 `crop_calendar.yaml`에 입력(권역 정의도 확정) ③ 연도별로 변하는 시기 자동화: 사과 만개일 API(data.go.kr 15041539), 과수 휴면타파시기 API(15168306, 67개 지점) 수집기 → 재배 기간 시작일 갱신
 - 정적 JSON 브라우저 캐시 `max-age=600`(`next.config.ts`): 배치 직후 최대 10분간 파일별로 어제·오늘 데이터가 섞여 보일 수 있음. 운영 전 파일명에 기준일 버전을 붙이거나 캐시 시간 조정 검토
 
-- `pipeline/config.py`: FIELD_CANDIDATES 실제 태그로 확정, NCPMS_SERVICE_CODES 빈 값 3개
+- `pipeline/config.py`: FIELD_CANDIDATES 실제 태그로 확정. NCPMS 서비스 코드는 11-10 공식 명세로 확정(예찰 SVC51~53 추가, 발생정보는 OpenAPI 미제공) — 조사 결과·대상 확대안은 `docs/ncpms-research.md`
+- 대상 병해충 재검토: 고추 담배거세미나방은 NCPMS 고추 예찰·예측 대상이 아님(고추는 담배나방, 담배거세미나방은 콩 예찰) → 교체 여부 결정 필요. 확대 1·2순위 후보는 `docs/ncpms-research.md` 5절
 - `pipeline/fetch/kma.py`: 중기예보(getMidTa/getMidLandFcst, regId) 미구현
 - `pipeline/fetch/ncpms.py`: 방제정보 응답 태그(`developmentCondition` 등)는 가이드 기준 추정 → 실응답으로 확인
 - `models/*/*/model.yaml`: `ncpms_key` 비어 있음, `references` 일반 문구

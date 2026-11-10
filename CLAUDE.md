@@ -20,7 +20,8 @@
   - Tailwind 설정(`tailwind.config.ts`)을 바꾸면 dev 서버를 재시작해야 반영된다. `npm run build`는 dev 서버의 `.next`를 덮어쓰므로 dev 서버를 멈추고 빌드 후 `.next`를 지우고 다시 띄운다.
 - 외부 API 키는 환경변수(`NCPMS_API_KEY`, `DATA_GO_KR_KEY`, `KMA_API_KEY`)로만. 코드·커밋·로그에 절대 넣지 않는다. 공공데이터포털 키는 `config.normalize_key()`가 디코딩한다.
 - 모델 파라미터(`model.yaml`)는 담당 연구자 검토 대상. 값을 바꾸면 `references`에 근거를 적고 `status`를 유지/갱신한다. 임의로 "그럴듯한" 수치를 만들지 말고, 모르면 TODO로 남긴다.
-- 농업기상 API 응답 태그명은 미확인 상태(`pipeline/config.py` FIELD_CANDIDATES). `python -m pipeline.cli probe` 결과로 맞춘다. NCPMS 예찰·예측·발생정보 서비스 코드도 미확인(`NCPMS_SERVICE_CODES`).
+- 농업기상 API 응답 태그명은 미확인 상태(`pipeline/config.py` FIELD_CANDIDATES). `python -m pipeline.cli probe` 결과로 맞춘다.
+- NCPMS 서비스 코드는 공식 명세로 확정(`NCPMS_SERVICE_CODES`, `docs/ncpms-research.md`). 검색·예찰 계열은 `serviceType` 필수, 예측(SVC31~34)은 위젯이라 원자료 아님, 발생정보(발령)는 OpenAPI 없음. 대상 병해충을 늘릴 때는 NCPMS 예찰(검증)·예측모형(비교) 유무를 먼저 본다(`data/reference/ncpms_*.csv`).
 - 개발계정 트래픽은 일 1,000건. 라이브 실행은 `--spots N`으로 제한해서 시작한다.
 
 ## 자주 쓰는 명령

@@ -90,17 +90,24 @@ KMA_BASE_TIMES = ["0200", "0500", "0800", "1100", "1400", "1700", "2000", "2300"
 
 # --- NCPMS 오픈API --------------------------------------------------------
 NCPMS_BASE = "http://ncpms.rda.go.kr/npmsAPI/service"
-# 확인된 코드: SVC01 병 검색, SVC05 병 상세(sickKey). 해충 SVC03/SVC07은 통용되는 값.
-# 예찰·예측·발생정보 코드는 NCPMS 'OpenAPI 안내' 화면에서 확인 후 채운다.
+# 2026-11-10 NCPMS 'OpenAPI 안내'(ncpms.rda.go.kr/npms/OpenApiInfo.np) 상세 화면으로 확인한 코드.
+# 검색·예찰 계열은 serviceType(AA001=XML, AA003=JSON)이 필수. 상세(SVC05/07)는 serviceType 없음.
+# 예측(SVC31~34)은 원자료가 아니라 웹페이지에 끼워 넣는 지도 위젯(proxyUrl·div_id, 인증 도메인 필요).
+# '병해충 발생정보'(예보·주의보·경보 발령)는 OpenAPI로 제공되지 않는다(웹 /npms/NewIndcUserListR.np 게시판).
 NCPMS_SERVICE_CODES = {
-    "disease_search": "SVC01",
-    "disease_detail": "SVC05",
-    "insect_search": "SVC03",
-    "insect_detail": "SVC07",
-    "occurrence_info": "",     # TODO: 발생정보(예보·주의보·경보)
-    "survey_result": "",       # TODO: 예찰 결과
-    "forecast_map": "",        # TODO: 예측 지도
+    "disease_search": "SVC01",       # 병 검색: cropName | sickNameKor
+    "disease_detail": "SVC05",       # 병 상세: sickKey → infectionRoute, developmentCondition, symptoms, preventionMethod …
+    "insect_search": "SVC03",        # 해충 검색: cropName | insectKorName
+    "insect_detail": "SVC07",        # 해충 상세: insectKey → ecologyInfo, damageInfo, preventMethod …
+    "survey_search": "SVC51",        # 예찰 검색: searchExaminYear, searchPredictnSpchcknCode, searchKncrCode → insectKey(회차키), examinTmrd, inputStdrDatetm
+    "survey_by_sido": "SVC52",       # 예찰 상세(시도별): insectKey → sidoCode, sidoNm, dbyhsNm, inqireValue
+    "survey_by_sigungu": "SVC53",    # 예찰 상세(시군구별): insectKey, sidoCode → sigunguNm, dbyhsNm, inqireValue
+    "forecast_map_widget": "SVC31",  # 병해충예측지도(위젯)
+    "forecast_spot_widget": "SVC32", # 지점자료예측조회(위젯)
 }
+NCPMS_SERVICE_TYPE_XML = "AA001"
+# 예찰 검색용 코드(예찰구분·작물·조사구분): data/reference/ncpms_survey_targets.csv
+# NCPMS 자체 예측모형 목록(9작물 51모형, 운영기간): data/reference/ncpms_forecast_models.csv
 
 
 def ensure_dirs() -> None:
