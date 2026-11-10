@@ -1,0 +1,46 @@
+id: apple_anthracnose__demo_wet
+pest_id: apple_anthracnose
+name_ko: 사과 탄저병
+name_sci: Colletotrichum spp.
+crop: apple
+kind: disease
+type: A
+version: 0.0.1
+horizon_days: 7
+season:
+  start_month: 6
+  end_month: 9
+inputs:
+- tavg
+- rain
+- lwd_hours(추정)
+- rh
+label: (데모) 장기 누적형
+demo_only: true
+description: 화면의 모델 선택 기능을 확인하기 위한 가상 모형입니다. 실제 예측에 쓰지 않으며 데모 실행(--demo)에서만 나타납니다.
+logic: 기본 감염조건형과 같은 계산식에서 감염 부하 감소율만 높여(0.9) 최근 강우·젖음 이력을 더 오래 반영하도록 한 비교용 설정. 수치는 근거 문헌이 없는 시연용이다.
+params:
+  temp:
+    min: 15
+    opt_low: 22
+    opt_high: 28
+    max: 32
+  wetness_hours:
+  - temp: 15
+    hours: 12
+  - temp: 20
+    hours: 8
+  - temp: 25
+    hours: 5
+  - temp: 30
+    hours: 6
+  rain_trigger_mm: 2.0
+  rain_min_wet_hours: 8.0
+  decay: 0.9
+  load_sat: 4.0
+references:
+- 시연용 가상 모형 — 근거 문헌 없음. 실제 추가 모델은 담당 연구자가 근거와 함께 등록한다.
+owner: ''
+status: draft
+ncpms_key: ''
+ncpms_kind: sick

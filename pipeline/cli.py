@@ -34,7 +34,7 @@ def _parse_date(s: str | None) -> date:
 
 
 def cmd_models(_: argparse.Namespace) -> int:
-    for m in discover():
+    for m in discover(include_demo=True):
         c = m.card
         print(f"{c.id:28s} {c.type}  {c.crop:7s} {c.name_ko:12s} v{c.version} [{c.status}] {m.folder.relative_to(ROOT)}")
     return 0
@@ -94,7 +94,7 @@ def cmd_run(args: argparse.Namespace) -> int:
     horizon = int(args.horizon)
     warnings: list[str] = []
     only = [x.strip() for x in args.models.split(",")] if args.models else None
-    models = discover(only=only)
+    models = discover(only=only, include_demo=bool(args.demo))
     if not models:
         print("실행할 모델이 없습니다.")
         return 2

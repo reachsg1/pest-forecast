@@ -9,9 +9,9 @@ import RiskBadge from "./RiskBadge";
 import SpotPanel from "./SpotPanel";
 import { Icon } from "./ui";
 import { GRADES, NA, fmtIndex, gradeOf, gradeRank } from "@/lib/grades";
-import type { Grade, NaReason, RiskFile, RiskSpotEntry, Spot } from "@/lib/types";
+import type { Grade, ModelLite, NaReason, RiskFile, RiskSpotEntry, Spot } from "@/lib/types";
 
-type PestLite = { pest_id: string; name_ko: string; crop: string; crop_ko: string; horizon_days: number };
+type PestLite = { pest_id: string; name_ko: string; crop: string; crop_ko: string; horizon_days: number; models: ModelLite[] };
 
 // 배경지도: 위성(기본) / 일반. 두 소스를 한 스타일에 넣고 레이어 표시만 바꾼다(위험도 레이어 유지).
 // 개발용 타일: 위성 Esri World Imagery, 일반 OSM. 운영 전 VWorld(위성·하이브리드·기본) 타일로 교체(HANDOFF TODO).
@@ -62,6 +62,11 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
   const crop = sp.get("crop") ?? pests[0]?.crop ?? "";
   const cropPests = useMemo(() => pests.filter((p) => p.crop === crop), [pests, crop]);
   const pestId = sp.get("pest") && pests.some((p) => p.pest_id === sp.get("pest")) ? (sp.get("pest") as string) : cropPests[0]?.pest_id ?? "";
+  // 예측 모델: 병해충마다 여러 개일 수 있다. URL ?model= 이 이 병해충의 모델이 아니면 기본 모델.
+  const pestModels = useMemo(() => pests.find((p) => p.pest_id === pestId)?.models ?? [], [pests, pestId]);
+  const defaultModel = pestModels.find((m) => m.is_default) ?? pestModels[0];
+  const model = pestModels.find((m) => m.model_id === sp.get("model")) ?? defaultModel;
+  const modelId = model?.model_id ?? pestId;
   const offset = Math.max(0, Math.min(horizon, Number(sp.get("d") ?? 0) || 0));
   const selected = sp.get("spot") ?? "";
 
@@ -93,19 +98,21 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
     [router, sp],
   );
 
-  // 병해충 선택이 바뀌면 지도용 데이터 로드
+  // 병해충·모델 선택이 바뀌면 그 모델의 지도용 데이터 로드
+  // (모델별 파일 risk/models/<model_id>.json, 없으면 예전 형식 risk/<pest_id>.json)
   useEffect(() => {
     if (!pestId) return;
     let alive = true;
     setLoading(true);
-    fetch(`/data/risk/${pestId}.json`)
+    fetch(`/data/risk/models/${modelId}.json`)
+      .then((r) => (r.ok ? r : fetch(`/data/risk/${pestId}.json`)))
       .then((r) => (r.ok ? r.json() : null))
       .then((j) => alive && setRisk(j))
       .finally(() => alive && setLoading(false));
     return () => {
       alive = false;
     };
-  }, [pestId]);
+  }, [pestId, modelId]);
 
   // 지도 클릭 핸들러가 항상 최신 URL 상태를 쓰도록 ref로 전달
   const setParamsRef = useRef(setParams);
@@ -232,7 +239,7 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
             <div className="grid grid-cols-[1fr_1.5fr] gap-2">
               <label>
                 <span className="mb-1 block text-[11px] font-medium text-white/60">작물</span>
-                <select className="field-glass" value={crop} onChange={(e) => setParams({ crop: e.target.value, pest: null, spot: null })}>
+                <select className="field-glass" value={crop} onChange={(e) => setParams({ crop: e.target.value, pest: null, model: null, spot: null })}>
                   {crops.map((c) => (
                     <option key={c} value={c}>
                       {pests.find((p) => p.crop === c)?.crop_ko ?? c}
@@ -242,7 +249,7 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
               </label>
               <label>
                 <span className="mb-1 block text-[11px] font-medium text-white/60">병해충</span>
-                <select className="field-glass" value={pestId} onChange={(e) => setParams({ pest: e.target.value })}>
+                <select className="field-glass" value={pestId} onChange={(e) => setParams({ pest: e.target.value, model: null })}>
                   {cropPests.map((p) => (
                     <option key={p.pest_id} value={p.pest_id}>
                       {p.name_ko}
@@ -251,6 +258,38 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
                 </select>
               </label>
             </div>
+            {/* 예측 모델 선택: 모델이 2개 이상일 때만 고를 수 있고, 1개면 이름만 보여 준다 */}
+            {pestModels.length > 1 ? (
+              <div>
+                <span className="mb-1 flex items-center justify-between text-[11px] font-medium text-white/60">
+                  <span>예측 모델</span>
+                  <span className="text-white/40">{pestModels.length}개</span>
+                </span>
+                <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="예측 모델">
+                  {pestModels.map((m) => (
+                    <button
+                      key={m.model_id}
+                      role="radio"
+                      aria-checked={m.model_id === modelId}
+                      onClick={() => setParams({ model: m.is_default ? null : m.model_id })}
+                      className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition ${
+                        m.model_id === modelId ? "border-emerald-300/60 bg-emerald-400/20 text-white" : "border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
+                      }`}
+                    >
+                      <span className="rounded bg-white/15 px-1 text-[10px] font-semibold">{m.type}</span>
+                      {m.label}
+                      {m.is_default && <span className="text-[10px] text-white/45">기본</span>}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              model && (
+                <p className="flex items-center gap-1.5 text-[11px] text-white/50">
+                  예측 모델 <span className="rounded bg-white/10 px-1.5 py-0.5 font-medium text-white/80">{model.label}</span>
+                </p>
+              )
+            )}
             <div className="flex items-center justify-between gap-2">
               <div className="segmented-glass" role="radiogroup" aria-label="전망">
                 {[0, 3, 7, 10].filter((d) => d <= horizon).map((d) => (
@@ -306,6 +345,7 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
           <div className="glass-dark absolute bottom-9 left-3 max-w-[calc(100%-1.5rem)] px-3.5 py-2.5 text-xs sm:bottom-3 sm:max-w-[calc(100%-16rem)]" aria-label="범례">
             <div className="mb-1.5 font-semibold">
               {pestName} <span className="font-normal text-white/50">· {offset === 0 ? "오늘" : `+${offset}일`}</span>
+              {pestModels.length > 1 && model && <span className="ml-1.5 rounded bg-emerald-400/20 px-1.5 py-0.5 text-[10px] font-medium text-emerald-100">{model.label}</span>}
             </div>
             <ul className="flex flex-wrap items-center gap-x-3 gap-y-1 text-white/75">
               {counts.map((g) => (
@@ -325,7 +365,14 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
         </div>
         <aside className="card p-5" aria-label="선택 지점 정보">
           {selected ? (
-            <SpotPanel code={selected} pestId={pestId} pests={pests} horizon={horizon} onClose={() => setParams({ spot: null })} />
+            <SpotPanel
+              code={selected}
+              pestId={pestId}
+              model={pestModels.length > 1 ? model : undefined}
+              pests={pests}
+              horizon={horizon}
+              onClose={() => setParams({ spot: null })}
+            />
           ) : (
             <div className="flex h-full flex-col items-center justify-center py-10 text-center">
               <span className="grid h-12 w-12 place-items-center rounded-2xl bg-brand-50 text-brand-600">

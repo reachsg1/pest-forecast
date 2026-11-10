@@ -37,6 +37,10 @@ export default function PestTabs({
 }) {
   const router = useRouter();
   const [tab, setTab] = useState(TABS.some((t) => t.id === initialTab) ? initialTab : "now");
+  // 예측 근거 탭: 병해충에 모델이 여러 개면 골라서 카드를 본다
+  const models = pest.models ?? [];
+  const [whyModelId, setWhyModelId] = useState(pest.default_model ?? models[0]?.model_id ?? "");
+  const whyModel = models.find((m) => m.model_id === whyModelId) ?? models[0];
   const series = spotFile?.series[pest.pest_id] ?? [];
   const countMap = Object.fromEntries(GRADES.map((g) => [g.name, entries.filter((e) => e.grade_today === g.name).length])) as Record<Grade, number>;
   const naCount = entries.filter((e) => e.grade_today == null).length;
@@ -164,8 +168,29 @@ export default function PestTabs({
         )}
 
         {tab === "why" && (
-          <section role="tabpanel" id="panel-why" aria-labelledby="tab-why">
-            <ModelCard pest={pest} />
+          <section role="tabpanel" id="panel-why" aria-labelledby="tab-why" className="space-y-5">
+            {models.length > 1 && (
+              <div>
+                <div className="text-xs font-semibold text-slate-500">이 병해충의 예측 모델 {models.length}개 · 예측 지도에서 골라 볼 수 있어요</div>
+                <div className="segmented mt-2 flex-wrap" role="radiogroup" aria-label="예측 모델">
+                  {models.map((m) => (
+                    <button key={m.model_id} role="radio" aria-checked={m.model_id === whyModel?.model_id} onClick={() => setWhyModelId(m.model_id)} className="segmented-item">
+                      {m.label}
+                      {m.is_default && <span className="ml-1 text-[10px] text-slate-400">기본</span>}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+            {whyModel?.demo_only && (
+              <p className="rounded-xl bg-amber-50 px-4 py-3 text-xs text-amber-800 ring-1 ring-inset ring-amber-200">데모 화면 확인용 가상 모형입니다. 실제 예측에는 쓰지 않습니다.</p>
+            )}
+            <ModelCard pest={whyModel ? (whyModel as unknown as PestCard) : pest} />
+            {models.length > 1 && whyModel && (
+              <Link href={`/map?crop=${pest.crop}&pest=${pest.pest_id}${whyModel.is_default ? "" : `&model=${whyModel.model_id}`}`} className="link-arrow text-xs">
+                이 모델로 예측 지도 보기 <Icon name="arrow" className="h-3.5 w-3.5" />
+              </Link>
+            )}
           </section>
         )}
 

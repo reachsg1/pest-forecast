@@ -36,7 +36,7 @@ def test_discover_finds_eight_models():
     assert all(m.card.type in {"A", "B", "C"} for m in models)
 
 
-@pytest.mark.parametrize("m", discover(), ids=lambda m: m.id)
+@pytest.mark.parametrize("m", discover(include_demo=True), ids=lambda m: m.id)
 def test_predict_index_in_range_and_sorted(m):
     wx = synth_weather(date(2026, 1, 1), 300, wet=True)
     pts = m.model.predict(wx)

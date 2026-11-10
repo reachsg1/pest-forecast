@@ -6,11 +6,11 @@ import RiskBadge from "./RiskBadge";
 import Sparkline from "./Sparkline";
 import { Icon } from "./ui";
 import { NA_REASONS, pestFullName, windowText } from "@/lib/grades";
-import type { SpotFile } from "@/lib/types";
+import type { ModelLite, SpotFile } from "@/lib/types";
 
 type PestLite = { pest_id: string; name_ko: string; crop: string; crop_ko: string };
 
-export default function SpotPanel({ code, pestId, pests, horizon, onClose }: { code: string; pestId: string; pests: PestLite[]; horizon: number; onClose?: () => void }) {
+export default function SpotPanel({ code, pestId, model, pests, horizon, onClose }: { code: string; pestId: string; model?: ModelLite; pests: PestLite[]; horizon: number; onClose?: () => void }) {
   const [data, setData] = useState<SpotFile | null>(null);
   const [err, setErr] = useState(false);
 
@@ -37,7 +37,8 @@ export default function SpotPanel({ code, pestId, pests, horizon, onClose }: { c
       </div>
     );
 
-  const series = data.series[pestId] ?? [];
+  // 추가 모델을 골랐으면 그 모델의 시계열, 아니면 기본 모델
+  const series = (model && !model.is_default ? data.series_by_model?.[model.model_id] : undefined) ?? data.series[pestId] ?? [];
   const future = series.filter((p) => p.offset >= 0 && p.offset <= horizon);
   const today = series.find((p) => p.offset === 0);
   const recent = data.weather.filter((w) => !w.is_forecast).slice(-7);
@@ -80,7 +81,10 @@ export default function SpotPanel({ code, pestId, pests, horizon, onClose }: { c
       </div>
 
       <div className="rounded-xl bg-slate-50 p-4">
-        <div className="text-xs font-medium text-slate-500">{pestName} · 오늘</div>
+        <div className="text-xs font-medium text-slate-500">
+          {pestName}
+          {model && <span className="ml-1 rounded bg-brand-50 px-1.5 py-0.5 text-[10px] font-semibold text-brand-700">{model.label}</span>} · 오늘
+        </div>
         <div className="mt-2">{today ? <RiskBadge grade={today.grade} index={today.index} na={today.na_reason} size="lg" /> : <span className="text-slate-500">예측 없음</span>}</div>
         {isNa && today?.na_reason && <p className="mt-3 text-xs leading-relaxed text-slate-600">{NA_REASONS[today.na_reason].long(pest?.crop_ko ?? "이 작물")}</p>}
         {season && <p className="mt-2 text-xs text-slate-500">재배 기간 {season}</p>}

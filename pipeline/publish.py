@@ -83,27 +83,44 @@ def publish(
     ]
     _dump(web / "spots.json", spots_out)
 
-    # --- pests.json ---------------------------------------------------------
-    pests_out = []
+    # --- 병해충별 모델 묶음 -------------------------------------------------
+    # 같은 pest_id의 모델이 여러 개일 수 있다. 기본 모델(is_default, 없으면 첫 모델)이
+    # 홈 요약·등급 집계·risk/<pest_id>.json을 맡고, 모든 모델은 risk/models/<model_id>.json을 갖는다.
+    pest_models: dict[str, list[LoadedModel]] = {}
     for lm in models:
+        pest_models.setdefault(lm.card.pest_id, []).append(lm)
+    for pid, lst in pest_models.items():
+        lst.sort(key=lambda m: (not m.is_default, m.id))
+    default_of = {pid: lst[0] for pid, lst in pest_models.items()}
+
+    # --- pests.json (병해충 1건 = 기본 모델 카드 + 모델 목록) ---------------------
+    pests_out = []
+    for pid, lst in pest_models.items():
+        lm = lst[0]
         card = lm.card.to_dict()
         card["crop_ko"] = CROP_NAMES.get(lm.card.crop, lm.card.crop)
         card["eval"] = lm.eval_summary()
-        if control_info and lm.card.pest_id in control_info:
-            card["control"] = control_info[lm.card.pest_id]
+        card["default_model"] = lm.id
+        card["models"] = [
+            {**m.card.to_dict(), "model_id": m.id, "label": m.label, "is_default": m is lm, "eval": m.eval_summary()}
+            for m in lst
+        ]
+        if control_info and pid in control_info:
+            card["control"] = control_info[pid]
         pests_out.append(card)
     _dump(web / "pests.json", pests_out)
 
-    # --- 행 분류 -----------------------------------------------------------
-    by_pest_spot: dict[str, dict[str, list[dict]]] = defaultdict(lambda: defaultdict(list))
+    # --- 행 분류 (모델별) -------------------------------------------------------
+    by_model_spot: dict[str, dict[str, list[dict]]] = defaultdict(lambda: defaultdict(list))
     for r in rows:
-        by_pest_spot[r["pest_id"]][r["spot_code"]].append(r)
+        by_model_spot[r["model_id"]][r["spot_code"]].append(r)
 
     summary_pests = []
     for lm in models:
         pid = lm.card.pest_id
+        is_default = default_of[pid] is lm
         entries = []
-        for code, rs in by_pest_spot.get(pid, {}).items():
+        for code, rs in by_model_spot.get(lm.id, {}).items():
             rs.sort(key=lambda x: x["offset_days"])
             fut = [x for x in rs if 0 <= x["offset_days"] <= horizon]
             today = next((x for x in rs if x["offset_days"] == 0), None)
@@ -133,18 +150,23 @@ def publish(
         # 위험 높은 순, 해당 없음은 맨 뒤
         entries.sort(key=lambda e: (e["index_today"] is None, -(e["index_today"] or 0)))
         applicable = [e for e in entries if e["index_today"] is not None]
-        _dump(
-            web / "risk" / f"{pid}.json",
-            {
-                "pest_id": pid,
-                "name_ko": lm.card.name_ko,
-                "crop": lm.card.crop,
-                "issued_date": issued.isoformat(),
-                "horizon_days": horizon,
-                "offsets": list(range(0, horizon + 1)),
-                "spots": entries,
-            },
-        )
+        risk_doc = {
+            "pest_id": pid,
+            "model_id": lm.id,
+            "model_label": lm.label,
+            "model_type": lm.card.type,
+            "is_default": is_default,
+            "name_ko": lm.card.name_ko,
+            "crop": lm.card.crop,
+            "issued_date": issued.isoformat(),
+            "horizon_days": horizon,
+            "offsets": list(range(0, horizon + 1)),
+            "spots": entries,
+        }
+        _dump(web / "risk" / "models" / f"{lm.id}.json", risk_doc)  # 지도에서 모델을 골라 볼 때
+        if not is_default:
+            continue
+        _dump(web / "risk" / f"{pid}.json", risk_doc)  # 기본 모델(요약·상세·API 호환)
         summary_pests.append(
             {
                 "pest_id": pid,
@@ -166,15 +188,21 @@ def publish(
     # --- spot/<code>.json ---------------------------------------------------
     for s in spots:
         code = s["spot_code"]
-        series: dict[str, list[dict]] = {}
+        series: dict[str, list[dict]] = {}          # pest_id → 기본 모델 시계열
+        series_by_model: dict[str, list[dict]] = {}  # model_id → 추가 모델 시계열(기본 모델은 series에)
         for lm in models:
-            rs = by_pest_spot.get(lm.card.pest_id, {}).get(code, [])
-            if rs:
-                series[lm.card.pest_id] = [
-                    {"date": r["target_date"], "offset": r["offset_days"], "index": r["index"], "grade": r["grade"], "na_reason": r.get("na_reason"),
-                     "is_forecast": r["is_forecast"], "inputs": r["inputs"]}
-                    for r in sorted(rs, key=lambda x: x["offset_days"])
-                ]
+            rs = by_model_spot.get(lm.id, {}).get(code, [])
+            if not rs:
+                continue
+            pts = [
+                {"date": r["target_date"], "offset": r["offset_days"], "index": r["index"], "grade": r["grade"], "na_reason": r.get("na_reason"),
+                 "is_forecast": r["is_forecast"], "inputs": r["inputs"]}
+                for r in sorted(rs, key=lambda x: x["offset_days"])
+            ]
+            if default_of[lm.card.pest_id] is lm:
+                series[lm.card.pest_id] = pts
+            else:
+                series_by_model[lm.id] = pts
         phen = {crop: sc.to_dict() for (c, crop), sc in assessments.items() if c == code}
         wx = [
             {
@@ -200,12 +228,13 @@ def publish(
                 "missing_rate": round(missing_rate_by_spot.get(code, 0.0), 3),
                 "phenology": phen,   # 작물별 재배 여부·재배 기간 판정 근거
                 "series": series,
+                "series_by_model": series_by_model,
                 "weather": wx,
             },
         )
 
     # --- summary.json / status.json -----------------------------------------
-    all_entries = [e for lm in models for e in json.loads((web / "risk" / f"{lm.card.pest_id}.json").read_text(encoding="utf-8"))["spots"]]
+    all_entries = [e for pid in pest_models for e in json.loads((web / "risk" / f"{pid}.json").read_text(encoding="utf-8"))["spots"]]
     summary = {
         "issued_date": issued.isoformat(),
         "generated_at": datetime.now().isoformat(timespec="seconds"),
@@ -214,7 +243,8 @@ def publish(
         "grade_counts_all": _grade_counts(all_entries),
         "na_all": sum(1 for e in all_entries if e["index_today"] is None),
         "n_spots": len(spots),
-        "n_models": len(models),
+        "n_models": len(pest_models),      # 화면의 '병해충 N종'(병해충 수)
+        "n_model_variants": len(models),   # 추가 모델 포함 전체 모델 수
         "pests": sorted(summary_pests, key=lambda p: -max(p["grade_counts"].get("경보", 0) * 100 + p["grade_counts"].get("주의보", 0) * 10 + p["grade_counts"].get("예보", 0), 0)),
     }
     _dump(web / "summary.json", summary)
@@ -225,6 +255,7 @@ def publish(
         "generated_at": summary["generated_at"],
         "n_spots": len(spots),
         "n_models": len(models),
+        "n_pests": len(pest_models),
         "n_rows": len(rows),
         "mean_missing_rate": round(sum(missing_rate_by_spot.values()) / len(missing_rate_by_spot), 3) if missing_rate_by_spot else None,
         "data_poor_spots": sorted(c for c, m in missing_rate_by_spot.items() if m > 0.3),

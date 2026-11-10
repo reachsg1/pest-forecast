@@ -2,12 +2,23 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import MapView from "@/components/MapView";
 import { getPests, getSpots, getSummary } from "@/lib/data";
+import type { ModelLite } from "@/lib/types";
 
 export const metadata: Metadata = { title: "예측 지도" };
 
 export default async function MapPage() {
   const [pests, spots, summary] = await Promise.all([getPests(), getSpots(), getSummary()]);
-  const pestList = pests.map((p) => ({ pest_id: p.pest_id, name_ko: p.name_ko, crop: p.crop, crop_ko: p.crop_ko, horizon_days: p.horizon_days }));
+  const pestList = pests.map((p) => ({
+    pest_id: p.pest_id,
+    name_ko: p.name_ko,
+    crop: p.crop,
+    crop_ko: p.crop_ko,
+    horizon_days: p.horizon_days,
+    // 이 병해충에 등록된 모델들(첫 번째 = 기본). 예전 데이터처럼 목록이 없으면 기본 모델 1개로 본다.
+    models: (p.models?.map((m) => ({ model_id: m.model_id, label: m.label, type: m.type, is_default: m.is_default, demo_only: m.demo_only })) ?? [
+      { model_id: p.id, label: p.label ?? "기본 모델", type: p.type, is_default: true },
+    ]) as ModelLite[],
+  }));
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">

@@ -5,7 +5,8 @@
 큰 작업이 끝나면 `docs/HANDOFF.md`의 '검증 상태'와 'TODO'를 갱신한다.
 
 ## 구조 한눈에
-- `models/<작물>/<병해충>/{model.yaml, model.py, eval.json}` — 모델 플러그인. `models/_base/`에 공통 인터페이스와 유형 A(감염조건)·B(적산온도)·C(통계형). 폴더 추가만으로 자동 등록(`registry.discover()`).
+- `models/<작물>/<병해충>/{model.yaml, model.py, eval.json}` — 모델 플러그인(기본 모델). `models/_base/`에 공통 인터페이스와 유형 A(감염조건)·B(적산온도)·C(통계형). 폴더 추가만으로 자동 등록(`registry.discover()`).
+  - 같은 병해충의 추가 모델은 `<병해충>/variants/<이름>/`(같은 `pest_id`, 다른 `id`, `label` 필수). 예측 지도에서 모델을 골라 결과를 비교한다(`?model=`). 요약·등급 집계는 기본 모델 기준. `demo_only: true`는 데모 실행 전용 시연 모형 — 실제 모델로 쓰지 않는다. 자세한 규칙은 `docs/model-authoring.md`.
 - `pipeline/` — `cli.py run [--demo]` 가 수집→정제→실행→발행. 발행 결과는 `apps/web/public/data/`(웹이 읽음)와 `data/predictions/`(스냅샷).
 - `apps/web/` — Next.js 15 App Router + Tailwind. 서버 컴포넌트는 `lib/data.ts`로 JSON을 fs로 읽고, 클라이언트는 `/data/*.json`을 fetch.
 - `.github/workflows/daily.yml` — 05:00 KST 배치 후 결과 커밋(→ Vercel 자동 배포). `backtest-on-pr.yml` — PR 검증.

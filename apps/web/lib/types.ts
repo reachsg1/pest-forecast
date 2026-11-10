@@ -66,6 +66,27 @@ export interface PestCard {
   status: string;
   eval: EvalSummary;
   control?: { name: string; environment: string; symptoms: string; control: string; image: string };
+  label?: string;
+  demo_only?: boolean;
+  // 같은 병해충의 여러 모델(첫 번째가 기본 모델). 지도에서 골라 볼 수 있다.
+  default_model?: string;
+  models?: ModelVariant[];
+}
+
+// 병해충 1종에 붙은 모델 1개(카드 전체 + 식별 정보)
+export interface ModelVariant extends Omit<PestCard, "models" | "default_model" | "control"> {
+  model_id: string;
+  label: string;
+  is_default: boolean;
+}
+
+// 지도·목록에서 쓰는 모델 요약
+export interface ModelLite {
+  model_id: string;
+  label: string;
+  type: string;
+  is_default: boolean;
+  demo_only?: boolean;
 }
 
 export interface RiskSpotEntry {
@@ -89,6 +110,10 @@ export interface RiskSpotEntry {
 
 export interface RiskFile {
   pest_id: string;
+  model_id?: string;
+  model_label?: string;
+  model_type?: string;
+  is_default?: boolean;
   name_ko: string;
   crop: string;
   issued_date: string;
@@ -125,7 +150,8 @@ export interface SpotFile {
   issued_date: string;
   missing_rate: number;
   phenology?: Record<string, PhenologyInfo>; // crop → 판정 근거
-  series: Record<string, SeriesPoint[]>;
+  series: Record<string, SeriesPoint[]>; // pest_id → 기본 모델 시계열
+  series_by_model?: Record<string, SeriesPoint[]>; // model_id → 추가 모델 시계열
   weather: WeatherDay[];
 }
 

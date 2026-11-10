@@ -18,10 +18,15 @@ class LoadedModel:
     card: ModelCard
     model: BaseModel
     folder: Path
+    is_default: bool = True   # 병해충 폴더 바로 아래 model.yaml = 기본 모델, variants/* = 추가 모델
 
     @property
     def id(self) -> str:
         return self.card.id
+
+    @property
+    def label(self) -> str:
+        return self.card.label or ("기본 모델" if self.is_default else self.card.id)
 
     def eval_summary(self) -> dict:
         import json
@@ -48,19 +53,32 @@ def _load_module(py_path: Path):
     return mod
 
 
-def discover(root: Optional[Path] = None, only: Optional[Iterable[str]] = None, include_draft: bool = True) -> list[LoadedModel]:
+def discover(
+    root: Optional[Path] = None,
+    only: Optional[Iterable[str]] = None,
+    include_draft: bool = True,
+    include_demo: bool = False,
+) -> list[LoadedModel]:
     """``model.yaml``이 있는 모든 폴더를 모델로 적재한다.
 
-    only: 모델 id 목록으로 제한. include_draft=False면 status가 draft인 모델 제외.
+    - ``<작물>/<병해충>/model.yaml``            : 그 병해충의 기본 모델
+    - ``<작물>/<병해충>/variants/<이름>/model.yaml`` : 같은 병해충의 추가 모델(지도에서 골라 볼 수 있음)
+    같은 병해충의 모델은 ``pest_id``가 같고 ``id``는 서로 달라야 한다.
+
+    only: 모델 id 또는 pest_id 목록으로 제한. include_draft=False면 draft 제외.
+    include_demo=False면 demo_only 모델(데모 화면 확인용 가상 모형) 제외.
     """
     root = Path(root) if root else MODELS_ROOT
     wanted = set(only) if only else None
     found: list[LoadedModel] = []
-    for yml in sorted(root.glob("*/*/model.yaml")):
+    ymls = [(y, True) for y in sorted(root.glob("*/*/model.yaml"))] + [(y, False) for y in sorted(root.glob("*/*/variants/*/model.yaml"))]
+    for yml, is_default in ymls:
         card = ModelCard.from_yaml(yml)
-        if wanted and card.id not in wanted:
+        if wanted and card.id not in wanted and card.pest_id not in wanted:
             continue
         if not include_draft and card.status == "draft":
+            continue
+        if card.demo_only and not include_demo:
             continue
         py = yml.parent / "model.py"
         if not py.exists():
@@ -69,5 +87,9 @@ def discover(root: Optional[Path] = None, only: Optional[Iterable[str]] = None, 
         cls = getattr(mod, "Model", None)
         if cls is None:
             raise AttributeError(f"{py}: 'Model' 클래스를 정의해야 합니다")
-        found.append(LoadedModel(card=card, model=cls(card), folder=yml.parent))
+        found.append(LoadedModel(card=card, model=cls(card), folder=yml.parent, is_default=is_default))
+    ids = [m.id for m in found]
+    dup = {i for i in ids if ids.count(i) > 1}
+    if dup:
+        raise ValueError(f"모델 id 중복: {sorted(dup)} — 같은 병해충의 추가 모델은 id를 다르게 지정하세요")
     return found

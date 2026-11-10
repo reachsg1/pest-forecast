@@ -125,6 +125,8 @@ class ModelCard:
     references: list[str] = field(default_factory=list)
     owner: str = ""
     status: str = "draft"     # draft | reviewed | active
+    label: str = ""           # 같은 병해충의 여러 모델 중 화면에 보일 짧은 이름(예: "적산온도형")
+    demo_only: bool = False   # True면 --demo 실행에서만 적재(화면 기능 확인용 가상 모형)
     path: str = ""
 
     @classmethod

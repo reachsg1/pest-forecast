@@ -27,6 +27,24 @@ models/<작물>/<병해충>/
 - `params`: 유형별 파라미터. **초기값 출처를 `references`에 반드시 적습니다**
 - `owner`: 담당 연구자 이름, `status`: `draft` → 검토 후 `reviewed` → 운영 `active`
 - `ncpms_key`: NCPMS 도감 키(sickKey/insectKey)를 넣으면 방제 정보가 자동 연동됩니다
+- `label`: 화면에 보일 짧은 모델 이름(예: "적산온도형"). 같은 병해충에 모델이 여럿일 때 지도 선택 버튼에 쓰입니다
+
+### 같은 병해충에 모델을 더 붙이기 (지도에서 골라 보기)
+
+한 병해충을 여러 방식(감염조건형·적산온도형·통계형 등)으로 예측할 수 있습니다.
+
+```
+models/apple/anthracnose/
+├── model.yaml, model.py, eval.json          ← 기본 모델(홈 요약·등급 집계·상세 화면 기준)
+└── variants/
+    └── <이름>/model.yaml, model.py, eval.json  ← 추가 모델
+```
+
+- 추가 모델의 `pest_id`는 기본 모델과 **같게**, `id`는 **다르게**(예: `apple_anthracnose__wetness`) 지정합니다. id가 겹치면 등록 단계에서 오류가 납니다
+- `label`을 꼭 채웁니다. 예측 지도 조건 패널에 "예측 모델" 버튼으로 나타나고, 고르면 지도·범례·지점 패널이 그 모델 결과로 바뀝니다(URL `?model=<id>`로 공유 가능)
+- 발행 결과: 모든 모델은 `public/data/risk/models/<id>.json`, 지점 시계열은 `spot/<code>.json`의 `series_by_model`. 기본 모델만 `risk/<pest_id>.json`·요약에 쓰입니다
+- `demo_only: true`는 데모 실행(`--demo`)에서만 적재되는 시연용 모형입니다. 실제 모델에는 쓰지 않습니다(`apple/anthracnose/variants/demo_wet` 참고)
+- 추가 모델도 파라미터 근거를 `references`에 적고 `status: draft`로 시작합니다
 
 ## 3. model.py
 

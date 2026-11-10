@@ -68,9 +68,41 @@ def test_demo_run_end_to_end(tmp_path, monkeypatch):
 
     assert main(["run", "--demo", "--date", "2026-07-15", "--models", "apple_anthracnose,rice_sheath_blight"]) == 0
     status = json.loads((tmp_path / "web" / "status.json").read_text(encoding="utf-8"))
-    assert status["ok"] and status["n_models"] == 2 and status["n_spots"] == 12
+    assert status["ok"] and status["n_pests"] == 2 and status["n_spots"] == 12
     risk = json.loads((tmp_path / "web" / "risk" / "apple_anthracnose.json").read_text(encoding="utf-8"))
     assert len(risk["spots"]) == 12 and len(risk["spots"][0]["index_by_offset"]) == 11
     spot = json.loads((tmp_path / "web" / "spot" / "DEMO_SUWON.json").read_text(encoding="utf-8"))
     assert "apple_anthracnose" in spot["series"] and spot["weather"]
     assert (tmp_path / "pred" / "2026-07-15.csv").exists()
+
+
+def test_multiple_models_per_pest(tmp_path, monkeypatch):
+    """같은 병해충의 여러 모델: 모델별 지도 파일, 기본 모델 기준 요약, 지점별 모델 시계열."""
+    monkeypatch.setattr(config, "WEB_DATA_DIR", tmp_path / "web")
+    monkeypatch.setattr(config, "PREDICTIONS_DIR", tmp_path / "pred")
+    monkeypatch.setattr(config, "CACHE_DIR", tmp_path / "cache")
+    from pipeline.cli import main
+
+    # --models 에 pest_id를 주면 그 병해충의 모든 모델(데모 비교 모형 포함)이 돈다
+    assert main(["run", "--demo", "--date", "2026-07-15", "--models", "apple_anthracnose"]) == 0
+    web = tmp_path / "web"
+    pests = json.loads((web / "pests.json").read_text(encoding="utf-8"))
+    assert len(pests) == 1 and pests[0]["default_model"] == "apple_anthracnose"
+    assert [m["model_id"] for m in pests[0]["models"]] == ["apple_anthracnose", "apple_anthracnose__demo_wet"]
+    for mid in ("apple_anthracnose", "apple_anthracnose__demo_wet"):
+        doc = json.loads((web / "risk" / "models" / f"{mid}.json").read_text(encoding="utf-8"))
+        assert doc["model_id"] == mid and len(doc["spots"]) == 12
+    default = json.loads((web / "risk" / "apple_anthracnose.json").read_text(encoding="utf-8"))
+    assert default["model_id"] == "apple_anthracnose"
+    summary = json.loads((web / "summary.json").read_text(encoding="utf-8"))
+    assert summary["n_models"] == 1 and summary["n_model_variants"] == 2 and len(summary["pests"]) == 1
+    spot = json.loads((web / "spot" / "DEMO_SUWON.json").read_text(encoding="utf-8"))
+    assert "apple_anthracnose" in spot["series"] and "apple_anthracnose__demo_wet" in spot["series_by_model"]
+
+
+def test_demo_only_models_excluded_from_live_discovery():
+    from models._base.registry import discover
+
+    live = {m.id for m in discover()}
+    demo = {m.id for m in discover(include_demo=True)}
+    assert "apple_anthracnose__demo_wet" not in live and "apple_anthracnose__demo_wet" in demo
