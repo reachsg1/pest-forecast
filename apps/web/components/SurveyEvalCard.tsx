@@ -82,7 +82,7 @@ export default function SurveyEvalCard({ model, defaultLabel }: { model: ModelVa
       <ul className="mt-4 space-y-1 text-xs leading-relaxed text-slate-500">
         <li>· AUC는 발생한 곳과 안 한 곳을 가르는 힘입니다. 1.0이면 완벽, 0.5면 무작위와 같습니다. Brier는 확률 오차로 낮을수록 좋습니다.</li>
         <li>· &lsquo;같은 회차 변별력&rsquo;은 같은 조사일의 시군끼리만 비교한 값으로, 시기(계절)를 맞힌 효과를 뺀 성능입니다.</li>
-        <li>· 정답은 NCPMS 시군구 예찰 피해과율이 0보다 큰지이며, 같은 시군 이름의 농업기상 관측소와 짝지었습니다.</li>
+        <li>· 정답은 NCPMS 시군구 예찰 피해과율이 0보다 큰지이며, 설치 주소가 같은 시군인 농업기상 관측소(여럿이면 평균)와 짝지었습니다.</li>
       </ul>
     </div>
   );

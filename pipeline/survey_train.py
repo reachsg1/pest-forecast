@@ -6,9 +6,9 @@
 - data/survey/ncpms_<pest>_sigungu.csv  (scripts/fetch_survey.py)
 - data/cache/agriweather/_all/YYYY-MM.json (scripts/fetch_weather_all.py)
 
-매칭: 관측소명 첫 낱말(예: '이천시 장호원' → 이천시)과 예찰 시군구명이 같으면 한 시군으로 보고,
-시군 안 관측소가 여럿이면 날짜별 평균을 쓴다. 예찰 자료에서 이름이 두 시도 이상에 나오는 시군
-(예: 고성군)과 '구' 단위는 관측소 시도를 알 수 없어 뺀다(관측지점 목록 서비스 승인 후 좌표로 개선).
+매칭: 관측소 설치 주소(data/reference/agri_stations.csv, 관측지점 상세정보 15073274)의 '시도 시군'과
+예찰의 '시도 시군'이 같으면 짝짓고, 시군 안 관측소가 여럿이면 날짜별 평균을 쓴다. 목록에 없는 옛
+관측소는 이름 첫 낱말로 시군을 정한다. 관측소가 없는 시군은 뺀다(인접 시군 대체는 하지 않음).
 
 정답: 조사값 > 0 → 발생(1). 피처는 조사일 전날까지의 기상(models._base.stat.compute_features).
 검증은 연도 단위로 나눠(학습/시험 연도 분리) 다음과 비교한다.
@@ -40,6 +40,9 @@ from models._base.registry import discover  # noqa: E402
 from models._base.stat import compute_features  # noqa: E402
 from pipeline import config  # noqa: E402
 from pipeline.fetch.agriweather import to_daily_weather  # noqa: E402
+from pipeline.phenology import norm_sido, region_key  # noqa: E402
+
+STATIONS_CSV = config.REFERENCE_DIR / "agri_stations.csv"  # 관측지점 상세정보(15073274): 코드·주소·좌표
 
 FEATURES = [
     "tavg_14d", "rh_14d", "rain_14d", "rain_days_14d", "lwd_14d", "lwd_30d",
@@ -53,8 +56,35 @@ def _years(s: str) -> list[int]:
     return list(range(a, b + 1))
 
 
-def load_weather_by_sigungu(years: list[int]) -> dict[str, dict[date, DailyWeather]]:
-    """시군명 → 날짜 → 시군 내 관측소 평균 DailyWeather."""
+# 관측소 설치 주소가 옛 행정구역명으로 남은 경우 → 현재 시군(예찰 자료 표기)
+# 여주군→여주시(2013.9 시 승격), 당진군→당진시(2012.1 시 승격), 청원군→청주시(2014.7 통합)
+ADMIN_RENAMES = {"여주군": "여주시", "당진군": "당진시", "청원군": "청주시"}
+
+
+def station_regions() -> dict[str, str]:
+    """관측소 코드 → '시도 시군'(예: '경기 이천시'). 관측지점 상세정보의 설치 주소 기준."""
+    out: dict[str, str] = {}
+    if STATIONS_CSV.exists():
+        with STATIONS_CSV.open(encoding="utf-8") as f:
+            for r in csv.DictReader(f):
+                sd, sg = region_key(r["address"])
+                sg = ADMIN_RENAMES.get(sg, sg)
+                if sd and sg:
+                    out[r["spot_code"]] = f"{sd} {sg}"
+    return out
+
+
+def load_weather_by_sigungu(years: list[int], extra_regions: list[str] | None = None) -> dict[str, dict[date, DailyWeather]]:
+    """'시도 시군' → 날짜 → 시군 내 관측소 평균 DailyWeather.
+
+    관측소 시군은 관측지점 상세정보의 설치 주소로 정한다. 목록에 없는(폐쇄 등) 관측소는
+    관측소명 첫 낱말을 시군으로 보고, 그 이름이 (관측소 주소·예찰 자료를 통틀어) 한 시도에만
+    있을 때만 그 시도로 정한다."""
+    regions = station_regions()
+    sidos_of: dict[str, set] = defaultdict(set)
+    for key in list(regions.values()) + list(extra_regions or []):
+        sd, sg = key.split(" ", 1)
+        sidos_of[sg].add(sd)
     raw_by_stn: dict[str, list[dict]] = defaultdict(list)
     stn_sgg: dict[str, str] = {}
     for y in years:
@@ -67,7 +97,12 @@ def load_weather_by_sigungu(years: list[int]) -> dict[str, dict[date, DailyWeath
                 if not code:
                     continue
                 raw_by_stn[code].append(r)
-                stn_sgg[code] = (r.get("stn_Name") or "").split()[0] if r.get("stn_Name") else ""
+                if code in regions:
+                    stn_sgg[code] = regions[code]
+                else:
+                    name = (r.get("stn_Name") or "").split()
+                    sg = name[0] if name else ""
+                    stn_sgg[code] = f"{next(iter(sidos_of[sg]))} {sg}" if len(sidos_of.get(sg, ())) == 1 else ""
     per_sgg_day: dict[str, dict[date, list[DailyWeather]]] = defaultdict(lambda: defaultdict(list))
     for code, rows in raw_by_stn.items():
         sgg = stn_sgg.get(code, "")
@@ -93,20 +128,17 @@ def load_survey(pest: str) -> list[dict]:
     p = config.DATA_DIR / "survey" / f"ncpms_{pest}_sigungu.csv"
     with p.open(encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
-    # 같은 이름이 두 시도 이상에 나오는 시군, '구' 단위는 제외
-    sidos_by_name: dict[str, set] = defaultdict(set)
-    for r in rows:
-        sidos_by_name[r["sigungu"]].add(r["sido_code"])
     out = []
     for r in rows:
         name = r["sigungu"]
-        if not name or len(sidos_by_name[name]) > 1 or name.endswith("구"):
+        if not name:
             continue
         try:
             v = float(r["value"])
         except ValueError:
             continue
-        out.append({**r, "value": v, "date": datetime.strptime(r["survey_date"], "%Y-%m-%d").date()})
+        out.append({**r, "key": f"{norm_sido(r['sido'])} {name}", "value": v,
+                    "date": datetime.strptime(r["survey_date"], "%Y-%m-%d").date()})
     return out
 
 
@@ -141,6 +173,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--pest", required=True)
     ap.add_argument("--train", default="2015-2022")
     ap.add_argument("--test", default="2023-2025")
+    ap.add_argument("--export", default="",
+                    help="variant 폴더(예: models/pepper/anthracnose/variants/survey_logit) — model.yaml params와 eval.json을 이 결과로 갱신")
     ap.add_argument("--with-history", action="store_true",
                     help="직전 회차 예찰값(log1p)을 피처로 추가(운영하려면 예찰 실시간 연동 필요)")
     args = ap.parse_args(argv)
@@ -153,7 +187,7 @@ def main(argv: list[str] | None = None) -> int:
     from sklearn.preprocessing import StandardScaler
 
     survey = load_survey(args.pest)
-    wx = load_weather_by_sigungu(sorted(set(train_years + test_years)))
+    wx = load_weather_by_sigungu(sorted(set(train_years + test_years)), extra_regions=sorted({r["key"] for r in survey}))
     default = next(m for m in discover(include_demo=False) if m.card.pest_id == args.pest and m.is_default)
 
     # 기본 모델은 시군·연도 시계열로 한 번씩 돌린다(연초~조사일)
@@ -169,7 +203,7 @@ def main(argv: list[str] | None = None) -> int:
     samples = []
     skipped = defaultdict(int)
     for r in survey:
-        sgg, d = r["sigungu"], r["date"]
+        sgg, d = r["key"], r["date"]
         if sgg not in wx:
             skipped["관측소 없음"] += 1
             continue
@@ -293,7 +327,41 @@ def main(argv: list[str] | None = None) -> int:
     out.write_text(json.dumps(result, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
     print(json.dumps({k: result[k] for k in ("n_sigungu", "skipped", "train", "test", "test_by_year")}, ensure_ascii=False, indent=1))
     print(f"\n저장: {out}")
+    if args.export:
+        export_variant(Path(args.export), result)
     return 0
+
+
+def _pick(e: dict) -> dict:
+    return {k: e[k] for k in ("n", "positive_rate", "auc", "within_round_auc", "brier")}
+
+
+def export_variant(folder: Path, result: dict) -> None:
+    """학습 결과를 variant의 model.yaml(params)과 eval.json(status: survey_evaluated)에 옮긴다.
+    직전 예찰값 참고판(eval_<pest>_survey_history.json)이 있으면 eval.json에 참고로 붙인다."""
+    import yaml
+
+    if result.get("with_history"):
+        raise SystemExit("--with-history 결과는 운영 모델로 내보내지 않습니다(예찰 실시간 연동 전).")
+    my = folder / "model.yaml"
+    card = yaml.safe_load(my.read_text(encoding="utf-8"))
+    card["params"] = result["params"]
+    my.write_text(yaml.safe_dump(card, allow_unicode=True, sort_keys=False), encoding="utf-8")
+    ev = {
+        "model_id": card["id"], "version": card.get("version", ""), "evaluated_at": result["generated"],
+        "status": "survey_evaluated",
+        "method": f"연도 분리 검증: 학습 {result['train_years']}, 시험 {result['test_years']}. 정답 = 시군구 예찰값 > 0.",
+        "n_sigungu": result["n_sigungu"], "skipped": result["skipped"],
+        "test": _pick(result["test"]),
+        "test_by_year": {y: _pick(v) for y, v in result["test_by_year"].items()},
+        "note": "AUC 1.0=완벽, 0.5=무작위. '같은 회차 변별력'은 같은 조사일의 시군끼리 비교한 AUC로, 계절(시기) 효과를 뺀 성능입니다.",
+    }
+    hist = config.DATA_DIR / "survey" / f"eval_{result['pest_id']}_survey_history.json"
+    if hist.exists():
+        h = json.loads(hist.read_text(encoding="utf-8"))
+        ev["with_history_reference"] = {"note": "직전 회차 예찰값을 피처로 더한 판(운영엔 예찰 실시간 연동 필요)", "test": _pick(h["test"])}
+    (folder / "eval.json").write_text(json.dumps(ev, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"내보냄: {my}, {folder / 'eval.json'}")
 
 
 if __name__ == "__main__":

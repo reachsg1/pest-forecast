@@ -27,5 +27,5 @@
 | `eval_pepper_anthracnose_survey_history.json` | 참고: 직전 회차 예찰값을 더한 판 |
 
 - 회차: 6~9월 매월 1·16일(연 최대 8회). 2015년은 6월 16일부터 4회
-- 같은 이름이 두 시도에 있는 시군(고성군 등)과 '구' 단위는 관측소 시도를 알 수 없어 학습에서 뺀다
+- 관측소와는 설치 주소(`data/reference/agri_stations.csv`)의 '시도 시군'으로 짝짓는다. 관측소가 없는 시군은 학습에서 뺀다
 - 재수집: `python scripts/fetch_survey.py --crop VC011205 --examin 01320 --item 탄저병 --pest pepper_anthracnose` (캐시가 있으면 호출 0건, 처음 받을 때 약 790건)

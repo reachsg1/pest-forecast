@@ -78,7 +78,8 @@ AGRI_BASE = "https://apis.data.go.kr/1390802/AgriWeather"
 AGRI_SPOT_LIST = f"{AGRI_BASE}/getObsrSpotList"
 # 기본 관측데이터 조회(공공데이터포털 15078057) V3 — 2026-11-10 실호출 확인.
 # 오퍼레이션명 끝에 '3'이 붙는다. 월별 일자료는 지점코드를 빼면 전국 전 지점을 한 번에 준다.
-# 관측지점 목록(getObsrSpotList)은 별도 서비스(15073274)라 활용신청이 따로 필요하다.
+# 관측지점 목록(getObsrSpotList)은 별도 서비스(15073274) — 같은 키로 활용신청 승인됨(11-10).
+# 응답 태그: Obsr_Spot_Code Obsr_Spot_Nm Instl_La Instl_Lo Instl_Al Instl_Adres Clmt_Zone_Code Obsr_Begin_Datetm
 AGRI_GNRL = f"{AGRI_BASE}/WeatherObsrInfo/V3/GnrlWeather"
 AGRI_DAILY_MONTH = f"{AGRI_GNRL}/getWeatherMonDayList3"   # search_Year, search_Month, (obsr_Spot_Cd)
 AGRI_DAILY_RANGE = f"{AGRI_GNRL}/getWeatherTermDayList3"  # begin_Date, end_Date(1~365일), obsr_Spot_Cd
@@ -88,13 +89,13 @@ AGRI_PAGE_SIZE_BULK = 5000  # 전국 월자료 1회 호출(2015-07 기준 4,858�
 # 응답 XML 태그 → 내부 필드. 후보를 순서대로 찾는다. 일자료 태그는 V3 실응답으로 확인(11-10):
 # stn_Cd stn_Name date temp hghst_Artmp lowst_Artmp hum widdir wind max_Wind rn sun_Time srqty condens_Time gr_Temp soil_Temp soil_Wt
 FIELD_CANDIDATES: dict[str, list[str]] = {
-    "spot_code": ["stn_Cd", "obsr_Spot_Code", "stn_Code", "spot_Code", "stnCode"],
-    "spot_name": ["obsr_Spot_Nm", "stn_Name", "spot_Name", "stnName"],
-    "lat": ["lat", "latitude", "stn_Lat", "obsr_Lat"],
-    "lon": ["lon", "lng", "longitude", "stn_Lon", "obsr_Lon"],
-    "altitude": ["altitude", "alt", "stn_Alt", "obsr_Alt"],
-    "sigungu": ["sigungu", "area", "addr", "obsr_Addr", "stn_Addr"],
-    "zone_code": ["zone_Code", "zoneCode"],
+    "spot_code": ["stn_Cd", "Obsr_Spot_Code", "obsr_Spot_Code", "stn_Code", "spot_Code", "stnCode"],
+    "spot_name": ["Obsr_Spot_Nm", "obsr_Spot_Nm", "stn_Name", "spot_Name", "stnName"],
+    "lat": ["Instl_La", "lat", "latitude", "stn_Lat", "obsr_Lat"],
+    "lon": ["Instl_Lo", "lon", "lng", "longitude", "stn_Lon", "obsr_Lon"],
+    "altitude": ["Instl_Al", "altitude", "alt", "stn_Alt", "obsr_Alt"],
+    "sigungu": ["Instl_Adres", "sigungu", "area", "addr", "obsr_Addr", "stn_Addr"],
+    "zone_code": ["Clmt_Zone_Code", "zone_Code", "zoneCode"],
     "date": ["date", "obsr_Date", "ymd", "obsr_Ymd"],
     "tavg": ["temp", "avg_Temp", "tavg", "temp_Avg"],
     "tmax": ["hghst_Artmp", "max_Temp", "tmax", "temp_Max"],
