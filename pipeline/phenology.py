@@ -86,24 +86,30 @@ def _mmdd(s: str) -> tuple[int, int]:
 
 @dataclass
 class Window:
-    """작물이 포장에 있는 기간(월-일). start > end 이면 해를 넘기는 작기."""
+    """작물이 포장에 있는 기간(월-일). start > end 이면 해를 넘기는 작기.
+
+    end가 비어 있으면(수확 종료 근거 없음) 시작일 이전만 '재배 시기 아님'으로 보고, 그 뒤는 연말까지 재배 중으로 둔다.
+    """
 
     start: str
-    end: str
+    end: Optional[str]
     level: str          # sigungu | sido | zone | national
     region: str
     source: str = ""
     status: str = "draft"
 
     def contains(self, d: date) -> bool:
-        s, e = _mmdd(self.start), _mmdd(self.end)
+        s = _mmdd(self.start)
         md = (d.month, d.day)
+        if not self.end:
+            return md >= s
+        e = _mmdd(self.end)
         if s <= e:
             return s <= md <= e
         return md >= s or md <= e
 
     def label(self) -> str:
-        return f"{self.start}~{self.end}"
+        return f"{self.start}~{self.end}" if self.end else f"{self.start}~(끝 미정)"
 
 
 @dataclass
@@ -175,9 +181,9 @@ class Phenology:
         for crop, spec in (raw.get("crops") or {}).items():
             ws = []
             for w in (spec or {}).get("windows") or []:
-                if not w.get("start") or not w.get("end"):
+                if not w.get("start"):
                     continue
-                ws.append(Window(start=str(w["start"]), end=str(w["end"]), level=w.get("level", "national"),
+                ws.append(Window(start=str(w["start"]), end=str(w["end"]) if w.get("end") else None, level=w.get("level", "national"),
                                  region=w.get("region", ""), source=w.get("source", ""), status=w.get("status", "draft")))
             if ws:
                 self.windows[crop] = ws

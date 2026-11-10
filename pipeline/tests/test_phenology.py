@@ -116,3 +116,27 @@ def test_demo_run_marks_not_grown_as_na(tmp_path, monkeypatch):
     spot = json.loads((tmp_path / "web" / "spot" / "DEMO_JEJU.json").read_text(encoding="utf-8"))
     assert spot["phenology"]["apple"]["cultivation"] == "not_grown"
     assert spot["series"]["apple_anthracnose"][0]["na_reason"] == "not_grown"
+
+
+def test_open_ended_window_only_gates_before_start():
+    from datetime import date as _d
+
+    from pipeline.phenology import Window
+
+    w = Window(start="05-01", end=None, level="zone", region="수도권")
+    assert not w.contains(_d(2026, 4, 30))
+    assert w.contains(_d(2026, 5, 1)) and w.contains(_d(2026, 12, 31))
+    assert w.label() == "05-01~(끝 미정)"
+
+
+def test_real_calendar_has_sourced_windows_for_all_crops():
+    from datetime import date as _d
+
+    from pipeline.phenology import OFF_SEASON, OK, load_default
+
+    ph = load_default()
+    assert {"apple", "rice", "pepper"} <= ph.crops_with_calendar()
+    assert all(w.source for ws in ph.windows.values() for w in ws)  # 근거 없는 날짜 금지
+    # 4월 하순 고추: 중부(경기) 정식 전, 남부(경북) 정식 시작
+    assert ph.assess("pepper", "경기 이천시").status_on(_d(2026, 4, 25)) == OFF_SEASON
+    assert ph.assess("pepper", "경북 안동시").status_on(_d(2026, 4, 25)) == OK

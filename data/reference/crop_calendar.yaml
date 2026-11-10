@@ -8,6 +8,8 @@
 #  - status: draft(초안) | reviewed(담당 연구자 검토) | active
 #  - 같은 작물에 여러 수준이 있으면 가장 구체적인 것을 쓴다: sigungu > sido > zone > national
 #  - start > end 이면 해를 넘기는 작기로 본다(예: 11-01 ~ 06-10).
+#  - end를 비우면(수확 종료 근거 없음) 시작일 이전만 '재배 시기 아님'으로 판정하고 그 뒤는 재배 중으로 둔다.
+#    수확 종료는 공식 날짜를 찾지 못한 작물(벼·고추)에 대해 주간농사정보(농사로 OpenAPI)·평년 첫서리일 등으로 보완 예정.
 #
 # 기간의 뜻: "작물이 포장에 있는 기간"
 #  - 사과: 발아기 ~ 수확 종료    - 벼: 이앙기 ~ 수확 종료    - 고추(노지): 정식기 ~ 수확 종료
@@ -32,15 +34,44 @@ crops:
   apple:
     label: 사과
     window_meaning: 발아기 ~ 수확 종료
-    windows: []   # TODO(담당 연구자): 근거와 함께 입력
-    # 입력 예시 형식 (값은 예시가 아님 — 자료 확인 후 채울 것)
-    # - {level: zone,    region: 영남권,      start: "MM-DD", end: "MM-DD", source: "출처", status: draft}
-    # - {level: sigungu, region: 경북 청송군, start: "MM-DD", end: "MM-DD", source: "출처", status: draft}
+    windows:
+      # 농사로 작목별 농작업일정(사과): 발아·전엽 3월 중순~4월 상순, 만생종 수확 10월 중순~11월 상순(전국 단위, 순 단위 표)
+      - {level: national, region: "", start: "03-11", end: "11-10", status: draft,
+         source: "농촌진흥청 농사로 작목별 농작업일정-사과(발아 3월 중순~만생종 수확 11월 상순) https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30663"}
+      # 참고(지역별 만개 예측 2025, 국립원예특작과학원): 거창·군위 4/18~20, 장수 4/20~22, 영주·충주 4/21~23, 청송 4/28~30 — 발아는 이보다 이르므로 전국 시작일로 덮임
   rice:
     label: 벼
     window_meaning: 이앙기 ~ 수확 종료
-    windows: []   # TODO(담당 연구자)
+    windows:
+      # 이앙 시작 = 지역·지대·숙기별 최적 이앙기 중 가장 이른 날(농촌진흥청 2009 보도자료). 농사로 기계이앙(중북부 5.15~, 남부 5.25~)보다 이른 쪽을 써서
+      # 일찍 심은 논을 '재배 시기 아님'으로 잘못 빼지 않게 한다. 남부 조기재배(4월 중순 이앙 사례)는 반영하지 않음.
+      # 수확 종료: 지역별 공식 날짜 없음(출수 후 55~60일 규칙만) → end 비움
+      - {level: zone, region: 수도권, start: "05-08", end: null, status: draft,
+         source: "농촌진흥청 보도자료 '이앙적기 지켜야'(2009.4.14) 중부 중간지·중산간지 중생종 5.8~5.14 https://www.korea.kr/briefing/pressReleaseView.do?newsId=155344300"}
+      - {level: zone, region: 강원권, start: "05-08", end: null, status: draft,
+         source: "농촌진흥청 보도자료 '이앙적기 지켜야'(2009.4.14) 중부 중간지·중산간지 중생종 5.8~5.14"}
+      - {level: zone, region: 충청권, start: "05-08", end: null, status: draft,
+         source: "농촌진흥청 보도자료 '이앙적기 지켜야'(2009.4.14) 중부 중간지·중산간지 중생종 5.8~5.14"}
+      - {level: zone, region: 영남권, start: "05-10", end: null, status: draft,
+         source: "농촌진흥청 보도자료 '이앙적기 지켜야'(2009.4.14) 영남 중산간지 중만생종 5.10~5.17"}
+      - {level: zone, region: 호남권, start: "05-25", end: null, status: draft,
+         source: "농촌진흥청 보도자료 '이앙적기 지켜야'(2009.4.14) 호남 중간지 중만생종 5.25~6.1; 농사로 벼 기계이앙 농작업일정 남부 5.25~6.20"}
   pepper:
     label: 고추(노지)
     window_meaning: 정식기 ~ 수확 종료
-    windows: []   # TODO(담당 연구자)
+    windows:
+      # 정식 시작: 농사로 고추(보통재배) 농작업일정 '남부 4월 하순~5월 상순, 중부 5월 상순~5월 중순'
+      # 남부/중부 배정은 통상의 지방 구분(중부지방=수도권·강원·충청, 남부지방=호남·영남, 제주는 남부로 둠) — 출처에 배정 기준은 없음
+      # 수확 종료: 공식 날짜 없음('서리 전까지 수확' 원칙만) → end 비움
+      - {level: zone, region: 수도권, start: "05-01", end: null, status: draft,
+         source: "농촌진흥청 농사로 고추(보통재배) 농작업일정: 중부 5월 상순~5월 중순 정식 https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30600"}
+      - {level: zone, region: 강원권, start: "05-01", end: null, status: draft,
+         source: "농촌진흥청 농사로 고추(보통재배) 농작업일정: 중부 5월 상순~5월 중순 정식"}
+      - {level: zone, region: 충청권, start: "05-01", end: null, status: draft,
+         source: "농촌진흥청 농사로 고추(보통재배) 농작업일정: 중부 5월 상순~5월 중순 정식"}
+      - {level: zone, region: 호남권, start: "04-21", end: null, status: draft,
+         source: "농촌진흥청 농사로 고추(보통재배) 농작업일정: 남부 4월 하순~5월 상순 정식"}
+      - {level: zone, region: 영남권, start: "04-21", end: null, status: draft,
+         source: "농촌진흥청 농사로 고추(보통재배) 농작업일정: 남부 4월 하순~5월 상순 정식"}
+      - {level: zone, region: 제주권, start: "04-21", end: null, status: draft,
+         source: "농촌진흥청 농사로 고추(보통재배) 농작업일정: 남부 4월 하순~5월 상순 정식(제주는 남부 기준 적용)"}
