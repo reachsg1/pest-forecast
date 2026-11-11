@@ -1,10 +1,16 @@
 /**
- * 접속 코드 로그인(회원가입·개인정보 없음). 미들웨어(Edge)와 라우트 핸들러가 함께 쓴다 — Web Crypto만 사용.
+ * 로그인: 접속 코드(회원가입·개인정보 없음) 또는 구글 로그인. 미들웨어(Edge)와 라우트 핸들러가 함께 쓴다 — Web Crypto만 사용.
  *
  * 환경변수(Vercel 프로젝트 설정 → Environment Variables):
- *   SITE_ACCESS_CODE   일반 이용자 접속 코드. 비우면 로그인 없이 누구나 볼 수 있다(관리자 메뉴는 계속 잠김).
- *   ADMIN_ACCESS_CODE  관리자 코드. 데이터·API, 검증·소개 메뉴. 비우면 관리자 메뉴는 아무도 못 연다.
- *   AUTH_SECRET        쿠키 서명용 임의의 긴 문자열. 바꾸면 모든 로그인이 풀린다.
+ *   SITE_ACCESS_CODE      일반 이용자 접속 코드(선택)
+ *   ADMIN_ACCESS_CODE     관리자 코드. 데이터·API, 검증·소개 메뉴
+ *   GOOGLE_CLIENT_ID      구글 로그인(OAuth 클라이언트 ID). 있으면 '구글로 로그인'을 쓴다
+ *   GOOGLE_CLIENT_SECRET  구글 OAuth 클라이언트 보안 비밀
+ *   ALLOWED_EMAILS        구글 로그인 허용 목록(쉼표 구분, "@도메인"은 그 도메인 전체). 비우면 구글 계정이 있는 누구나
+ *   ADMIN_EMAILS          구글 로그인 관리자 이메일(쉼표 구분)
+ *   AUTH_SECRET           쿠키 서명용 임의의 긴 문자열. 바꾸면 모든 로그인이 풀린다.
+ * 로그인 필요 여부: SITE_ACCESS_CODE 또는 GOOGLE_CLIENT_ID 가 있으면 로그인해야 본다. 둘 다 없으면 공개(관리자 메뉴는 잠김).
+ * 구글 이메일은 허용 여부 확인에만 쓰고 쿠키·서버 어디에도 저장하지 않는다(쿠키에는 역할만).
  *
  * 쿠키 pf_auth = "<role>.<만료 epoch초>.<HMAC-SHA256 base64url>"
  */
@@ -44,12 +50,49 @@ export function safeEqual(a: string, b: string): boolean {
   return diff === 0;
 }
 
+const list = (v: string | undefined) =>
+  (v ?? "")
+    .split(/[,\s]+/)
+    .map((x) => x.trim().toLowerCase())
+    .filter(Boolean);
+
 export function authConfig() {
   const site = process.env.SITE_ACCESS_CODE?.trim() ?? "";
   const admin = process.env.ADMIN_ACCESS_CODE?.trim() ?? "";
-  // 코드가 하나라도 있으면 서명 비밀이 필요하다. 없으면 코드들로 대신 만든다(설정 누락 시에도 위조 불가하게).
-  const secret = process.env.AUTH_SECRET?.trim() || (site || admin ? `pf:${site}:${admin}` : "");
-  return { site, admin, secret, loginRequired: site !== "" };
+  const googleId = process.env.GOOGLE_CLIENT_ID?.trim() ?? "";
+  const googleSecret = process.env.GOOGLE_CLIENT_SECRET?.trim() ?? "";
+  const google = googleId !== "" && googleSecret !== "";
+  // 서명 비밀: AUTH_SECRET 권장. 없으면 비밀값들로 대신 만든다(설정 누락 시에도 위조 불가하게).
+  const secret = process.env.AUTH_SECRET?.trim() || (site || admin || google ? `pf:${site}:${admin}:${googleSecret}` : "");
+  return {
+    site,
+    admin,
+    secret,
+    google,
+    googleId,
+    googleSecret,
+    allowedEmails: list(process.env.ALLOWED_EMAILS),
+    adminEmails: list(process.env.ADMIN_EMAILS),
+    loginRequired: site !== "" || google,
+  };
+}
+
+/** 구글 로그인 이메일 → 역할(허용 안 되면 null). "@domain" 항목은 그 도메인 전체 허용 */
+export function roleForEmail(email: string): Role | null {
+  const { allowedEmails, adminEmails } = authConfig();
+  const e = email.trim().toLowerCase();
+  if (!e) return null;
+  const hit = (xs: string[]) => xs.some((x) => (x.startsWith("@") ? e.endsWith(x) : e === x));
+  if (hit(adminEmails)) return "admin";
+  if (!allowedEmails.length || hit(allowedEmails)) return "user";
+  return null;
+}
+
+/** 짧은 무작위 문자열(구글 로그인 state) */
+export function randomToken(bytes = 24): string {
+  const a = new Uint8Array(bytes);
+  crypto.getRandomValues(a);
+  return b64url(a.buffer);
 }
 
 export async function signSession(role: Role, secret: string, days = SESSION_DAYS): Promise<string> {
