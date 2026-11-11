@@ -1,4 +1,5 @@
 import type { Grade, NaReason, PhenologyInfo } from "./types";
+import { fmtDatesIn } from "./format";
 
 // 설계서 3.2 위험도 등급. 색·아이콘·텍스트를 항상 함께 쓴다(접근성).
 // bg/text/ring: 배지·타일용 옅은 면 + 같은 계열 테두리. color: 지도·막대 등 채움색.
@@ -39,7 +40,7 @@ const LEVEL_LABEL: Record<string, string> = { sigungu: "시군", sido: "시도",
 export function windowText(p: PhenologyInfo | null | undefined): string | null {
   if (!p?.window) return null;
   const where = p.window_level === "national" ? "전국 기준" : `${p.window_region ?? ""} ${LEVEL_LABEL[p.window_level ?? ""] ?? ""} 기준`.trim();
-  return `${p.window.replace("~", " ~ ")} · ${where}`;
+  return `${fmtDatesIn(p.window).replace("~", " ~ ")} · ${where}`;
 }
 
 /** '사과 탄저병'처럼 이름에 작물명이 이미 있으면 다시 붙이지 않는다. '복숭아순나방' → '사과 복숭아순나방' */

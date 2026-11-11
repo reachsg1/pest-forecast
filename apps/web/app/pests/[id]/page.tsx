@@ -6,6 +6,7 @@ import RiskBadge from "@/components/RiskBadge";
 import { getPest, getPests, getRisk, getSpotFile } from "@/lib/data";
 import { gradeRank, pestFullName } from "@/lib/grades";
 import type { Grade } from "@/lib/types";
+import { fmtDate } from "@/lib/format";
 
 type Params = Promise<{ id: string }>;
 type Search = Promise<{ spot?: string; tab?: string }>;
@@ -77,7 +78,7 @@ export default async function PestDetailPage({ params, searchParams }: { params:
             </div>
           </div>
           <p className="num w-full text-xs text-white/40">
-            기준일 {risk?.issued_date ?? "-"}
+            기준일 {fmtDate(risk?.issued_date)}
             {entries.length > applicable.length && ` · 해당 없음 ${entries.length - applicable.length}곳 제외`}
           </p>
         </div>

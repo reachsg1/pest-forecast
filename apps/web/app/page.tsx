@@ -5,6 +5,7 @@ import { Icon } from "@/components/ui";
 import { getSummary } from "@/lib/data";
 import { CROP_LABEL, GRADES, gradeMeta } from "@/lib/grades";
 import type { Grade, SummaryPest } from "@/lib/types";
+import { fmtDate, fmtDateTime } from "@/lib/format";
 
 type CropGroup = { crop: string; crop_ko: string; pests: SummaryPest[]; grown: number; top: Grade | null; alerts: number };
 
@@ -69,7 +70,7 @@ export default async function HomePage() {
               <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
             </span>
             <span className="num">
-              기준일 {summary.issued_date} · {summary.horizon_days}일 전망
+              기준일 {fmtDate(summary.issued_date)} · {summary.horizon_days}일 전망
             </span>
           </span>
           <h1 id="today" className="mt-5 text-3xl font-bold leading-tight tracking-tight sm:text-5xl sm:leading-[1.1]">
@@ -135,7 +136,7 @@ export default async function HomePage() {
           <h2 id="by-crop" className="section-title text-lg">
             작물별 현황
           </h2>
-          <p className="num text-xs text-slate-400">갱신 {summary.generated_at.replace("T", " ")}</p>
+          <p className="num text-xs text-slate-400">갱신 {fmtDateTime(summary.generated_at)}</p>
         </div>
         <ul className="grid gap-4 lg:grid-cols-3">
           {crops.map((c) => (

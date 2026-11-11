@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { fmtDate, fmtDateTime } from "@/lib/format";
 
 export default function Footer({ generatedAt, issuedDate }: { generatedAt?: string; issuedDate?: string }) {
   return (
@@ -11,8 +12,8 @@ export default function Footer({ generatedAt, issuedDate }: { generatedAt?: stri
           </p>
           {(issuedDate || generatedAt) && (
             <p className="num mt-3 text-xs text-slate-400">
-              {issuedDate && `기준일 ${issuedDate}`}
-              {generatedAt && ` · 갱신 ${generatedAt.replace("T", " ")}`}
+              {issuedDate && `기준일 ${fmtDate(issuedDate)}`}
+              {generatedAt && ` · 갱신 ${fmtDateTime(generatedAt)}`}
             </p>
           )}
         </div>

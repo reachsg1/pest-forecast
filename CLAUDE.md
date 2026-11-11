@@ -19,6 +19,7 @@
   - 디자인 기반: 글꼴 Pretendard(npm `pretendard`), 색·그림자 토큰 `tailwind.config.ts`(brand-50~900, canvas, shadow-card/lift), 공통 클래스 `app/globals.css`(`.card` `.btn-primary` `.btn-secondary` `.segmented` `.field` `.table-clean` `.chip` `.page-title` 등), 공통 컴포넌트 `components/ui.tsx`(`PageHeader`, `GradeBar`, `Icon`). 새 화면은 이것을 재사용하고 임의 회색(gray-*) 대신 slate-* 를 쓴다.
   - 톤: 페이지 머리는 짙은 녹·청록 그라데이션 히어로(`.hero-dark`, `PageHeader`) + 반투명 유리 요소(`.glass-tile` `.glass-dark` `.btn-light` `.btn-glass`), 본문은 밝은 카드. 지도는 위성(기본)/일반 전환, 조건·범례는 지도 위 유리 패널. 사용자가 "구식"이라 한 흰 카드 나열형으로 되돌리지 않는다.
   - 위성 타일(Esri World Imagery)·홈 히어로 위성 배경은 개발용. 운영 전 VWorld 위성·하이브리드 타일로 교체(한글 지명).
+  - 화면 날짜는 점 형식(2026.11.11. / 9.30.) — `lib/format.ts`의 fmtDate·fmtMD·fmtDateTime. 데이터·API는 ISO 유지.
   - Tailwind 설정(`tailwind.config.ts`)을 바꾸면 dev 서버를 재시작해야 반영된다. `npm run build`는 dev 서버의 `.next`를 덮어쓰므로 dev 서버를 멈추고 빌드 후 `.next`를 지우고 다시 띄운다.
 - 외부 API 키는 환경변수(`NCPMS_API_KEY`, `DATA_GO_KR_KEY`, `KMA_API_KEY`)로만(로컬은 루트 `.env`, git 제외). 코드·커밋·로그에 절대 넣지 않는다. `fetch/http.py`가 오류·로그의 키를 가린다. 공공데이터포털 키는 `config.normalize_key()`가 디코딩한다.
 - 모델 파라미터(`model.yaml`)는 담당 연구자 검토 대상. 값을 바꾸면 `references`에 근거를 적고 `status`를 유지/갱신한다. 임의로 "그럴듯한" 수치를 만들지 말고, 모르면 TODO로 남긴다.
@@ -48,7 +49,7 @@ cd apps/web && npm install && npm run typecheck && npm run build && npm run dev
 2. `probe`로 태그 확인 → `config.py` 수정 → `spots` → `run --spots 20` 성공
 3. NCPMS 서비스 코드·도감 키(`ncpms_key`) 입력 → 방제 정보 탭 자동 연동
 4. 예찰조사 원본 정제(`data/survey/README.md` 형식) → 백테스트 → 검증 탭 채우기
-4-1. 생물계절 자료: 시군 재배면적(2025, 1 ha 이하 = 비재배지)·재배 기간 시작일 입력 완료. 벼 수확 종료 10-31 반영(농사로 농작업일정). 고추 수확 종료는 후보 둘(09-30/11-20) 중 결정 대기, 제주 벼 재배 기간 근거 없음
+4-1. 생물계절 자료: 시군 재배면적(2025, 1 ha 이하 = 비재배지)·재배 기간 시작일 입력 완료. 벼 수확 종료 10-31 반영(농사로 농작업일정). 고추 수확 종료 11-10 반영(냉해·수확기 단축 끝), 제주 벼 재배 기간 근거 없음
 5. 운영 전: OSM 타일을 VWorld로 교체(`components/MapView.tsx` MAP_STYLE), 푸터 문의처
 
 ## 하지 말 것

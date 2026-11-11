@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { Bar, CartesianGrid, ComposedChart, Legend, Line, ReferenceArea, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { GRADES, NA, NA_REASONS, fmtIndex } from "@/lib/grades";
 import type { NaReason, SeriesPoint, WeatherDay } from "@/lib/types";
+import { fmtMD } from "@/lib/format";
 
 export default function TrendChart({ series, weather, issuedDate, cropKo = "작물" }: { series: SeriesPoint[]; weather: WeatherDay[]; issuedDate: string; cropKo?: string }) {
   const data = useMemo(() => {
@@ -11,7 +12,7 @@ export default function TrendChart({ series, weather, issuedDate, cropKo = "작�
     return series.map((p) => {
       const w = wx.get(p.date);
       return {
-        date: p.date.slice(5),
+        date: fmtMD(p.date),
         full: p.date,
         past: p.is_forecast ? null : p.index,
         forecast: p.is_forecast || p.offset === 0 ? p.index : null,
@@ -53,7 +54,7 @@ export default function TrendChart({ series, weather, issuedDate, cropKo = "작�
     );
   }
 
-  const todayLabel = issuedDate.slice(5);
+  const todayLabel = fmtMD(issuedDate);
 
   return (
     <div className="space-y-2">

@@ -4,6 +4,7 @@ import RiskBadge from "@/components/RiskBadge";
 import { Icon, PageHeader } from "@/components/ui";
 import { getPests, getStatus } from "@/lib/data";
 import { CROP_LABEL, GRADES, TYPE_LABEL, pestFullName } from "@/lib/grades";
+import { fmtDateTime } from "@/lib/format";
 
 export const metadata: Metadata = { title: "검증·소개" };
 
@@ -154,7 +155,7 @@ export default async function AboutPage() {
               "병해충 도감·발생정보: 국가농작물병해충관리시스템(NCPMS) 오픈API",
               "기상 예보: 기상청 단기예보(공공데이터포털)",
               "재배 현황: 농림축산식품부 농업경영체 등록정보",
-              `갱신: 매일 새벽 1회 배치${status ? ` (마지막 ${status.generated_at.replace("T", " ")}, 모드 ${status.mode})` : ""}`,
+              `갱신: 매일 새벽 1회 배치${status ? ` (마지막 ${fmtDateTime(status.generated_at)}, 모드 ${status.mode})` : ""}`,
             ].map((t) => (
               <li key={t} className="flex gap-2">
                 <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 rounded-full bg-slate-400" />

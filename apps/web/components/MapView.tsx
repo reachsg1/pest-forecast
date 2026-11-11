@@ -10,6 +10,7 @@ import SpotPanel from "./SpotPanel";
 import { Icon } from "./ui";
 import { GRADES, NA, TYPE_LABEL, fmtIndex, gradeOf, gradeRank, perfText } from "@/lib/grades";
 import type { Grade, ModelLite, NaReason, RiskFile, RiskSpotEntry, Spot } from "@/lib/types";
+import { fmtDate } from "@/lib/format";
 
 type PestLite = { pest_id: string; name_ko: string; crop: string; crop_ko: string; horizon_days: number; models: ModelLite[] };
 
@@ -335,7 +336,7 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
             <label className="block">
               <span className="flex items-baseline justify-between text-[11px] text-white/60">
                 <span>날짜</span>
-                <span className="num text-sm font-semibold text-white">{addDays(issuedDate, offset)}</span>
+                <span className="num text-sm font-semibold text-white">{fmtDate(addDays(issuedDate, offset))}</span>
               </span>
               <input
                 type="range"
@@ -343,7 +344,7 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
                 max={horizon}
                 value={offset}
                 onChange={(e) => setParams({ d: e.target.value })}
-                aria-valuetext={addDays(issuedDate, offset)}
+                aria-valuetext={fmtDate(addDays(issuedDate, offset))}
                 className="mt-1 h-5 w-full accent-emerald-400"
               />
             </label>
@@ -430,7 +431,7 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
         <div className="overflow-x-auto border-t border-slate-100">
           <table className="table-clean">
             <caption className="sr-only">
-              {pestName} {addDays(issuedDate, offset)} 기준 지점별 위험도
+              {pestName} {fmtDate(addDays(issuedDate, offset))} 기준 지점별 위험도
             </caption>
             <thead>
               <tr>

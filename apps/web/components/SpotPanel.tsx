@@ -7,6 +7,7 @@ import Sparkline from "./Sparkline";
 import { Icon } from "./ui";
 import { NA_REASONS, gradeOf, pestFullName, perfText, windowText } from "@/lib/grades";
 import type { ModelLite, SpotFile, SurveyRef } from "@/lib/types";
+import { fmtMD } from "@/lib/format";
 
 type PestLite = { pest_id: string; name_ko: string; crop: string; crop_ko: string };
 
@@ -120,7 +121,7 @@ export default function SpotPanel({ code, pestId, model, models = [], pests, hor
                 최근 7일 강수 {rainSum.toFixed(0)}mm({rainDays}일), 평균 잎젖음 {avg("lwd_hours")?.toFixed(1) ?? "-"}시간, 평균기온 {avg("tavg")?.toFixed(1) ?? "-"}℃.
                 {surveyRef && (
                   <>
-                    {" "}가까운 예찰은 {surveyRef.sigungu.split(" ").slice(-1)[0]} {surveyRef.date.slice(5).replace("-", "/")} 피해과율 {surveyRef.value}%
+                    {" "}가까운 예찰은 {surveyRef.sigungu.split(" ").slice(-1)[0]} {fmtMD(surveyRef.date)} 피해과율 {surveyRef.value}%
                     {surveyRef.distance_km > 0 ? `(약 ${Math.round(surveyRef.distance_km)}km 떨어진 시군)` : ""}입니다.
                   </>
                 )}
