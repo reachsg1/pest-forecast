@@ -90,15 +90,29 @@ def publish(
     pest_models: dict[str, list[LoadedModel]] = {}
     for lm in models:
         pest_models.setdefault(lm.card.pest_id, []).append(lm)
+    # 지정한 기본 모델(예: 앙상블)이 이번 실행에서 결과를 못 냈으면 병해충 폴더의 원래 모델로 되돌린다
+    ran = {r["model_id"] for r in rows}
     for pid, lst in pest_models.items():
-        lst.sort(key=lambda m: (not m.is_default, m.id))
+        dflt = next((m for m in lst if m.is_default), None)
+        if dflt is not None and not dflt.is_base and dflt.id not in ran and rows:
+            base = next((m for m in lst if m.is_base), None)
+            if base is not None:
+                warnings.append(f"{pid}: 기본 모델 {dflt.id} 결과가 없어 {base.id}를 기본으로 발행")
+                dflt = base
+        lst.sort(key=lambda m: (m is not dflt, not m.is_base, m.id))
     default_of = {pid: lst[0] for pid, lst in pest_models.items()}
+    base_of = {pid: next((m for m in lst if m.is_base), lst[0]) for pid, lst in pest_models.items()}
 
     # --- pests.json (병해충 1건 = 기본 모델 카드 + 모델 목록) ---------------------
     pests_out = []
     for pid, lst in pest_models.items():
         lm = lst[0]
         card = lm.card.to_dict()
+        # 병해충 자체 정보(학명·도감 키 등)는 병해충 폴더 모델 카드 기준
+        bc = base_of[pid].card
+        for k in ("name_ko", "name_sci", "kind", "crop", "ncpms_key", "ncpms_kind"):
+            if getattr(bc, k, ""):
+                card[k] = getattr(bc, k)
         card["crop_ko"] = CROP_NAMES.get(lm.card.crop, lm.card.crop)
         card["eval"] = lm.eval_summary()
         card["default_model"] = lm.id

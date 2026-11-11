@@ -18,7 +18,8 @@ class LoadedModel:
     card: ModelCard
     model: BaseModel
     folder: Path
-    is_default: bool = True   # 병해충 폴더 바로 아래 model.yaml = 기본 모델, variants/* = 추가 모델
+    is_default: bool = True   # 화면 기본 모델(요약·등급 집계 기준). 병해충 폴더 model.yaml의 default_variant로 바꿀 수 있다
+    is_base: bool = True      # 병해충 폴더 바로 아래 model.yaml(기준 규칙 모델), variants/* = False
 
     @property
     def id(self) -> str:
@@ -51,6 +52,18 @@ def _load_module(py_path: Path):
     sys.modules[name] = mod
     spec.loader.exec_module(mod)
     return mod
+
+
+def _apply_default_variant(found: list[LoadedModel]) -> None:
+    """병해충 폴더 model.yaml의 ``default_variant: <variants 폴더 이름>``이 있으면 그 추가 모델을 기본으로 삼는다.
+    지정한 모델이 적재되지 않았으면(--only·demo 제외 등) 원래 모델이 기본으로 남는다."""
+    for base in [m for m in found if m.is_base and m.card.default_variant]:
+        want = base.card.default_variant
+        target = next((m for m in found if not m.is_base and m.card.pest_id == base.card.pest_id
+                       and (m.folder.name == want or m.id == want)), None)
+        if target is not None:
+            base.is_default = False
+            target.is_default = True
 
 
 def discover(
@@ -87,7 +100,8 @@ def discover(
         cls = getattr(mod, "Model", None)
         if cls is None:
             raise AttributeError(f"{py}: 'Model' 클래스를 정의해야 합니다")
-        found.append(LoadedModel(card=card, model=cls(card), folder=yml.parent, is_default=is_default))
+        found.append(LoadedModel(card=card, model=cls(card), folder=yml.parent, is_default=is_default, is_base=is_default))
+    _apply_default_variant(found)
     ids = [m.id for m in found]
     dup = {i for i in ids if ids.count(i) > 1}
     if dup:

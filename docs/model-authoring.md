@@ -43,6 +43,7 @@ models/apple/anthracnose/
 - 추가 모델의 `pest_id`는 기본 모델과 **같게**, `id`는 **다르게**(예: `apple_anthracnose__wetness`) 지정합니다. id가 겹치면 등록 단계에서 오류가 납니다
 - `label`을 꼭 채웁니다. 예측 지도 조건 패널에 "예측 모델" 버튼으로 나타나고, 고르면 지도·범례·지점 패널이 그 모델 결과로 바뀝니다(URL `?model=<id>`로 공유 가능)
 - 발행 결과: 모든 모델은 `public/data/risk/models/<id>.json`, 지점 시계열은 `spot/<code>.json`의 `series_by_model`. 기본 모델만 `risk/<pest_id>.json`·요약에 쓰입니다
+- 기본으로 보일 모델 바꾸기: 병해충 폴더 `model.yaml`에 `default_variant: <variants 폴더 이름>`(예: 고추 탄저병 `survey_ens`). 지정 모델이 이번 실행에서 결과를 못 내면 원래 모델로 자동 발행하고 경고를 남깁니다. 학습 스크립트의 비교 기준(규칙형)은 계속 병해충 폴더 모델(`is_base`)입니다
 - `demo_only: true`는 데모 실행(`--demo`)에서만 적재되는 시연용 모형입니다. 실제 모델에는 쓰지 않습니다(`apple/anthracnose/variants/demo_wet` 참고)
 - 추가 모델도 파라미터 근거를 `references`에 적고 `status: draft`로 시작합니다
 

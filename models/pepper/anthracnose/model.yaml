@@ -40,6 +40,8 @@ references:
 - 담당 연구자 지정 예정 — 초기값은 일반 문헌 범위에서 설정, 검토 필요
 owner: ''
 status: draft
+# 화면 기본 모델: 예찰 검증(2023~2025)에서 정확도·AUC가 가장 높은 앙상블. 이 규칙 모델(AUC 0.54)은 비교용으로 남긴다
+default_variant: survey_ens
 ncpms_key: ''
 ncpms_kind: sick
 label: 감염조건형

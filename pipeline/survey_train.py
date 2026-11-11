@@ -168,7 +168,7 @@ def build_samples(pest: str, train_years: list[int], test_years: list[int], feat
             _pts[st["key"]].append((st["lat"], st["lon"]))
     for k, pts in _pts.items():
         stn_locs[k] = regions.location_of(k, pts)
-    default = next(m for m in discover(include_demo=False) if m.card.pest_id == pest and m.is_default)
+    default = next(m for m in discover(include_demo=False) if m.card.pest_id == pest and m.is_base)
 
     # 기본 모델은 시군·연도 시계열로 한 번씩 돌린다(연초~조사일)
     default_cache: dict[tuple[str, int], dict[date, float]] = {}

@@ -127,6 +127,7 @@ class ModelCard:
     status: str = "draft"     # draft | reviewed | active
     label: str = ""           # 같은 병해충의 여러 모델 중 화면에 보일 짧은 이름(예: "적산온도형")
     demo_only: bool = False   # True면 --demo 실행에서만 적재(화면 기능 확인용 가상 모형)
+    default_variant: str = "" # 병해충 폴더 model.yaml에만: 기본으로 보일 추가 모델(variants/<이름>). 비우면 이 모델이 기본
     path: str = ""
 
     @classmethod

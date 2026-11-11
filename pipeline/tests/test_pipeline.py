@@ -106,3 +106,38 @@ def test_demo_only_models_excluded_from_live_discovery():
     live = {m.id for m in discover()}
     demo = {m.id for m in discover(include_demo=True)}
     assert "apple_anthracnose__demo_wet" not in live and "apple_anthracnose__demo_wet" in demo
+
+
+def test_default_variant_ensemble_is_published_as_default(tmp_path, monkeypatch):
+    """병해충 폴더 model.yaml의 default_variant(고추 탄저병 → 앙상블)가 요약·risk/<pest>.json·지점 series의 기준이 된다."""
+    monkeypatch.setattr(config, "WEB_DATA_DIR", tmp_path / "web")
+    monkeypatch.setattr(config, "PREDICTIONS_DIR", tmp_path / "pred")
+    monkeypatch.setattr(config, "CACHE_DIR", tmp_path / "cache")
+    from pipeline.cli import main
+
+    assert main(["run", "--demo", "--date", "2026-07-15", "--models", "pepper_anthracnose"]) == 0
+    web = tmp_path / "web"
+    pests = json.loads((web / "pests.json").read_text(encoding="utf-8"))
+    p = pests[0]
+    assert p["default_model"] == "pepper_anthracnose__survey_ens"
+    assert p["models"][0]["model_id"] == "pepper_anthracnose__survey_ens" and p["models"][0]["is_default"]
+    assert p["models"][1]["model_id"] == "pepper_anthracnose"  # 원래 규칙 모델은 비교용으로 둘째
+    assert sum(m["is_default"] for m in p["models"]) == 1
+    risk = json.loads((web / "risk" / "pepper_anthracnose.json").read_text(encoding="utf-8"))
+    assert risk["model_id"] == "pepper_anthracnose__survey_ens" and risk["is_default"]
+    spot = json.loads((web / "spot" / "DEMO_SUWON.json").read_text(encoding="utf-8"))
+    assert "pepper_anthracnose__survey_ens" not in spot["series_by_model"]
+    assert "pepper_anthracnose" in spot["series_by_model"]
+
+
+def test_default_variant_falls_back_when_not_loaded():
+    """지정한 기본 모델이 적재되지 않으면(예: 앙상블 제외) 원래 모델이 기본으로 남는다."""
+    from models._base.registry import _apply_default_variant, discover
+
+    loaded = [m for m in discover() if m.card.pest_id == "pepper_anthracnose"]
+    assert [m.id for m in loaded if m.is_default] == ["pepper_anthracnose__survey_ens"]
+    without_ens = [m for m in loaded if m.card.type != "E"]
+    for m in without_ens:
+        m.is_default = m.is_base
+    _apply_default_variant(without_ens)
+    assert [m.id for m in without_ens if m.is_default] == ["pepper_anthracnose"]

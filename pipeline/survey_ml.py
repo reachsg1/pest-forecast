@@ -209,7 +209,7 @@ def main(argv: list[str] | None = None) -> int:
 def _pest_folder(pest_id: str) -> tuple[str, str]:
     from models._base.registry import discover
 
-    m = next(m for m in discover(include_demo=False) if m.card.pest_id == pest_id and m.is_default)
+    m = next(m for m in discover(include_demo=False) if m.card.pest_id == pest_id and m.is_base)
     return m.folder.parent.name, m.folder.name
 
 
