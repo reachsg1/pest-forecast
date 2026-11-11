@@ -44,17 +44,17 @@ export default async function PestDetailPage({ params, searchParams }: { params:
         <span className="text-slate-600">{pest.name_ko}</span>
       </nav>
       <header className="hero-dark">
-        <div className="relative flex flex-wrap items-end justify-between gap-6 px-6 py-8 sm:px-10 sm:py-10">
+        <div className="relative flex flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-8 sm:py-5">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-1.5">
               {[pest.crop_ko, pest.kind === "insect" ? "해충" : "병", `유형 ${pest.type}`].map((t) => (
-                <span key={t} className="rounded-full border border-white/15 bg-white/10 px-2.5 py-0.5 text-xs font-medium text-emerald-100">
+                <span key={t} className="rounded-full border border-white/15 bg-white/10 px-2 py-0.5 text-[11px] font-medium text-emerald-100">
                   {t}
                 </span>
               ))}
             </div>
-            <h1 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">{pestFullName(pest.crop_ko, pest.name_ko)}</h1>
-            <p className="mt-2 text-sm text-white/60">
+            <h1 className="mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">{pestFullName(pest.crop_ko, pest.name_ko)}</h1>
+            <p className="mt-1 text-xs text-white/60 sm:text-sm">
               <span className="italic">{pest.name_sci}</span>
               <span className="mx-1.5 text-white/30">·</span>
               <a className="font-medium text-emerald-300 hover:text-emerald-200" href={ncpmsUrl} target="_blank" rel="noreferrer">
@@ -63,15 +63,15 @@ export default async function PestDetailPage({ params, searchParams }: { params:
             </p>
           </div>
           <div className="flex shrink-0 gap-3">
-            <div className="glass-tile px-5 py-4">
-              <div className="text-xs text-white/55">오늘 전국 최고 등급</div>
-              <div className="mt-2">
-                <RiskBadge grade={maxGrade} size="lg" />
+            <div className="glass-tile px-4 py-2.5">
+              <div className="text-[11px] text-white/55">오늘 전국 최고 등급</div>
+              <div className="mt-1">
+                <RiskBadge grade={maxGrade} />
               </div>
             </div>
-            <div className="glass-tile px-5 py-4">
-              <div className="text-xs text-white/55">주의보 이상</div>
-              <div className="num mt-1.5 text-3xl font-bold tracking-tight text-white">
+            <div className="glass-tile px-4 py-2.5">
+              <div className="text-[11px] text-white/55">주의보 이상</div>
+              <div className="num mt-0.5 text-2xl font-bold tracking-tight text-white">
                 {alertN}
                 <span className="text-sm font-medium text-white/50"> / {applicable.length}곳</span>
               </div>

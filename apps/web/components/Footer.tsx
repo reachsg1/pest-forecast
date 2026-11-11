@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { fmtDate, fmtDateTime } from "@/lib/format";
 
-export default function Footer({ generatedAt, issuedDate }: { generatedAt?: string; issuedDate?: string }) {
+export default function Footer({ generatedAt, issuedDate, isAdmin = false }: { generatedAt?: string; issuedDate?: string; isAdmin?: boolean }) {
   return (
     <footer className="mt-16 border-t border-slate-200/80 bg-white">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 text-sm sm:px-6 md:grid-cols-[1.4fr_1fr_1fr]">
@@ -34,16 +34,20 @@ export default function Footer({ generatedAt, issuedDate }: { generatedAt?: stri
         <div>
           <div className="text-xs font-semibold text-slate-400">이용</div>
           <ul className="mt-2 space-y-1.5 text-xs text-slate-600">
-            <li>
-              <Link href="/data" className="hover:text-slate-900">
-                Open API · 데이터 다운로드
-              </Link>
-            </li>
-            <li>
-              <Link href="/about" className="hover:text-slate-900">
-                모델 검증 · 서비스 소개
-              </Link>
-            </li>
+            {isAdmin && (
+              <>
+                <li>
+                  <Link href="/data" className="hover:text-slate-900">
+                    Open API · 데이터 다운로드
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/about" className="hover:text-slate-900">
+                    모델 검증 · 서비스 소개
+                  </Link>
+                </li>
+              </>
+            )}
             <li>재개방 데이터는 공공누리 제1유형(출처표시)</li>
           </ul>
         </div>
