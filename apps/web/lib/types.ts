@@ -34,6 +34,8 @@ export interface SurveyEvalBlock {
   auc: { survey_logit: number; climatology: number; default_rule: number; persistence?: number; gbm_reference?: number };
   within_round_auc: { survey_logit: number; climatology: number; default_rule: number; persistence?: number };
   brier: { survey_logit: number; climatology: number; constant_rate?: number; gbm_reference?: number };
+  // 위험지수 50(주의보) 이상을 '발생'으로 볼 때
+  classification?: Record<string, { accuracy: number | null; precision: number | null; recall: number | null; f1: number | null }>;
 }
 
 export interface EvalSummary {
@@ -45,6 +47,7 @@ export interface EvalSummary {
   test_by_year?: Record<string, SurveyEvalBlock>;
   with_history_reference?: { note: string; test: SurveyEvalBlock };
   uses_survey?: boolean; // 최근 예찰값을 입력으로 쓰는 모델
+  algorithm?: string;
   substituted?: { n: number; n_sigungu: number; max_km: number };
   years?: Record<
     string,
@@ -67,7 +70,7 @@ export interface PestCard {
   crop: string;
   crop_ko: string;
   kind: "disease" | "insect";
-  type: "A" | "B" | "C";
+  type: "A" | "B" | "C" | "D" | "E";
   version: string;
   horizon_days: number;
   season: { start_month: number; end_month: number };
@@ -103,6 +106,9 @@ export interface ModelLite {
   type: string;
   is_default: boolean;
   demo_only?: boolean;
+  algorithm?: string; // 예: XGBoost, Random Forest, 로지스틱 회귀
+  // 학습에 쓰지 않은 해로 시험한 성능(예찰 학습형만). 없으면 검증 전
+  perf?: { auc: number; accuracy: number | null; within: number } | null;
 }
 
 export interface RiskSpotEntry {

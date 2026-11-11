@@ -15,7 +15,18 @@ export default async function MapPage() {
     crop_ko: p.crop_ko,
     horizon_days: p.horizon_days,
     // 이 병해충에 등록된 모델들(첫 번째 = 기본). 예전 데이터처럼 목록이 없으면 기본 모델 1개로 본다.
-    models: (p.models?.map((m) => ({ model_id: m.model_id, label: m.label, type: m.type, is_default: m.is_default, demo_only: m.demo_only })) ?? [
+    models: (p.models?.map((m) => {
+      const t = m.eval?.status === "survey_evaluated" ? m.eval.test : undefined;
+      return {
+        model_id: m.model_id,
+        label: m.label,
+        type: m.type,
+        is_default: m.is_default,
+        demo_only: m.demo_only,
+        algorithm: m.eval?.algorithm,
+        perf: t ? { auc: t.auc.survey_logit, accuracy: t.classification?.survey_logit?.accuracy ?? null, within: t.within_round_auc.survey_logit } : null,
+      };
+    }) ?? [
       { model_id: p.id, label: p.label ?? "기본 모델", type: p.type, is_default: true },
     ]) as ModelLite[],
   }));

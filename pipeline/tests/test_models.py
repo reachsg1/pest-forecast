@@ -34,15 +34,19 @@ def test_discover_finds_eight_models():
     # 병해충 8종 = 기본 모델 8개 + 실제 추가 모델(variants, demo_only 제외)
     assert len({m.card.pest_id for m in models}) == 8
     assert sum(1 for m in models if m.is_default) == 8
-    assert len(ids) == 10
+    assert len(ids) == 13
     assert "apple_anthracnose" in ids
     assert "pepper_anthracnose__survey_logit" in ids and "pepper_anthracnose__survey_hist" in ids
-    assert all(m.card.type in {"A", "B", "C"} for m in models)
+    assert all(m.card.type in {"A", "B", "C", "D", "E"} for m in models)
 
 
 @pytest.mark.parametrize("m", discover(include_demo=True), ids=lambda m: m.id)
 def test_predict_index_in_range_and_sorted(m):
     wx = synth_weather(date(2026, 1, 1), 300, wet=True)
+    if m.card.type == "E":
+        # 앙상블은 단독 계산하지 않는다(구성 모델 결과 평균은 test_ml_models에서 검사)
+        assert m.model.predict(wx) == [] and m.card.params.get("members")
+        return
     pts = m.model.predict(wx)
     assert len(pts) == 300
     assert all(0.0 <= p.index <= 100.0 for p in pts)

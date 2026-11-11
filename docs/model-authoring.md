@@ -59,6 +59,15 @@ NCPMS 시군구 예찰값을 정답으로, 같은 시군 농업기상 관측소 
 
 판단 기준: 전체 AUC만 보지 말고 **같은 회차 변별력**(같은 조사일의 시군끼리 비교)을 함께 봅니다. 계절 평균(0.5)보다 높아야 기상이 실제로 기여한 것입니다.
 
+### 여러 알고리즘 비교(로지스틱·Random Forest·XGBoost·앙상블)
+
+`python -m pipeline.survey_ml --pest <pest_id> [--export]` — 같은 표본(기상 + 직전 예찰값)으로 세 알고리즘을 학습하고, 세 모델 평균(앙상블)까지 학습에 쓰지 않은 해로 비교합니다.
+- 하이퍼파라미터는 학습 연도 안에서 한 해씩 빼고 검증해 고릅니다(시험 연도는 선택에 쓰지 않음)
+- 평가: AUC, 같은 회차 변별력, 정확도·정밀도·재현율(위험지수 50 이상 = 발생), Brier
+- `--export`: `variants/survey_rf`(유형 D, `model.joblib`), `survey_xgb`(유형 D, `model.ubj`), `survey_ens`(유형 E, `params.members`)의 학습 파일·params·eval.json을 갱신하고, 로지스틱 variant의 eval.json도 같은 형식으로 다시 씁니다. 순서: `survey_train --export`(로지스틱 계수) → `survey_ml --export`
+- 유형 D는 `models/_base/ml.py`가 학습 파일을 읽어 실행합니다. 파일은 학습 때 라이브러리 버전으로만 읽히므로 `requirements.txt`의 scikit-learn·xgboost 버전을 함께 고정합니다
+- 유형 E(앙상블)는 단독 계산이 없고, `pipeline/run_models.py`가 구성 모델의 같은 지점·같은 날 위험지수를 평균합니다
+
 ## 3. model.py
 
 ```python

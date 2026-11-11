@@ -8,7 +8,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import RiskBadge from "./RiskBadge";
 import SpotPanel from "./SpotPanel";
 import { Icon } from "./ui";
-import { GRADES, NA, fmtIndex, gradeOf, gradeRank } from "@/lib/grades";
+import { GRADES, NA, TYPE_LABEL, fmtIndex, gradeOf, gradeRank, perfText } from "@/lib/grades";
 import type { Grade, ModelLite, NaReason, RiskFile, RiskSpotEntry, Spot } from "@/lib/types";
 
 type PestLite = { pest_id: string; name_ko: string; crop: string; crop_ko: string; horizon_days: number; models: ModelLite[] };
@@ -265,6 +265,35 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
                   <span>예측 모델</span>
                   <span className="text-white/40">{pestModels.length}개</span>
                 </span>
+                {pestModels.length > 3 ? (
+                  // 모델이 많으면 목록으로: 이름 · 알고리즘 · 시험 성능
+                  <>
+                    <select
+                      className="field-glass"
+                      aria-label="예측 모델"
+                      value={modelId}
+                      onChange={(e) => {
+                        const m = pestModels.find((x) => x.model_id === e.target.value);
+                        setParams({ model: !m || m.is_default ? null : m.model_id });
+                      }}
+                    >
+                      {pestModels.map((m) => (
+                        <option key={m.model_id} value={m.model_id}>
+                          {m.label}
+                          {m.is_default ? " (기본)" : ""} — {perfText(m.perf)}
+                        </option>
+                      ))}
+                    </select>
+                    {model && (
+                      <p className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[11px] text-white/60">
+                        <span className="rounded bg-white/15 px-1 text-[10px] font-semibold text-white/80">{model.type}</span>
+                        {TYPE_LABEL[model.type] ?? model.type}
+                        <span className="text-white/30">·</span>
+                        <span className={model.perf ? "text-emerald-200" : "text-amber-200"}>{perfText(model.perf)}</span>
+                      </p>
+                    )}
+                  </>
+                ) : (
                 <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="예측 모델">
                   {pestModels.map((m) => (
                     <button
@@ -282,6 +311,7 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
                     </button>
                   ))}
                 </div>
+                )}
               </div>
             ) : (
               model && (
@@ -369,6 +399,7 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
               code={selected}
               pestId={pestId}
               model={pestModels.length > 1 ? model : undefined}
+              models={pestModels}
               pests={pests}
               horizon={horizon}
               onClose={() => setParams({ spot: null })}

@@ -155,27 +155,11 @@ def brier(y: list[int], p: list[float]) -> float:
     return mean((pi - yi) ** 2 for yi, pi in zip(y, p))
 
 
-def main(argv: list[str] | None = None) -> int:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--pest", required=True)
-    ap.add_argument("--train", default="2015-2022")
-    ap.add_argument("--test", default="2023-2025")
-    ap.add_argument("--max-km", type=float, default=0.0,
-                    help="관측소 없는 시군을 가까운 시군으로 대체할 때 최대 거리(km). 0이면 제한 없음")
-    ap.add_argument("--export", default="",
-                    help="variant 폴더(예: models/pepper/anthracnose/variants/survey_logit) — model.yaml params와 eval.json을 이 결과로 갱신")
-    ap.add_argument("--with-history", action="store_true",
-                    help="직전 회차 예찰값(log1p)을 피처로 추가(운영하려면 예찰 실시간 연동 필요)")
-    args = ap.parse_args(argv)
-    feat_names = FEATURES + (["prev_survey_log"] if args.with_history else [])
-    train_years, test_years = _years(args.train), _years(args.test)
-
-    import numpy as np
-    from sklearn.ensemble import HistGradientBoostingClassifier
-    from sklearn.linear_model import LogisticRegression
-    from sklearn.preprocessing import StandardScaler
-
-    survey = load_survey(args.pest)
+def build_samples(pest: str, train_years: list[int], test_years: list[int], feat_names: list[str],
+                  max_km: float = 0.0) -> tuple[list[dict], dict]:
+    """예찰 1건 = 표본 1개. 피처(조사일 전날까지 기상 + 직전 예찰값), 정답(조사값>0), 기본 모델 점수.
+    여러 알고리즘(pipeline/survey_ml.py)이 같은 표본을 쓰도록 분리했다."""
+    survey = load_survey(pest)
     wx = load_weather_by_sigungu(sorted(set(train_years + test_years)), extra_regions=sorted({r["key"] for r in survey}))
     stn_locs: dict[str, tuple[float, float]] = {}
     _pts: dict[str, list] = defaultdict(list)
@@ -184,7 +168,7 @@ def main(argv: list[str] | None = None) -> int:
             _pts[st["key"]].append((st["lat"], st["lon"]))
     for k, pts in _pts.items():
         stn_locs[k] = regions.location_of(k, pts)
-    default = next(m for m in discover(include_demo=False) if m.card.pest_id == args.pest and m.is_default)
+    default = next(m for m in discover(include_demo=False) if m.card.pest_id == pest and m.is_default)
 
     # 기본 모델은 시군·연도 시계열로 한 번씩 돌린다(연초~조사일)
     default_cache: dict[tuple[str, int], dict[date, float]] = {}
@@ -219,8 +203,8 @@ def main(argv: list[str] | None = None) -> int:
             if src is None:
                 skipped["좌표 없음"] += 1
                 continue
-            if args.max_km and src.distance_km > args.max_km:
-                skipped[f"대체 거리 {args.max_km:g}km 초과"] += 1
+            if max_km and src.distance_km > max_km:
+                skipped[f"대체 거리 {max_km:g}km 초과"] += 1
                 continue
             window = window_of(src.key)
             if window is None:
@@ -246,10 +230,35 @@ def main(argv: list[str] | None = None) -> int:
             smp["feats"]["prev_survey_log"] = math.log1p(smp["prev"])
             smp["x"] = [smp["feats"].get(k, float("nan")) for k in feat_names]
 
+    return samples, dict(skipped)
+
+
+
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--pest", required=True)
+    ap.add_argument("--train", default="2015-2022")
+    ap.add_argument("--test", default="2023-2025")
+    ap.add_argument("--max-km", type=float, default=0.0,
+                    help="관측소 없는 시군을 가까운 시군으로 대체할 때 최대 거리(km). 0이면 제한 없음")
+    ap.add_argument("--export", default="",
+                    help="variant 폴더(예: models/pepper/anthracnose/variants/survey_logit) — model.yaml params와 eval.json을 이 결과로 갱신")
+    ap.add_argument("--with-history", action="store_true",
+                    help="직전 회차 예찰값(log1p)을 피처로 추가(운영하려면 예찰 실시간 연동 필요)")
+    args = ap.parse_args(argv)
+    feat_names = FEATURES + (["prev_survey_log"] if args.with_history else [])
+    train_years, test_years = _years(args.train), _years(args.test)
+
+    import numpy as np
+    from sklearn.ensemble import HistGradientBoostingClassifier
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.preprocessing import StandardScaler
+
+    samples, skipped = build_samples(args.pest, train_years, test_years, feat_names, args.max_km)
     tr = [s for s in samples if s["year"] in train_years]
     te = [s for s in samples if s["year"] in test_years]
     if len(tr) < 50 or len(te) < 20:
-        print(f"표본 부족: 학습 {len(tr)}, 시험 {len(te)} (건너뜀 {dict(skipped)})")
+        print(f"표본 부족: 학습 {len(tr)}, 시험 {len(te)} (건너뜀 {skipped})")
         return 2
 
     Xtr = np.array([s["x"] for s in tr], dtype=float)
@@ -329,7 +338,7 @@ def main(argv: list[str] | None = None) -> int:
         "target": "시군구 예찰 조사값 > 0 (발생)",
         "train_years": args.train, "test_years": args.test,
         "n_sigungu": len({s["sigungu"] for s in samples}),
-        "skipped": dict(skipped),
+        "skipped": skipped,
         "substituted": {
             "n": sum(1 for x in samples if x["wx_km"] > 0),
             "n_sigungu": len({x["sigungu"] for x in samples if x["wx_km"] > 0}),

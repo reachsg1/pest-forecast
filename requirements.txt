@@ -3,4 +3,7 @@ PyYAML>=6.0
 pandas>=2.1
 numpy>=1.26
 pyarrow>=14.0        # 선택: 있으면 Parquet 스냅샷도 생성
-scikit-learn>=1.4    # 선택: train_template.py 에서만 사용
+# 학습한 모델 파일(models/**/model.joblib, model.ubj)을 읽으므로 학습 때와 같은 버전으로 고정
+scikit-learn==1.9.1
+xgboost==3.4.1
+joblib>=1.4

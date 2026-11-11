@@ -10,30 +10,31 @@ export default function SurveyEvalCard({ models, defaultLabel }: { models: Model
   const hasLiveSurveyModel = evs.some((x) => x.ev.uses_survey);
   const hist = hasLiveSurveyModel ? undefined : ev.with_history_reference?.test;
 
-  type Row = { name: string; sub?: string; auc: number | null; within: number | null; brier: number | null; tone: "main" | "base" | "ref" };
+  type Row = { name: string; sub?: string; auc: number | null; within: number | null; acc: number | null; tone: "main" | "base" | "ref" };
   const rows: Row[] = evs.map(({ m, ev: e }) => ({
     name: m.label,
-    sub: e.uses_survey ? "기상 + 최근 예찰값" : "기상만 사용",
+    sub: `${e.algorithm ? e.algorithm + " · " : ""}${e.uses_survey ? "기상 + 최근 예찰값" : "기상만 사용"}`,
     auc: e.test!.auc.survey_logit,
     within: e.test!.within_round_auc.survey_logit,
-    brier: e.test!.brier.survey_logit,
+    acc: e.test!.classification?.survey_logit?.accuracy ?? null,
     tone: "main" as const,
   }));
   rows.sort((x, y) => (y.within ?? 0) - (x.within ?? 0));
   rows.push(
-    { name: defaultLabel, sub: "현재 기본 모델", auc: t.auc.default_rule, within: t.within_round_auc.default_rule, brier: null, tone: "base" },
-    { name: "계절 평균", sub: "조사 시기별 과거 발생률만", auc: t.auc.climatology, within: t.within_round_auc.climatology, brier: t.brier.climatology, tone: "base" },
+    { name: defaultLabel, sub: "현재 기본 모델", auc: t.auc.default_rule, within: t.within_round_auc.default_rule, acc: t.classification?.default_rule?.accuracy ?? null, tone: "base" },
+    { name: "계절 평균", sub: "조사 시기별 과거 발생률만", auc: t.auc.climatology, within: t.within_round_auc.climatology, acc: t.classification?.climatology?.accuracy ?? null, tone: "base" },
   );
   if (t.auc.persistence != null)
-    rows.push({ name: "직전 회차 예찰값", sub: "참고 · 예찰 이력만", auc: t.auc.persistence, within: t.within_round_auc.persistence ?? null, brier: null, tone: "ref" });
+    rows.push({ name: "직전 회차 예찰값", sub: "참고 · 예찰 이력만", auc: t.auc.persistence, within: t.within_round_auc.persistence ?? null, acc: null, tone: "ref" });
   if (hist)
-    rows.push({ name: `${base.m.label} + 직전 예찰값`, sub: "참고 · 예찰 실시간 연동 필요", auc: hist.auc.survey_logit, within: hist.within_round_auc.survey_logit, brier: hist.brier.survey_logit, tone: "ref" });
+    rows.push({ name: `${base.m.label} + 직전 예찰값`, sub: "참고 · 예찰 실시간 연동 필요", auc: hist.auc.survey_logit, within: hist.within_round_auc.survey_logit, acc: hist.classification?.survey_logit?.accuracy ?? null, tone: "ref" });
   const sub = ev.substituted;
 
   const bar = (v: number | null) => {
     if (v == null || Number.isNaN(v)) return 0;
     return Math.max(0, Math.min(1, (v - 0.5) / 0.5)) * 100; // 0.5(무작위)~1.0(완벽)
   };
+  const pct = (v: number | null) => (v == null || Number.isNaN(v) ? "–" : `${Math.round(v * 100)}%`);
   const fmt = (v: number | null, d = 2) => (v == null || Number.isNaN(v) ? "–" : v.toFixed(d));
 
   return (
@@ -53,7 +54,7 @@ export default function SurveyEvalCard({ models, defaultLabel }: { models: Model
           <span>모델·기준</span>
           <span>전체 변별력 (AUC)</span>
           <span className="text-right">같은 회차 변별력</span>
-          <span className="text-right">Brier ↓</span>
+          <span className="text-right">정확도</span>
         </div>
         <ul className="divide-y divide-slate-100">
           {rows.map((r) => (
@@ -71,10 +72,10 @@ export default function SurveyEvalCard({ models, defaultLabel }: { models: Model
               <div className="num col-start-2 row-start-1 self-start text-right text-[11px] text-slate-500 sm:hidden">
                 같은 회차 {fmt(r.within)}
                 <br />
-                Brier {fmt(r.brier, 3)}
+                정확도 {pct(r.acc)}
               </div>
               <span className="num hidden text-right text-sm text-slate-700 sm:block">{fmt(r.within)}</span>
-              <span className="num hidden text-right text-sm text-slate-700 sm:block">{fmt(r.brier, 3)}</span>
+              <span className="num hidden text-right text-sm text-slate-700 sm:block">{pct(r.acc)}</span>
             </li>
           ))}
         </ul>
@@ -95,7 +96,7 @@ export default function SurveyEvalCard({ models, defaultLabel }: { models: Model
       )}
 
       <ul className="mt-4 space-y-1 text-xs leading-relaxed text-slate-500">
-        <li>· AUC는 발생한 곳과 안 한 곳을 가르는 힘입니다. 1.0이면 완벽, 0.5면 무작위와 같습니다. Brier는 확률 오차로 낮을수록 좋습니다.</li>
+        <li>· AUC는 발생한 곳과 안 한 곳을 가르는 힘입니다. 1.0이면 완벽, 0.5면 무작위와 같습니다. 정확도는 위험지수 50(주의보) 이상을 &lsquo;발생&rsquo;으로 볼 때 맞힌 비율입니다(시험 기간 발생률 약 30%라 &lsquo;모두 미발생&rsquo;이라고만 해도 70%가 나오므로 AUC와 함께 보세요).</li>
         <li>· &lsquo;같은 회차 변별력&rsquo;은 같은 조사일의 시군끼리만 비교한 값으로, 시기(계절)를 맞힌 효과를 뺀 성능입니다.</li>
         <li>· 정답은 NCPMS 시군구 예찰 피해과율이 0보다 큰지이며, 설치 주소가 같은 시군인 농업기상 관측소(여럿이면 평균)와 짝지었습니다. 관측소가 없는 시군은 가장 가까운 시군의 관측소를 쓰고, 나중에 그 시군 자료가 생기면 자동으로 바뀝니다.</li>
       </ul>

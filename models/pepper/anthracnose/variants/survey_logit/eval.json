@@ -1,10 +1,11 @@
 {
   "model_id": "pepper_anthracnose__survey_logit",
   "version": "0.1.0",
-  "evaluated_at": "2026-11-10",
+  "evaluated_at": "2026-11-11",
   "status": "survey_evaluated",
   "uses_survey": false,
-  "method": "연도 분리 검증: 학습 2015-2022, 시험 2023-2025. 정답 = 시군구 예찰값 > 0.",
+  "algorithm": "로지스틱 회귀",
+  "method": "연도 분리 검증: 학습 2015-2022, 시험 2023-2025. 정답 = 시군구 예찰값 > 0. 정확도·정밀도·재현율은 위험지수 50(주의보) 이상을 '발생'으로 볼 때.",
   "n_sigungu": 72,
   "skipped": {},
   "test": {
@@ -14,20 +15,37 @@
       "survey_logit": 0.836,
       "climatology": 0.816,
       "default_rule": 0.542,
-      "gbm_reference": 0.831,
       "persistence": 0.79
     },
     "within_round_auc": {
       "survey_logit": 0.574,
+      "climatology": 0.5,
       "default_rule": 0.465,
-      "persistence": 0.707,
-      "climatology": 0.5
+      "persistence": 0.707
     },
     "brier": {
       "survey_logit": 0.155,
-      "climatology": 0.156,
-      "gbm_reference": 0.1621,
-      "constant_rate": 0.2142
+      "climatology": 0.156
+    },
+    "classification": {
+      "survey_logit": {
+        "accuracy": 0.749,
+        "precision": 0.557,
+        "recall": 0.721,
+        "f1": 0.629
+      },
+      "default_rule": {
+        "accuracy": 0.492,
+        "precision": 0.319,
+        "recall": 0.639,
+        "f1": 0.426
+      },
+      "climatology": {
+        "accuracy": 0.741,
+        "precision": 0.561,
+        "recall": 0.563,
+        "f1": 0.562
+      }
     }
   },
   "test_by_year": {
@@ -38,20 +56,37 @@
         "survey_logit": 0.902,
         "climatology": 0.888,
         "default_rule": 0.56,
-        "gbm_reference": 0.889,
         "persistence": 0.798
       },
       "within_round_auc": {
         "survey_logit": 0.637,
+        "climatology": 0.5,
         "default_rule": 0.509,
-        "persistence": 0.705,
-        "climatology": 0.5
+        "persistence": 0.705
       },
       "brier": {
         "survey_logit": 0.1223,
-        "climatology": 0.1312,
-        "gbm_reference": 0.1295,
-        "constant_rate": 0.2316
+        "climatology": 0.1312
+      },
+      "classification": {
+        "survey_logit": {
+          "accuracy": 0.818,
+          "precision": 0.733,
+          "recall": 0.786,
+          "f1": 0.759
+        },
+        "default_rule": {
+          "accuracy": 0.52,
+          "precision": 0.411,
+          "recall": 0.73,
+          "f1": 0.526
+        },
+        "climatology": {
+          "accuracy": 0.772,
+          "precision": 0.742,
+          "recall": 0.571,
+          "f1": 0.646
+        }
       }
     },
     "2024": {
@@ -61,20 +96,37 @@
         "survey_logit": 0.811,
         "climatology": 0.79,
         "default_rule": 0.543,
-        "gbm_reference": 0.806,
         "persistence": 0.806
       },
       "within_round_auc": {
         "survey_logit": 0.535,
+        "climatology": 0.5,
         "default_rule": 0.482,
-        "persistence": 0.743,
-        "climatology": 0.5
+        "persistence": 0.743
       },
       "brier": {
         "survey_logit": 0.169,
-        "climatology": 0.1684,
-        "gbm_reference": 0.1773,
-        "constant_rate": 0.2163
+        "climatology": 0.1684
+      },
+      "classification": {
+        "survey_logit": {
+          "accuracy": 0.723,
+          "precision": 0.532,
+          "recall": 0.737,
+          "f1": 0.618
+        },
+        "default_rule": {
+          "accuracy": 0.52,
+          "precision": 0.332,
+          "recall": 0.577,
+          "f1": 0.421
+        },
+        "climatology": {
+          "accuracy": 0.721,
+          "precision": 0.54,
+          "recall": 0.54,
+          "f1": 0.54
+        }
       }
     },
     "2025": {
@@ -84,53 +136,39 @@
         "survey_logit": 0.793,
         "climatology": 0.796,
         "default_rule": 0.497,
-        "gbm_reference": 0.791,
         "persistence": 0.764
       },
       "within_round_auc": {
         "survey_logit": 0.577,
+        "climatology": 0.5,
         "default_rule": 0.416,
-        "persistence": 0.666,
-        "climatology": 0.5
+        "persistence": 0.666
       },
       "brier": {
         "survey_logit": 0.1662,
-        "climatology": 0.1627,
-        "gbm_reference": 0.1721,
-        "constant_rate": 0.1985
+        "climatology": 0.1627
+      },
+      "classification": {
+        "survey_logit": {
+          "accuracy": 0.72,
+          "precision": 0.43,
+          "recall": 0.621,
+          "f1": 0.508
+        },
+        "default_rule": {
+          "accuracy": 0.44,
+          "precision": 0.232,
+          "recall": 0.612,
+          "f1": 0.337
+        },
+        "climatology": {
+          "accuracy": 0.738,
+          "precision": 0.451,
+          "recall": 0.583,
+          "f1": 0.508
+        }
       }
     }
   },
-  "note": "AUC 1.0=완벽, 0.5=무작위. '같은 회차 변별력'은 같은 조사일의 시군끼리 비교한 AUC로, 계절(시기) 효과를 뺀 성능입니다.",
-  "substituted": {
-    "n": 465,
-    "n_sigungu": 11,
-    "max_km": 25.9
-  },
-  "with_history_reference": {
-    "note": "직전 회차 예찰값을 피처로 더한 판(운영엔 예찰 실시간 연동 필요)",
-    "test": {
-      "n": 1241,
-      "positive_rate": 0.295,
-      "auc": {
-        "survey_logit": 0.898,
-        "climatology": 0.816,
-        "default_rule": 0.542,
-        "gbm_reference": 0.9,
-        "persistence": 0.79
-      },
-      "within_round_auc": {
-        "survey_logit": 0.758,
-        "default_rule": 0.465,
-        "persistence": 0.707,
-        "climatology": 0.5
-      },
-      "brier": {
-        "survey_logit": 0.1145,
-        "climatology": 0.156,
-        "gbm_reference": 0.1138,
-        "constant_rate": 0.2142
-      }
-    }
-  }
+  "note": "AUC 1.0=완벽, 0.5=무작위. '같은 회차 변별력'은 같은 조사일의 시군끼리 비교한 AUC로, 계절(시기) 효과를 뺀 성능입니다."
 }

@@ -24,7 +24,9 @@ LIVE_CALL_BUDGET = 150  # 실행 1회 상한(새 회차 1~2개면 약 20건)
 
 def uses_survey(lm: LoadedModel) -> bool:
     p = lm.card.params or {}
-    return bool(p.get("survey")) and any(f.get("name") == "prev_survey_log" for f in p.get("features", []))
+    # 피처 목록은 통계형은 {name, …} 사전, 기계학습형(유형 D)은 이름 문자열
+    names = [f.get("name") if isinstance(f, dict) else f for f in p.get("features", [])]
+    return bool(p.get("survey")) and "prev_survey_log" in names
 
 
 def _to_float(v) -> float | None:

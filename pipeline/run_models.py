@@ -6,6 +6,7 @@ from datetime import date, timedelta
 from typing import Iterable
 
 from models._base import DailyWeather
+from models._base.interface import clamp, grade_of
 from models._base.registry import LoadedModel
 
 from . import config
@@ -46,6 +47,8 @@ def run_all(
             sc = phenology.assess(crop, sp.get("sigungu", "")) if phenology else None
             if sc is not None and assessments is not None:
                 assessments[(code, crop)] = sc
+            if lm.card.type == "E":
+                continue  # 앙상블은 구성 모델 결과로 아래에서 만든다
             try:
                 hist = (survey_history or {}).get(lm.id)
                 pts = lm.model.predict(wx, hist.get(code, []) if hist is not None else None)
@@ -74,4 +77,44 @@ def run_all(
                         "raw_index": round(p.index, 1),
                     }
                 )
+    rows.extend(combine_ensembles(rows, models))
     return rows
+
+
+def combine_ensembles(rows: list[dict], models: list[LoadedModel]) -> list[dict]:
+    """유형 E(앙상블): 구성 모델의 같은 지점·같은 날 위험지수(raw_index) 평균. 재배 여부·시기 판정은 구성 모델과 같다.
+    구성 모델 중 하나라도 이번 실행에 없으면 그 앙상블은 건너뛴다."""
+    ran = {r["model_id"] for r in rows}
+    out: list[dict] = []
+    for lm in models:
+        if lm.card.type != "E":
+            continue
+        members = list(lm.card.params.get("members", []))
+        if not members or any(m not in ran for m in members):
+            log.warning("앙상블 %s: 구성 모델(%s) 중 실행되지 않은 것이 있어 건너뜀", lm.id, members)
+            continue
+        by_key: dict[tuple[str, str], dict[str, dict]] = {}
+        for r in rows:
+            if r["model_id"] in members:
+                by_key.setdefault((r["spot_code"], r["target_date"]), {})[r["model_id"]] = r
+        for (code, d), mr in by_key.items():
+            if len(mr) < len(members):
+                continue
+            first = mr[members[0]]
+            raw = sum(mr[m]["raw_index"] for m in members) / len(members)
+            applicable = first["na_reason"] is None
+            idx = clamp(raw)
+            out.append({
+                **{k: first[k] for k in ("spot_code", "pest_id", "issued_date", "target_date", "offset_days", "is_forecast", "na_reason")},
+                "model_id": lm.id,
+                "model_version": lm.card.version,
+                "index": round(idx, 1) if applicable else None,
+                "grade": grade_of(idx) if applicable else None,
+                "raw_index": round(idx, 1),
+                "inputs": {
+                    "members": {m: mr[m]["raw_index"] for m in members},
+                    "agree_alert": sum(1 for m in members if mr[m]["raw_index"] >= 50),  # 주의보 이상으로 본 모델 수
+                    **({"survey_ref": first["inputs"]["survey_ref"]} if isinstance(first.get("inputs"), dict) and first["inputs"].get("survey_ref") else {}),
+                },
+            })
+    return out

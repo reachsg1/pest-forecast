@@ -5,7 +5,7 @@
 큰 작업이 끝나면 `docs/HANDOFF.md`의 '검증 상태'와 'TODO'를 갱신한다.
 
 ## 구조 한눈에
-- `models/<작물>/<병해충>/{model.yaml, model.py, eval.json}` — 모델 플러그인(기본 모델). `models/_base/`에 공통 인터페이스와 유형 A(감염조건)·B(적산온도)·C(통계형). 폴더 추가만으로 자동 등록(`registry.discover()`).
+- `models/<작물>/<병해충>/{model.yaml, model.py, eval.json}` — 모델 플러그인(기본 모델). `models/_base/`에 공통 인터페이스와 유형 A(감염조건)·B(적산온도)·C(통계형·로지스틱)·D(학습한 ML: RF·XGBoost, `ml.py`)·E(앙상블 평균, `run_models.combine_ensembles`). 폴더 추가만으로 자동 등록(`registry.discover()`).
   - 예찰값을 입력으로 쓰는 모델(`params.survey` + 피처 `prev_survey_log`)은 배치가 `pipeline/survey_live.py`로 NCPMS 예찰을 받아 `predict(weather, history)`에 넘긴다. 관측소·예찰이 없는 시군은 `pipeline/regions.py`가 가장 가까운 시군으로 대체(매 실행 재계산 → 자료가 생기면 자동 보완).
   - 같은 병해충의 추가 모델은 `<병해충>/variants/<이름>/`(같은 `pest_id`, 다른 `id`, `label` 필수). 예측 지도에서 모델을 골라 결과를 비교한다(`?model=`). 요약·등급 집계는 기본 모델 기준. `demo_only: true`는 데모 실행 전용 시연 모형 — 실제 모델로 쓰지 않는다. 자세한 규칙은 `docs/model-authoring.md`.
 - `pipeline/` — `cli.py run [--demo]` 가 수집→정제→실행→발행. 발행 결과는 `apps/web/public/data/`(웹이 읽음)와 `data/predictions/`(스냅샷).
@@ -39,6 +39,7 @@ python scripts/fetch_weather_all.py --years 2015-2025 --months 4-9   # 전국 �
 python scripts/fetch_survey.py --crop VC011205 --examin 01320 --item 탄저병 --pest pepper_anthracnose  # NCPMS 시군구 예찰
 python -m pipeline.survey_train --pest pepper_anthracnose [--with-history] [--export <variant 폴더>]   # 예찰 학습형 학습·연도 분리 검증
 python scripts/fetch_sigungu_centroids.py                # 시군 대표 좌표(가까운 시군 대체용)
+python -m pipeline.survey_ml --pest pepper_anthracnose --export   # 로지스틱·RF·XGBoost·앙상블 비교·내보내기(학습 파일 갱신)
 cd apps/web && npm install && npm run typecheck && npm run build && npm run dev
 ```
 
@@ -54,3 +55,4 @@ cd apps/web && npm install && npm run typecheck && npm run build && npm run dev
 - `apps/web/public/data`를 손으로 편집하지 않는다(배치가 덮어씀).
 - `data/cache/`는 git 제외. 커밋에 포함시키지 않는다.
 - 테스트(`pipeline/tests`)를 삭제하거나 건너뛰지 않는다. 모델을 추가하면 `test_discover_finds_eight_models`의 개수를 갱신한다.
+- 학습 파일(`model.joblib`, `model.ubj`)을 다시 만들면 `requirements.txt`의 scikit-learn·xgboost 고정 버전과 맞춘다(버전이 다르면 배치에서 못 읽음).
