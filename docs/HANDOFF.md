@@ -47,6 +47,9 @@ Claude(프로젝트 대화)에서 설계와 초기 구축을 마치고 Claude Co
   - 벼 수확 종료 10-31 반영(기계이앙 "수확할때 10월 상순~하순", cntntsNo 30697). 제주권 벼는 이앙 시작 근거가 없어 판정 생략(서귀포 9지점)
   - 고추(보통재배, 30600) 수확 종료 11-10 반영: 같은 표 재해 행 "냉해, 수확기 단축 10월 중순~11월 상순". 다른 후보(붉은고추 수확 끝 09-30, 연장재배 끝 11-20)는 yaml 주석. 담당 연구자 검토 대상
 - **과거 비교(되돌려 보기, 11-11)**: 병해충 상세 '과거 비교' 탭 — 연도·예찰 조사일·모델을 골라 그날 위험지수와 실제 피해과율을 시군별로 비교(맞힘/놓침/헛경보). 자료 `pipeline/survey_backtest.py` → `data/backtest/<pest>.json`(배포 모델 파일로 계산, 예보 오차 미포함) → publish가 `public/data/backtest/`로 복사. 학습 연도(2015~2022)는 '학습에 쓴 해'로 경고. 시험 연도 앙상블 정확도 84.8%로 검증 결과와 일치 확인. 지도 표시는 아직 없음(표)
+- **연도별 발생 추이(11-12)**: 병해충 상세 '연도별 발생' 탭 — NCPMS 시군 예찰로 연도별 발생 시군 비율·평균 피해율, 조사 시기별 곡선(선택 연도 vs 평균), 표. `pipeline/survey_trend.py`(항목 정확한 이름 ITEMS) → `data/trend/<pest>.json` → publish 복사. 자료: 고추 3종 2015~2025, 사과 2종 2021~2025(2015~2020은 일일 호출 한도로 미수집: `scripts/fetch_survey.py --crop FT010601 --examin 01322 --item 탄저병 --pest apple_anthracnose --years 2015-2020`, 연 약 90건), 벼 3종 미수집(`--predictn 00204 --crop FC010101`, 항목명 확인 후 ITEMS 추가)
+- **과거 비교 지도(11-12)**: 표/지도 전환, 지도 색 = 예측 등급(굵은 테두리 = 실제 발생) 또는 판정. 시군 대표 좌표(sigungu_centroids.csv)
+- **GIS 피처 후보 조사(11-12)**: 관측지점 상세정보 `Instl_Al`(고도, 단위 확인 필요)·`Clmt_Zone_Code` 즉시 사용 가능, 흙토람 토양특성 통계 V2(data.go.kr 15144796, 법정동코드 시군 단위, KOGL 4유형 상업이용 금지), 팜맵 조회(15057368, 좌표 반경 1km 필지 구분). 토지피복(EGIS WMS만)·DEM 경사는 파일 처리 필요
 - **화면 날짜 표기(11-11)**: 사용자 요청으로 점 형식(2026.11.11. / 9.30.), `apps/web/lib/format.ts`. 데이터·API는 ISO 유지
 
 - 로컬 PC 환경: Python은 `.venv`(`.\.venv\Scripts\python.exe`), Node.js·git 설치 완료. 6절 지시문 1)~4) 완료(11-10). GitHub 원격 저장소 https://github.com/reachsg1/pest-forecast (main, 11-10 push). Actions Secrets 등록·daily-forecast 첫 수동 실행 성공(11-11, 21분, 206지점). **Vercel 배포: https://pest-forecast.vercel.app** (Root Directory apps/web, 환경변수 없음, Hobby). 배치 커밋마다 자동 재배포. 배포별·브랜치 URL은 Vercel 인증 보호(정상), 공개 주소는 위 운영 주소

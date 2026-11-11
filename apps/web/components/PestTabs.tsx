@@ -8,6 +8,7 @@ import ModelCard from "./ModelCard";
 import RiskBadge from "./RiskBadge";
 import SurveyEvalCard from "./SurveyEvalCard";
 import TrendChart from "./TrendChart";
+import YearTrend from "./YearTrend";
 import { GradeBar, Icon } from "./ui";
 import { GRADES, NA, NA_REASONS, fmtIndex } from "@/lib/grades";
 import type { Grade, PestCard, RiskSpotEntry, SpotFile } from "@/lib/types";
@@ -15,6 +16,7 @@ import type { Grade, PestCard, RiskSpotEntry, SpotFile } from "@/lib/types";
 const TABS = [
   { id: "now", label: "현재 위험도" },
   { id: "trend", label: "추이" },
+  { id: "years", label: "연도별 발생" },
   { id: "why", label: "예측 근거" },
   { id: "control", label: "방제 정보" },
   { id: "eval", label: "검증" },
@@ -294,6 +296,12 @@ export default function PestTabs({
               </div>
             )}
             {surveyEvalModels.length === 0 && <p className="text-xs leading-relaxed text-slate-400">적중률은 예찰 &lsquo;발생&rsquo; 기록 7일 전부터 당일 사이에 주의보 이상을 냈는지로 계산합니다. 모델 버전이 바뀔 때마다 다시 계산됩니다.</p>}
+          </section>
+        )}
+
+        {tab === "years" && (
+          <section role="tabpanel" id="panel-years" aria-labelledby="tab-years" className="text-sm">
+            <YearTrend pestId={pest.pest_id} nameKo={pest.name_ko} />
           </section>
         )}
 
