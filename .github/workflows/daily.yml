@@ -52,15 +52,28 @@ jobs:
           key: agriweather-${{ github.run_id }}
           restore-keys: agriweather-
 
+      # 키가 없으면 데모로 몰래 바꾸지 않고 실패시킨다(실데이터 지도를 데모로 덮어쓰는 사고 방지).
+      # 데모가 필요하면 수동 실행에서 demo를 체크한다.
+      - name: Check secrets (live only)
+        if: ${{ !inputs.demo }}
+        run: |
+          missing=""
+          [ -z "$DATA_GO_KR_KEY" ] && missing="$missing DATA_GO_KR_KEY"
+          [ -z "$NCPMS_API_KEY" ] && missing="$missing NCPMS_API_KEY"
+          if [ -n "$missing" ]; then
+            echo "::error::Secrets 없음:$missing — Settings → Secrets and variables → Actions 에 등록하세요. 기존 결과는 그대로 둡니다."
+            exit 1
+          fi
+
       - name: Fetch spots (live only)
-        if: ${{ !inputs.demo && env.DATA_GO_KR_KEY != '' }}
+        if: ${{ !inputs.demo }}
         run: python -m pipeline.cli spots
 
       - name: Run forecast
         id: run
         run: |
           ARGS=""
-          if [ "${{ inputs.demo }}" = "true" ] || [ -z "$DATA_GO_KR_KEY" ]; then ARGS="--demo"; fi
+          if [ "${{ inputs.demo }}" = "true" ]; then ARGS="--demo"; fi
           if [ -n "${{ inputs.date }}" ]; then ARGS="$ARGS --date ${{ inputs.date }}"; fi
           python -m pipeline.cli run $ARGS
 

@@ -190,6 +190,20 @@ def publish(
             }
         )
 
+    # --- 지난 실행이 남긴 파일 정리(데모↔실데이터 전환, 모델 삭제 시 섞이지 않게) ----------
+    keep_spots = {f"{s['spot_code']}.json" for s in spots}
+    for p in (web / "spot").glob("*.json"):
+        if p.name not in keep_spots:
+            p.unlink()
+    keep_models = {f"{m.id}.json" for m in models}
+    for p in (web / "risk" / "models").glob("*.json"):
+        if p.name not in keep_models:
+            p.unlink()
+    keep_pests = {f"{pid}.json" for pid in pest_models}
+    for p in (web / "risk").glob("*.json"):
+        if p.name not in keep_pests:
+            p.unlink()
+
     # --- spot/<code>.json ---------------------------------------------------
     for s in spots:
         code = s["spot_code"]
