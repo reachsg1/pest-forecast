@@ -1,12 +1,24 @@
 import Link from "next/link";
 import RiskBadge from "@/components/RiskBadge";
 import Sparkline from "@/components/Sparkline";
-import { GradeBar, Icon } from "@/components/ui";
+import { Icon } from "@/components/ui";
 import { getSummary } from "@/lib/data";
-import { CROP_LABEL, GRADES, NA, gradeMeta } from "@/lib/grades";
+import { CROP_LABEL, GRADES, gradeMeta } from "@/lib/grades";
+import type { Grade, SummaryPest } from "@/lib/types";
 
-export default async function HomePage({ searchParams }: { searchParams: Promise<{ crop?: string }> }) {
-  const { crop } = await searchParams;
+type CropGroup = { crop: string; crop_ko: string; pests: SummaryPest[]; grown: number; top: Grade | null; alerts: number };
+
+const ALERT: Grade[] = ["주의보", "경보"];
+const alertN = (p: SummaryPest) => ALERT.reduce((a, g) => a + (p.grade_counts[g] ?? 0), 0);
+const rank = (g: Grade | null) => (g ? GRADES.findIndex((x) => x.name === g) : -1);
+
+/** 받침이 있으면 "은", 없으면 "는" */
+function josa(word: string) {
+  const code = word.charCodeAt(word.length - 1) - 0xac00;
+  return code >= 0 && code <= 11171 && code % 28 !== 0 ? "은" : "는";
+}
+
+export default async function HomePage() {
   const summary = await getSummary();
   if (!summary) {
     return (
@@ -18,16 +30,25 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
       </div>
     );
   }
-  const crops = Array.from(new Set(summary.pests.map((p) => p.crop)));
-  const pests = crop ? summary.pests.filter((p) => p.crop === crop) : summary.pests;
-  const counts = summary.grade_counts_all;
-  const na = summary.na_all ?? 0;
-  const applicable = GRADES.reduce((a, g) => a + (counts[g.name] ?? 0), 0);
-  const order = GRADES.slice().reverse();
+
+  // 작물별 묶음: 재배 중인 작물 먼저, 그 안에서 위험 높은 순
+  const crops: CropGroup[] = Array.from(new Set(summary.pests.map((p) => p.crop))).map((c) => {
+    const ps = summary.pests.filter((p) => p.crop === c).sort((a, b) => rank(b.max_grade) - rank(a.max_grade) || alertN(b) - alertN(a));
+    const grown = Math.max(0, ...ps.map((p) => p.n_applicable ?? 0));
+    const top = ps.reduce<Grade | null>((m, p) => (rank(p.max_grade) > rank(m) ? p.max_grade : m), null);
+    return { crop: c, crop_ko: ps[0]?.crop_ko ?? CROP_LABEL[c] ?? c, pests: ps, grown, top, alerts: ps.reduce((a, p) => a + alertN(p), 0) };
+  });
+  crops.sort((a, b) => Number(b.grown > 0) - Number(a.grown > 0) || rank(b.top) - rank(a.top) || b.alerts - a.alerts);
+
+  const alerting = summary.pests.filter((p) => alertN(p) > 0).sort((a, b) => alertN(b) - alertN(a));
+  const watching = summary.pests.reduce((a, p) => a + (p.grade_counts["예보"] ?? 0), 0);
+  const offCrops = crops.filter((c) => c.grown === 0).map((c) => c.crop_ko);
+  const offText =
+    offCrops.length === 0 ? "" : `${offCrops.join("·")}${josa(offCrops[offCrops.length - 1])} 지금 재배 시기가 아니어서 위험도를 내지 않아요.`;
 
   return (
     <div className="space-y-10">
-      {/* 히어로: 오늘의 전국 위험 */}
+      {/* 히어로: 오늘의 결론 한 줄 */}
       <section aria-labelledby="today" className="hero-dark">
         {/* 한반도 위성 영상(장식). 개발용 Esri 영상, 운영 전 VWorld로 교체 */}
         <div
@@ -41,26 +62,61 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
             WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 45%, black 80%, transparent 100%)",
           }}
         />
-        <div className="relative px-6 pb-6 pt-8 sm:px-10 sm:pb-8 sm:pt-12">
-          <div className="flex flex-wrap items-end justify-between gap-6">
-            <div className="max-w-2xl">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-medium text-emerald-100 backdrop-blur">
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-                </span>
-                <span className="num">
-                  기준일 {summary.issued_date} · {summary.horizon_days}일 전망
-                </span>
-              </span>
-              <h1 id="today" className="mt-5 text-3xl font-bold leading-tight tracking-tight sm:text-5xl sm:leading-[1.1]">
-                오늘의 병해충
-                <br className="hidden sm:block" /> 발생 위험
-              </h1>
-              <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/65 sm:text-base">
-                관측지점 {summary.n_spots}곳의 농업기상으로 병해충 {summary.n_models}종의 발생 위험을 매일 계산합니다. 작물을 재배하지 않는 지역·시기는 자동으로 제외합니다.
+        <div className="relative px-6 pb-7 pt-8 sm:px-10 sm:pb-10 sm:pt-12">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-medium text-emerald-100 backdrop-blur">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+            </span>
+            <span className="num">
+              기준일 {summary.issued_date} · {summary.horizon_days}일 전망
+            </span>
+          </span>
+          <h1 id="today" className="mt-5 text-3xl font-bold leading-tight tracking-tight sm:text-5xl sm:leading-[1.1]">
+            오늘의 병해충
+            <br className="hidden sm:block" /> 발생 위험
+          </h1>
+
+          {/* 오늘의 결론 */}
+          <div className="mt-6 max-w-2xl">
+            {alerting.length > 0 ? (
+              <>
+                <p className="text-lg font-semibold sm:text-xl">
+                  <span aria-hidden="true" style={{ color: gradeMeta("주의보").color }}>
+                    {gradeMeta("주의보").icon}
+                  </span>{" "}
+                  주의보 이상인 병해충이 {alerting.length}종 있어요
+                </p>
+                <ul className="mt-3 flex flex-wrap gap-2" aria-label="주의보 이상 병해충">
+                  {alerting.map((p) => (
+                    <li key={p.pest_id}>
+                      <Link href={`/map?crop=${p.crop}&pest=${p.pest_id}`} className="glass-tile inline-flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-white/15">
+                        <span className="text-white/55">{p.crop_ko}</span>
+                        <span className="font-semibold">{p.name_ko}</span>
+                        <span className="num text-white/70">{alertN(p)}곳</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : (
+              <p className="text-lg font-semibold sm:text-xl">
+                <span aria-hidden="true" className="text-emerald-300">
+                  ○
+                </span>{" "}
+                오늘은 주의보 이상인 곳이 없어요
               </p>
-            </div>
+            )}
+            <p className="mt-2 text-sm leading-relaxed text-white/60">
+              {watching > 0 ? `예보(관찰 강화) 단계 ${watching}건. ` : alerting.length === 0 ? "평소처럼 포장을 살펴보세요. " : ""}
+              {offText}
+            </p>
+          </div>
+
+          <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
+            <p className="max-w-xl text-xs leading-relaxed text-white/45">
+              관측지점 {summary.n_spots}곳의 농업기상으로 작물 {crops.length}종, 병해충 {summary.n_models}종의 위험을 매일 계산합니다.
+            </p>
             <div className="flex flex-wrap gap-2">
               <Link href="/farm" className="btn-glass">
                 <Icon name="farm" /> 내 농장
@@ -70,118 +126,21 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
               </Link>
             </div>
           </div>
-
-          {/* 분포 막대 */}
-          <div className="mt-10">
-            <div className="flex flex-wrap items-baseline justify-between gap-2 text-xs text-white/55">
-              <span className="font-medium text-white/80">전국 위험 분포</span>
-              <span className="num">
-                지점 × 병해충 {applicable}건{na > 0 && ` · ${NA.label} ${na}건 제외`}
-              </span>
-            </div>
-            <div className="mt-2.5 flex h-2.5 w-full overflow-hidden rounded-full bg-white/10" role="img" aria-label={order.map((g) => `${g.name} ${counts[g.name] ?? 0}`).join(", ")}>
-              {order.map((g) => ((counts[g.name] ?? 0) > 0 ? <span key={g.name} style={{ width: `${((counts[g.name] ?? 0) / Math.max(1, applicable)) * 100}%`, background: g.color }} /> : null))}
-            </div>
-          </div>
-
-          {/* 등급 타일 */}
-          <ul className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4" aria-label="등급별 지점·병해충 조합 수">
-            {order.map((g) => {
-              const n = counts[g.name] ?? 0;
-              return (
-                <li key={g.name} className="glass-tile p-4 sm:p-5">
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-1.5 text-sm font-semibold text-white/90">
-                      <span aria-hidden="true" style={{ color: g.color }}>
-                        {g.icon}
-                      </span>
-                      {g.name}
-                    </span>
-                    <span className="num text-xs text-white/45">{applicable ? Math.round((n / applicable) * 100) : 0}%</span>
-                  </div>
-                  <div className="num mt-3 text-4xl font-bold tracking-tight">{n}</div>
-                  <div className="mt-1 text-xs text-white/55">{g.action}</div>
-                </li>
-              );
-            })}
-          </ul>
-
-          <p className="num mt-5 flex flex-wrap items-center gap-x-1.5 text-xs text-white/40">
-            {na > 0 && (
-              <>
-                <Icon name="info" className="h-3.5 w-3.5" /> {NA.label} {na}건은 비재배지·재배 시기 아님으로 집계에서 제외 ·
-              </>
-            )}
-            갱신 {summary.generated_at.replace("T", " ")}
-          </p>
         </div>
       </section>
 
-      {/* 병해충별 */}
-      <section aria-labelledby="by-pest" className="space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 id="by-pest" className="section-title text-lg">
-            병해충별 현황
+      {/* 작물별 현황 */}
+      <section aria-labelledby="by-crop" className="space-y-4">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h2 id="by-crop" className="section-title text-lg">
+            작물별 현황
           </h2>
-          <nav aria-label="작물 선택" className="segmented">
-            <Link href="/" aria-current={!crop ? "page" : undefined} className="segmented-item">
-              전체
-            </Link>
-            {crops.map((c) => (
-              <Link key={c} href={`/?crop=${c}`} aria-current={crop === c ? "page" : undefined} className="segmented-item">
-                {CROP_LABEL[c] ?? c}
-              </Link>
-            ))}
-          </nav>
+          <p className="num text-xs text-slate-400">갱신 {summary.generated_at.replace("T", " ")}</p>
         </div>
-        <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {pests.map((p) => {
-            const accent = p.max_grade ? gradeMeta(p.max_grade).color : NA.color;
-            return (
-              <li key={p.pest_id} className="card card-hover group relative flex flex-col p-5">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <span className="chip">{p.crop_ko}</span>
-                      <span className="text-xs text-slate-400">유형 {p.type}</span>
-                      {!p.in_season && <span className="chip bg-slate-50 text-slate-400">시즌 외</span>}
-                    </div>
-                    <h3 className="mt-2 text-lg font-bold tracking-tight">
-                      <Link href={`/pests/${p.pest_id}`} className="after:absolute after:inset-0 after:rounded-2xl">
-                        {p.name_ko}
-                      </Link>
-                    </h3>
-                  </div>
-                  <RiskBadge grade={p.max_grade} />
-                </div>
-
-                <div className="mt-4 flex items-end justify-between gap-4">
-                  <div className="min-w-0 flex-1">
-                    <GradeBar counts={p.grade_counts} naCount={p.na_count ?? 0} compact />
-                  </div>
-                  <div className="shrink-0 text-right">
-                    <Sparkline values={p.trend_7d} width={96} height={34} label={`${p.name_ko} 전국 평균 위험지수 7일 추이`} />
-                    <div className="text-[10px] text-slate-400">7일 추이</div>
-                  </div>
-                </div>
-
-                {p.top_spots.length > 0 && (
-                  <p className="mt-4 truncate border-l-2 pl-2.5 text-xs text-slate-500" style={{ borderColor: accent }}>
-                    <span className="font-medium text-slate-700">위험 상위</span> {p.top_spots.slice(0, 3).map((s) => `${s.name} ${Math.round(s.index)}`).join(" · ")}
-                  </p>
-                )}
-
-                <div className="relative z-10 mt-4 flex items-center gap-4 border-t border-slate-100 pt-3">
-                  <Link href={`/map?pest=${p.pest_id}`} className="link-arrow text-xs">
-                    지도에서 보기 <Icon name="arrow" className="h-3.5 w-3.5" />
-                  </Link>
-                  <Link href={`/pests/${p.pest_id}`} className="text-xs font-medium text-slate-500 hover:text-slate-900">
-                    상세·예측 근거
-                  </Link>
-                </div>
-              </li>
-            );
-          })}
+        <ul className="grid gap-4 lg:grid-cols-3">
+          {crops.map((c) => (
+            <CropCard key={c.crop} c={c} />
+          ))}
         </ul>
       </section>
 
@@ -212,5 +171,62 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
         </div>
       </section>
     </div>
+  );
+}
+
+function CropCard({ c }: { c: CropGroup }) {
+  const off = c.grown === 0;
+  const accent = c.top ? gradeMeta(c.top).color : "#e2e8f0";
+  return (
+    <li className={`card flex flex-col overflow-hidden ${off ? "bg-slate-50/70" : ""}`}>
+      <div className="h-1" style={{ background: off ? "transparent" : accent }} aria-hidden="true" />
+      <div className="flex items-start justify-between gap-3 px-5 pt-4">
+        <div className="min-w-0">
+          <h3 className={`text-xl font-bold tracking-tight ${off ? "text-slate-500" : "text-slate-900"}`}>{c.crop_ko}</h3>
+          <p className="num mt-0.5 text-xs text-slate-400">{off ? "지금은 재배 시기가 아니에요" : `재배 중 · 지점 ${c.grown}곳`}</p>
+        </div>
+        {off ? <span className="chip bg-white text-slate-400">재배 시기 아님</span> : <RiskBadge grade={c.top} />}
+      </div>
+      {!off && (
+        <p className="px-5 pt-2 text-sm text-slate-600">
+          {c.alerts > 0 ? (
+            <>
+              주의보 이상 병해충 <b className="num text-slate-900">{c.pests.filter((p) => alertN(p) > 0).length}종</b> — 지도에서 지역을 확인하세요
+            </>
+          ) : (
+            "주의보 이상인 곳 없음"
+          )}
+        </p>
+      )}
+      <ul className="mt-3 flex-1 divide-y divide-slate-100 border-t border-slate-100">
+        {c.pests.map((p) => {
+          const na = (p.n_applicable ?? 0) === 0;
+          const n = alertN(p);
+          const top = p.top_spots[0];
+          const sub = na ? "재배 시기 아님" : n > 0 ? `주의보 이상 ${n}곳${top ? ` · 최고 ${top.name}` : ""}` : top ? `최고 ${top.name} ${Math.round(top.index)}` : "";
+          return (
+            <li key={p.pest_id}>
+              <Link href={`/pests/${p.pest_id}`} className="flex items-center gap-3 px-5 py-3 transition hover:bg-slate-50">
+                <div className="min-w-0 flex-1">
+                  <div className={`truncate text-sm font-semibold ${na ? "text-slate-400" : "text-slate-800"}`}>{p.name_ko}</div>
+                  <div className="num truncate text-xs text-slate-400">{sub}</div>
+                </div>
+                {!na && (
+                  <span className="hidden sm:block">
+                    <Sparkline values={p.trend_7d} width={64} height={24} label={`${p.name_ko} 전국 평균 위험지수 7일 추이`} />
+                  </span>
+                )}
+                <div className="flex w-[4.75rem] shrink-0 justify-end">{na ? <span className="text-xs text-slate-300">–</span> : <RiskBadge grade={p.max_grade} size="sm" />}</div>
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+      <div className="border-t border-slate-100 px-5 py-3">
+        <Link href={`/map?crop=${c.crop}`} className="link-arrow text-xs">
+          {c.crop_ko} 지도에서 보기 <Icon name="arrow" className="h-3.5 w-3.5" />
+        </Link>
+      </div>
+    </li>
   );
 }

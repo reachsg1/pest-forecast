@@ -9,7 +9,7 @@
 #  - 같은 작물에 여러 수준이 있으면 가장 구체적인 것을 쓴다: sigungu > sido > zone > national
 #  - start > end 이면 해를 넘기는 작기로 본다(예: 11-01 ~ 06-10).
 #  - end를 비우면(수확 종료 근거 없음) 시작일 이전만 '재배 시기 아님'으로 판정하고 그 뒤는 재배 중으로 둔다.
-#    수확 종료는 공식 날짜를 찾지 못한 작물(벼·고추)에 대해 주간농사정보(농사로 OpenAPI)·평년 첫서리일 등으로 보완 예정.
+#    벼 수확 종료는 농사로 농작업일정(11-11 반영). 고추 수확 종료는 근거 후보 둘(붉은고추 수확 9월 하순 / 연장재배 11월 중순) 중 담당 연구자 결정 대기 — 주간농사정보(농사로 OpenAPI)·평년 첫서리일 등으로 보완 예정.
 #
 # 기간의 뜻: "작물이 포장에 있는 기간"
 #  - 사과: 발아기 ~ 수확 종료    - 벼: 이앙기 ~ 수확 종료    - 고추(노지): 정식기 ~ 수확 종료
@@ -45,17 +45,17 @@ crops:
     windows:
       # 이앙 시작 = 지역·지대·숙기별 최적 이앙기 중 가장 이른 날(농촌진흥청 2009 보도자료). 농사로 기계이앙(중북부 5.15~, 남부 5.25~)보다 이른 쪽을 써서
       # 일찍 심은 논을 '재배 시기 아님'으로 잘못 빼지 않게 한다. 남부 조기재배(4월 중순 이앙 사례)는 반영하지 않음.
-      # 수확 종료: 지역별 공식 날짜 없음(출수 후 55~60일 규칙만) → end 비움
-      - {level: zone, region: 수도권, start: "05-08", end: null, status: draft,
-         source: "농촌진흥청 보도자료 '이앙적기 지켜야'(2009.4.14) 중부 중간지·중산간지 중생종 5.8~5.14 https://www.korea.kr/briefing/pressReleaseView.do?newsId=155344300"}
-      - {level: zone, region: 강원권, start: "05-08", end: null, status: draft,
-         source: "농촌진흥청 보도자료 '이앙적기 지켜야'(2009.4.14) 중부 중간지·중산간지 중생종 5.8~5.14"}
-      - {level: zone, region: 충청권, start: "05-08", end: null, status: draft,
-         source: "농촌진흥청 보도자료 '이앙적기 지켜야'(2009.4.14) 중부 중간지·중산간지 중생종 5.8~5.14"}
-      - {level: zone, region: 영남권, start: "05-10", end: null, status: draft,
-         source: "농촌진흥청 보도자료 '이앙적기 지켜야'(2009.4.14) 영남 중산간지 중만생종 5.10~5.17"}
-      - {level: zone, region: 호남권, start: "05-25", end: null, status: draft,
-         source: "농촌진흥청 보도자료 '이앙적기 지켜야'(2009.4.14) 호남 중간지 중만생종 5.25~6.1; 농사로 벼 기계이앙 농작업일정 남부 5.25~6.20"}
+      # 수확 종료 10-31: 농사로 농작업일정 벼 기계이앙 "수확할때 10월 상순~10월 하순", 직파 "10월 중순~10월 하순"(전국 단일, 지역 구분 없음 → 모든 권역 같은 값)
+      - {level: zone, region: 수도권, start: "05-08", end: "10-31", status: draft,
+         source: "농촌진흥청 보도자료 '이앙적기 지켜야'(2009.4.14) 중부 중간지·중산간지 중생종 5.8~5.14 https://www.korea.kr/briefing/pressReleaseView.do?newsId=155344300 / 수확 종료: 농사로 농작업일정 벼 기계이앙 수확 10월 상순~하순 https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30697"}
+      - {level: zone, region: 강원권, start: "05-08", end: "10-31", status: draft,
+         source: "농촌진흥청 보도자료 '이앙적기 지켜야'(2009.4.14) 중부 중간지·중산간지 중생종 5.8~5.14 / 수확 종료: 농사로 농작업일정 벼 기계이앙 수확 10월 상순~하순 https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30697"}
+      - {level: zone, region: 충청권, start: "05-08", end: "10-31", status: draft,
+         source: "농촌진흥청 보도자료 '이앙적기 지켜야'(2009.4.14) 중부 중간지·중산간지 중생종 5.8~5.14 / 수확 종료: 농사로 농작업일정 벼 기계이앙 수확 10월 상순~하순 https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30697"}
+      - {level: zone, region: 영남권, start: "05-10", end: "10-31", status: draft,
+         source: "농촌진흥청 보도자료 '이앙적기 지켜야'(2009.4.14) 영남 중산간지 중만생종 5.10~5.17 / 수확 종료: 농사로 농작업일정 벼 기계이앙 수확 10월 상순~하순 https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30697"}
+      - {level: zone, region: 호남권, start: "05-25", end: "10-31", status: draft,
+         source: "농촌진흥청 보도자료 '이앙적기 지켜야'(2009.4.14) 호남 중간지 중만생종 5.25~6.1; 농사로 벼 기계이앙 농작업일정 남부 5.25~6.20 / 수확 종료: 농사로 농작업일정 벼 기계이앙 수확 10월 상순~하순 https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30697"}
   pepper:
     label: 고추(노지)
     window_meaning: 정식기 ~ 수확 종료

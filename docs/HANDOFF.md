@@ -42,6 +42,11 @@ Claude(프로젝트 대화)에서 설계와 초기 구축을 마치고 Claude Co
 
 ## 4. 알려진 미완·TODO (코드 안 TODO와 동일)
 
+- **홈 화면 작물별 개편(11-11)**: 전국 합계 4칸 대신 오늘의 결론 한 줄(주의보 이상 병해충 칩) + 작물 카드(재배 상태·최고 등급·병해충별 등급, 재배 시기 아닌 작물은 흐리게)
+- **농사로 OpenAPI(11-11)**: 키 `NONGSARO_API_KEY`(.env, GitHub Secrets 등록됨). 이 키로 되는 것: weekFarmInfo(주간농사정보, 본문은 첨부 hwp/pdf뿐이라 재배 기간 추출에 부적합), cropEbook, monthFarmTech. **농작업일정(farmWorkingPlanNew)은 미신청(결과코드 12)** → 농사로에서 추가 신청 필요. 값은 같은 내용의 농사로 웹 농작업일정 페이지에서 확인
+  - 벼 수확 종료 10-31 반영(기계이앙 "수확할때 10월 상순~하순", cntntsNo 30697). 제주권 벼는 이앙 시작 근거가 없어 판정 생략(서귀포 9지점)
+  - 고추(보통재배, 30600) 수확 종료 후보: 붉은고추 수확 7월 상순~9월 하순(→09-30) / 생산량 감소 시 연장재배 10월 상순~11월 중순(→11-20). 담당 연구자 결정 필요
+
 - 로컬 PC 환경: Python은 `.venv`(`.\.venv\Scripts\python.exe`), Node.js·git 설치 완료. 6절 지시문 1)~4) 완료(11-10). GitHub 원격 저장소 https://github.com/reachsg1/pest-forecast (main, 11-10 push). Actions Secrets 등록·daily-forecast 첫 수동 실행 성공(11-11, 21분, 206지점). **Vercel 배포: https://pest-forecast.vercel.app** (Root Directory apps/web, 환경변수 없음, Hobby). 배치 커밋마다 자동 재배포. 배포별·브랜치 URL은 Vercel 인증 보호(정상), 공개 주소는 위 운영 주소
 - 웹 의존성: `recharts@2.x`는 지원 종료(deprecated) 경고 → v3 이전 검토
 - 지도 타일: 위성은 개발용 Esri World Imagery(지명 영문), 일반은 OSM. 운영 전 VWorld 위성·하이브리드·기본 타일(API 키)로 교체 — `components/MapView.tsx` MAP_STYLE, 홈 히어로 배경 `app/page.tsx`

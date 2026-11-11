@@ -48,7 +48,7 @@ cd apps/web && npm install && npm run typecheck && npm run build && npm run dev
 2. `probe`로 태그 확인 → `config.py` 수정 → `spots` → `run --spots 20` 성공
 3. NCPMS 서비스 코드·도감 키(`ncpms_key`) 입력 → 방제 정보 탭 자동 연동
 4. 예찰조사 원본 정제(`data/survey/README.md` 형식) → 백테스트 → 검증 탭 채우기
-4-1. 생물계절 자료: 시군 재배면적(2025, 1 ha 이하 = 비재배지)·재배 기간 시작일 입력 완료. 벼·고추 수확 종료 근거 보완 필요(주간농사정보·첫서리일, `crop_calendar.yaml` 주석)
+4-1. 생물계절 자료: 시군 재배면적(2025, 1 ha 이하 = 비재배지)·재배 기간 시작일 입력 완료. 벼 수확 종료 10-31 반영(농사로 농작업일정). 고추 수확 종료는 후보 둘(09-30/11-20) 중 결정 대기, 제주 벼 재배 기간 근거 없음
 5. 운영 전: OSM 타일을 VWorld로 교체(`components/MapView.tsx` MAP_STYLE), 푸터 문의처
 
 ## 하지 말 것
