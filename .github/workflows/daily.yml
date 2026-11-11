@@ -86,7 +86,13 @@ jobs:
             echo "변경 없음"
           else
             git commit -m "chore(data): forecast $(date +%F)"
-            git push
+            # 실행 중에 main에 다른 커밋이 올라오면 push가 거부된다 → 최신을 받아 다시 쌓고 push(최대 3회).
+            # 결과 파일이 겹치면 이번 배치 결과(-X theirs: 다시 쌓는 쪽)를 쓴다.
+            for i in 1 2 3; do
+              git pull --rebase -X theirs origin "${GITHUB_REF_NAME}" && git push && exit 0
+              echo "push 재시도 $i"; sleep 5
+            done
+            exit 1
           fi
 
       - name: Open issue on failure
