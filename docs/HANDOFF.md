@@ -43,7 +43,7 @@ Claude(프로젝트 대화)에서 설계와 초기 구축을 마치고 Claude Co
 ## 4. 알려진 미완·TODO (코드 안 TODO와 동일)
 
 - **홈 화면 작물별 개편(11-11)**: 전국 합계 4칸 대신 오늘의 결론 한 줄(주의보 이상 병해충 칩) + 작물 카드(재배 상태·최고 등급·병해충별 등급, 재배 시기 아닌 작물은 흐리게)
-- **농사로 OpenAPI(11-11)**: 키 `NONGSARO_API_KEY`(.env, GitHub Secrets 등록됨). 이 키로 되는 것: weekFarmInfo(주간농사정보, 본문은 첨부 hwp/pdf뿐이라 재배 기간 추출에 부적합), cropEbook, monthFarmTech. **농작업일정(farmWorkingPlanNew)은 별도 키 `NONGSARO_WORKPLAN_KEY`**(농사로는 서비스 신청 건마다 인증키가 다름, 11-11 승인). `workScheduleEraInfoLst?cntntsNo=` 응답 htmlCn(CDATA)의 tblSchedule 표로 고추 30600·벼 30697·사과 30663 시기를 API로 재확인 — 웹 페이지 값과 동일
+- **농사로 OpenAPI(11-11)**: 키 `NONGSARO_API_KEY`(.env, GitHub Secrets 등록됨). 이 키로 되는 것: weekFarmInfo(주간농사정보, 본문은 첨부 hwp/pdf뿐이라 재배 기간 추출에 부적합), cropEbook, monthFarmTech. **농작업일정(farmWorkingPlanNew)은 별도 키 `NONGSARO_WORKPLAN_KEY`**(농사로는 서비스 신청 건마다 인증키가 다름, 11-11 승인. GitHub Secrets 이름은 `NONGSARO2_API_KEY`). `workScheduleEraInfoLst?cntntsNo=` 응답 htmlCn(CDATA)의 tblSchedule 표로 고추 30600·벼 30697·사과 30663 시기를 API로 재확인 — 웹 페이지 값과 동일
   - 벼 수확 종료 10-31 반영(기계이앙 "수확할때 10월 상순~하순", cntntsNo 30697). 제주권 벼는 이앙 시작 근거가 없어 판정 생략(서귀포 9지점)
   - 고추(보통재배, 30600) 수확 종료 11-10 반영: 같은 표 재해 행 "냉해, 수확기 단축 10월 중순~11월 상순". 다른 후보(붉은고추 수확 끝 09-30, 연장재배 끝 11-20)는 yaml 주석. 담당 연구자 검토 대상
 - **과거 비교(되돌려 보기, 11-11)**: 병해충 상세 '과거 비교' 탭 — 연도·예찰 조사일·모델을 골라 그날 위험지수와 실제 피해과율을 시군별로 비교(맞힘/놓침/헛경보). 자료 `pipeline/survey_backtest.py` → `data/backtest/<pest>.json`(배포 모델 파일로 계산, 예보 오차 미포함) → publish가 `public/data/backtest/`로 복사. 학습 연도(2015~2022)는 '학습에 쓴 해'로 경고. 시험 연도 앙상블 정확도 84.8%로 검증 결과와 일치 확인. 지도 표시는 아직 없음(표)

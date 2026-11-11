@@ -32,7 +32,7 @@ jobs:
       NCPMS_API_KEY: ${{ secrets.NCPMS_API_KEY }}
       DATA_GO_KR_KEY: ${{ secrets.DATA_GO_KR_KEY }}
       NONGSARO_API_KEY: ${{ secrets.NONGSARO_API_KEY }}   # 농사로(재배 기간 보완용, 아직 선택)
-      NONGSARO_WORKPLAN_KEY: ${{ secrets.NONGSARO_WORKPLAN_KEY }}   # 농사로 농작업일정(아직 선택)
+      NONGSARO_WORKPLAN_KEY: ${{ secrets.NONGSARO2_API_KEY }}   # 농사로 농작업일정(GitHub Secrets 이름은 NONGSARO2_API_KEY, 아직 선택)
       KMA_API_KEY: ${{ secrets.KMA_API_KEY }}
     steps:
       - uses: actions/checkout@v4
