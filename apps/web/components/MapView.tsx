@@ -12,6 +12,7 @@ import { GRADES, NA, TYPE_LABEL, fmtIndex, gradeOf, gradeRank, perfText } from "
 import type { Grade, ModelLite, NaReason, RiskFile, RiskSpotEntry, Spot } from "@/lib/types";
 import { fmtDate } from "@/lib/format";
 import { BASEMAP_LAYERS, MAP_STYLE, type Basemap } from "@/lib/mapStyle";
+import { SGG_FILL, SGG_GRADIENT, assignSpots, sggValues, type SggGeo } from "@/lib/sgg";
 
 type PestLite = { pest_id: string; name_ko: string; crop: string; crop_ko: string; horizon_days: number; models: ModelLite[] };
 
@@ -38,6 +39,9 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
   const modelId = model?.model_id ?? pestId;
   const offset = Math.max(0, Math.min(horizon, Number(sp.get("d") ?? 0) || 0));
   const selected = sp.get("spot") ?? "";
+  // 보기: 지점(원) | 시군(경계 색)
+  const view: "spot" | "sgg" = sp.get("view") === "sgg" ? "sgg" : "spot";
+  const [geo, setGeo] = useState<SggGeo | null>(null);
 
   const [risk, setRisk] = useState<RiskFile | null>(null);
   const [loading, setLoading] = useState(false);
@@ -83,6 +87,18 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
     };
   }, [pestId, modelId]);
 
+  // 시군 경계는 시군 보기를 처음 켤 때 한 번 받는다(약 0.5MB)
+  useEffect(() => {
+    if (view !== "sgg" || geo) return;
+    let alive = true;
+    fetch("/geo/sigungu.json")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => alive && j && setGeo(j));
+    return () => {
+      alive = false;
+    };
+  }, [view, geo]);
+
   // 지도 클릭 핸들러가 항상 최신 URL 상태를 쓰도록 ref로 전달
   const setParamsRef = useRef(setParams);
   useEffect(() => {
@@ -97,8 +113,12 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
       if (cancelled || !containerRef.current) return;
       const map = new ml.Map({ container: containerRef.current, style: MAP_STYLE, center: [127.8, 36.3], zoom: 6.2, attributionControl: false });
       map.addControl(new ml.NavigationControl({ showCompass: false }), "top-right");
-      map.addControl(new ml.AttributionControl({ compact: true }));
+      map.addControl(new ml.AttributionControl({ compact: true, customAttribution: "시군 경계: 통계청 SGIS(공공누리 1유형) · vuski/admdongkor(CC BY 4.0)" }));
       map.on("load", () => {
+        // 시군 색(경계) — 지점 원 아래에 깐다
+        map.addSource("sgg", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
+        map.addLayer({ id: "sgg-fill", type: "fill", source: "sgg", layout: { visibility: "none" }, paint: { "fill-color": SGG_FILL, "fill-opacity": ["case", ["<", ["get", "idx"], 0], 0.45, 0.78] as unknown as number } });
+        map.addLayer({ id: "sgg-line", type: "line", source: "sgg", layout: { visibility: "none" }, paint: { "line-color": "#ffffff", "line-width": ["case", ["get", "selected"], 2.5, 0.6] as unknown as number, "line-opacity": 0.9 } });
         map.addSource("spots", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
         const color = ["match", ["get", "grade"], "경보", GRADES[3].color, "주의보", GRADES[2].color, "예보", GRADES[1].color, "정상", GRADES[0].color, "#ffffff"] as unknown as string;
         // 위성 위에서 잘 보이도록 등급색 은은한 번짐(halo)
@@ -146,6 +166,23 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
           map.getCanvas().style.cursor = "";
           popup.remove();
         });
+        map.on("click", "sgg-fill", (e) => {
+          const code = e.features?.[0]?.properties?.top_code;
+          if (code) setParamsRef.current({ spot: String(code) });
+        });
+        map.on("mousemove", "sgg-fill", (e) => {
+          const f = e.features?.[0];
+          if (!f) return;
+          map.getCanvas().style.cursor = "pointer";
+          const p = f.properties as { key: string; grade: string; idx: number; n: number; top_name: string; sub_km: number };
+          const val = p.idx >= 0 ? `${p.grade} <b>${Math.round(p.idx)}</b>` : p.grade;
+          const src = p.sub_km >= 0 ? `관측지점 없음 · ${p.top_name} ${p.sub_km}km 대체` : p.n > 1 ? `지점 ${p.n}곳 중 최고 · ${p.top_name}` : p.top_name;
+          popup.setLngLat(e.lngLat).setHTML(`<div class="spot-tip-name">${p.key}</div><div class="spot-tip-grade">${val}</div><div class="spot-tip-grade">${src}</div>`).addTo(map);
+        });
+        map.on("mouseleave", "sgg-fill", () => {
+          map.getCanvas().style.cursor = "";
+          popup.remove();
+        });
         mapRef.current = map;
         setMapReady(true);
       });
@@ -183,6 +220,43 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
         })),
     });
   }, [entries, selected, mapReady]);
+
+  // 시군 보기: 지점→시군 배정(위치 기준)은 경계·지점 목록이 바뀔 때만 다시 계산
+  const assign = useMemo(() => (geo && risk ? assignSpots(geo, risk.spots) : null), [geo, risk]);
+  const sggVals = useMemo(() => {
+    if (!geo || !assign) return [];
+    return sggValues(geo, assign, new Map(entries.map((e) => [e.spot_code, { name: e.name, index: e.index }])));
+  }, [geo, assign, entries]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady) return;
+    const sgg = view === "sgg";
+    ["sgg-fill", "sgg-line"].forEach((id) => map.getLayer(id) && map.setLayoutProperty(id, "visibility", sgg ? "visible" : "none"));
+    ["spots-halo", "spots-circle"].forEach((id) => map.getLayer(id) && map.setLayoutProperty(id, "visibility", sgg ? "none" : "visible"));
+    if (!sgg || !geo) return;
+    const src = map.getSource("sgg") as import("maplibre-gl").GeoJSONSource | undefined;
+    const byKey = new Map(sggVals.map((v) => [v.key, v]));
+    src?.setData({
+      type: "FeatureCollection",
+      features: geo.features.map((f) => {
+        const v = byKey.get(f.properties.key);
+        return {
+          ...f,
+          properties: {
+            key: f.properties.key,
+            idx: v?.idx ?? -1,
+            grade: v?.grade ?? NA.label,
+            n: v?.n ?? 0,
+            top_code: v?.topCode ?? "",
+            top_name: v?.topName ?? "",
+            sub_km: v?.subKm ?? -1,
+            selected: !!selected && v?.topCode === selected,
+          },
+        };
+      }),
+    } as GeoJSON.FeatureCollection);
+  }, [view, geo, sggVals, selected, mapReady]);
 
   const pestName = pests.find((p) => p.pest_id === pestId)?.name_ko ?? "";
   const counts = GRADES.map((g) => ({ ...g, n: entries.filter((e) => e.grade === g.name).length }));
@@ -318,8 +392,28 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
             </label>
           </div>
 
+          {/* 표시 방식: 지점 원 / 시군 색 */}
+          <div className="glass-dark absolute right-3 top-[94px] flex flex-col gap-0.5 p-1 text-xs" role="radiogroup" aria-label="표시 방식">
+            {(
+              [
+                ["spot", "지점"],
+                ["sgg", "시군"],
+              ] as const
+            ).map(([v, label]) => (
+              <button
+                key={v}
+                role="radio"
+                aria-checked={view === v}
+                onClick={() => setParams({ view: v === "sgg" ? "sgg" : null })}
+                className={`rounded-lg px-2 py-1.5 font-medium transition ${view === v ? "bg-white text-slate-900" : "text-white/70 hover:text-white"}`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
           {/* 배경지도 전환 */}
-          <div className="glass-dark absolute right-3 top-[94px] flex flex-col gap-0.5 p-1 text-xs" role="radiogroup" aria-label="배경지도">
+          <div className="glass-dark absolute right-3 top-[170px] flex flex-col gap-0.5 p-1 text-xs" role="radiogroup" aria-label="배경지도">
             {(
               [
                 ["satellite", "위성"],
@@ -346,6 +440,28 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
               {pestName} <span className="font-normal text-white/50">· {offset === 0 ? "오늘" : `+${offset}일`}</span>
               {pestModels.length > 1 && model && <span className="ml-1.5 rounded bg-emerald-400/20 px-1.5 py-0.5 text-[10px] font-medium text-emerald-100">{model.label}</span>}
             </div>
+            {view === "sgg" ? (
+              <div className="w-64 max-w-full">
+                <div className="h-2.5 rounded-full" style={{ background: SGG_GRADIENT }} aria-hidden="true" />
+                <div className="mt-1 grid grid-cols-4 text-[10px] text-white/70">
+                  {GRADES.map((g) => (
+                    <span key={g.name}>
+                      {g.icon} {g.name}
+                    </span>
+                  ))}
+                </div>
+                <p className="mt-1.5 text-[10px] leading-relaxed text-white/55">
+                  <span className="hidden sm:inline">시군 색 = 그 시군 지점 중 가장 높은 위험지수 · 관측지점이 없는 시군은 가장 가까운 지점 값 · </span>
+                  <span className="inline-block h-2 w-3 rounded-sm bg-slate-200 align-middle" aria-hidden="true" /> 해당 없음
+                  {sggVals.length > 0 && (
+                    <>
+                      {" "}
+                      · 시군 {sggVals.length}곳 중 주의보 이상 <b className="num text-white">{sggVals.filter((v) => v.idx != null && v.idx >= 50).length}</b>
+                    </>
+                  )}
+                </p>
+              </div>
+            ) : (
             <ul className="flex flex-wrap items-center gap-x-3 gap-y-1 text-white/75">
               {counts.map((g) => (
                 <li key={g.name} className="flex items-center gap-1.5">
@@ -360,6 +476,7 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
                 </li>
               )}
             </ul>
+            )}
           </div>
         </div>
         <aside className="card p-5" aria-label="선택 지점 정보">

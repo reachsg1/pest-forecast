@@ -23,6 +23,7 @@ export default function Footer({ generatedAt, issuedDate, isAdmin = false }: { g
             <li>농촌진흥청 농업날씨365 (농업기상 관측)</li>
             <li>국가농작물병해충관리시스템 (NCPMS)</li>
             <li>기상청 단기예보 · 농업경영체 등록정보</li>
+            <li>시군 경계: 통계청 SGIS(공공누리 1유형) 가공 vuski/admdongkor(CC BY 4.0)</li>
             <li>
               지도 ©{" "}
               <a className="underline decoration-slate-300 underline-offset-2 hover:text-slate-900" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">
