@@ -128,6 +128,7 @@ def test_default_variant_ensemble_is_published_as_default(tmp_path, monkeypatch)
     spot = json.loads((web / "spot" / "DEMO_SUWON.json").read_text(encoding="utf-8"))
     assert "pepper_anthracnose__survey_ens" not in spot["series_by_model"]
     assert "pepper_anthracnose" in spot["series_by_model"]
+    assert (web / "backtest" / "pepper_anthracnose.json").exists()  # 되돌려 보기 자료 복사
 
 
 def test_default_variant_falls_back_when_not_loaded():

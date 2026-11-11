@@ -218,6 +218,17 @@ def publish(
         if p.name not in keep_pests:
             p.unlink()
 
+    # --- backtest/<pest>.json: 과거 예찰 회차 되돌려 보기(pipeline/survey_backtest.py가 만든 파일 복사) ----
+    bt_src = config.DATA_DIR / "backtest"
+    (web / "backtest").mkdir(parents=True, exist_ok=True)
+    for p in (web / "backtest").glob("*.json"):
+        if p.stem not in pest_models or not (bt_src / p.name).exists():
+            p.unlink()
+    for pid in pest_models:
+        src = bt_src / f"{pid}.json"
+        if src.exists():
+            (web / "backtest" / src.name).write_bytes(src.read_bytes())
+
     # --- spot/<code>.json ---------------------------------------------------
     for s in spots:
         code = s["spot_code"]

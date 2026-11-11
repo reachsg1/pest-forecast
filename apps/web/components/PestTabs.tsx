@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import BacktestReplay from "./BacktestReplay";
 import ModelCard from "./ModelCard";
 import RiskBadge from "./RiskBadge";
 import SurveyEvalCard from "./SurveyEvalCard";
@@ -17,6 +18,7 @@ const TABS = [
   { id: "why", label: "예측 근거" },
   { id: "control", label: "방제 정보" },
   { id: "eval", label: "검증" },
+  { id: "replay", label: "과거 비교" },
 ];
 
 export default function PestTabs({
@@ -247,8 +249,15 @@ export default function PestTabs({
         {tab === "eval" && (
           <section role="tabpanel" id="panel-eval" aria-labelledby="tab-eval" className="space-y-4 text-sm">
             {surveyEvalModels.length > 0 && <SurveyEvalCard models={surveyEvalModels} defaultLabel={defaultLabel} />}
-            {surveyEvalModels.length > 0 && <div className="pt-2 text-xs font-semibold text-slate-500">기본 모델({defaultLabel}) 백테스트</div>}
-            {pest.eval.status === "evaluated" && pest.eval.years ? (
+            {surveyEvalModels.length > 0 ? (
+              <p className="text-xs leading-relaxed text-slate-500">
+                날짜별로 예측과 실제 예찰을 비교하려면{" "}
+                <button type="button" className="font-medium text-brand-700 underline-offset-2 hover:underline" onClick={() => setTab("replay")}>
+                  과거 비교
+                </button>{" "}
+                탭을 보세요.
+              </p>
+            ) : pest.eval.status === "evaluated" && pest.eval.years ? (
               <div className="-mx-3 overflow-x-auto">
                 <table className="table-clean">
                   <thead>
@@ -284,7 +293,13 @@ export default function PestTabs({
                 </div>
               </div>
             )}
-            <p className="text-xs leading-relaxed text-slate-400">적중률은 예찰 &lsquo;발생&rsquo; 기록 7일 전부터 당일 사이에 주의보 이상을 냈는지로 계산합니다. 모델 버전이 바뀔 때마다 다시 계산됩니다.</p>
+            {surveyEvalModels.length === 0 && <p className="text-xs leading-relaxed text-slate-400">적중률은 예찰 &lsquo;발생&rsquo; 기록 7일 전부터 당일 사이에 주의보 이상을 냈는지로 계산합니다. 모델 버전이 바뀔 때마다 다시 계산됩니다.</p>}
+          </section>
+        )}
+
+        {tab === "replay" && (
+          <section role="tabpanel" id="panel-replay" aria-labelledby="tab-replay" className="text-sm">
+            <BacktestReplay pestId={pest.pest_id} />
           </section>
         )}
       </div>

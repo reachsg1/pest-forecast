@@ -46,6 +46,7 @@ Claude(프로젝트 대화)에서 설계와 초기 구축을 마치고 Claude Co
 - **농사로 OpenAPI(11-11)**: 키 `NONGSARO_API_KEY`(.env, GitHub Secrets 등록됨). 이 키로 되는 것: weekFarmInfo(주간농사정보, 본문은 첨부 hwp/pdf뿐이라 재배 기간 추출에 부적합), cropEbook, monthFarmTech. **농작업일정(farmWorkingPlanNew)은 미신청(결과코드 12)** → 농사로에서 추가 신청 필요. 값은 같은 내용의 농사로 웹 농작업일정 페이지에서 확인
   - 벼 수확 종료 10-31 반영(기계이앙 "수확할때 10월 상순~하순", cntntsNo 30697). 제주권 벼는 이앙 시작 근거가 없어 판정 생략(서귀포 9지점)
   - 고추(보통재배, 30600) 수확 종료 11-10 반영: 같은 표 재해 행 "냉해, 수확기 단축 10월 중순~11월 상순". 다른 후보(붉은고추 수확 끝 09-30, 연장재배 끝 11-20)는 yaml 주석. 담당 연구자 검토 대상
+- **과거 비교(되돌려 보기, 11-11)**: 병해충 상세 '과거 비교' 탭 — 연도·예찰 조사일·모델을 골라 그날 위험지수와 실제 피해과율을 시군별로 비교(맞힘/놓침/헛경보). 자료 `pipeline/survey_backtest.py` → `data/backtest/<pest>.json`(배포 모델 파일로 계산, 예보 오차 미포함) → publish가 `public/data/backtest/`로 복사. 학습 연도(2015~2022)는 '학습에 쓴 해'로 경고. 시험 연도 앙상블 정확도 84.8%로 검증 결과와 일치 확인. 지도 표시는 아직 없음(표)
 - **화면 날짜 표기(11-11)**: 사용자 요청으로 점 형식(2026.11.11. / 9.30.), `apps/web/lib/format.ts`. 데이터·API는 ISO 유지
 
 - 로컬 PC 환경: Python은 `.venv`(`.\.venv\Scripts\python.exe`), Node.js·git 설치 완료. 6절 지시문 1)~4) 완료(11-10). GitHub 원격 저장소 https://github.com/reachsg1/pest-forecast (main, 11-10 push). Actions Secrets 등록·daily-forecast 첫 수동 실행 성공(11-11, 21분, 206지점). **Vercel 배포: https://pest-forecast.vercel.app** (Root Directory apps/web, 환경변수 없음, Hobby). 배치 커밋마다 자동 재배포. 배포별·브랜치 URL은 Vercel 인증 보호(정상), 공개 주소는 위 운영 주소

@@ -41,6 +41,7 @@ python scripts/fetch_survey.py --crop VC011205 --examin 01320 --item 탄저병 -
 python -m pipeline.survey_train --pest pepper_anthracnose [--with-history] [--export <variant 폴더>]   # 예찰 학습형 학습·연도 분리 검증
 python scripts/fetch_sigungu_centroids.py                # 시군 대표 좌표(가까운 시군 대체용)
 python -m pipeline.survey_ml --pest pepper_anthracnose --export   # 로지스틱·RF·XGBoost·앙상블 비교·내보내기(학습 파일 갱신)
+python -m pipeline.survey_backtest --pest pepper_anthracnose   # 과거 예찰 회차 되돌려 보기 자료(data/backtest, 모델을 다시 학습하면 함께 갱신)
 cd apps/web && npm install && npm run typecheck && npm run build && npm run dev
 ```
 
