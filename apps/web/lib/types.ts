@@ -176,11 +176,26 @@ export interface WeatherDay {
   is_interpolated: boolean;
 }
 
+/** 관측지점 지형 요약(국토지리정보원 90m DEM) */
+export interface TerrainInfo {
+  elev: number | null;
+  slope: number | null;
+  aspect: string | null;
+  position: string | null;
+  tpi_1k: number | null;
+  dist_sea_km: number | null;
+  sgg_key: string;
+  sgg_elev_gentle: number | null;
+  lapse_dt: number | null;
+  source: string;
+}
+
 export interface SpotFile {
   spot: Spot & { zone_code?: string };
   issued_date: string;
   missing_rate: number;
   phenology?: Record<string, PhenologyInfo>; // crop → 판정 근거
+  terrain?: TerrainInfo | null; // 지형(DEM) 요약 — pipeline/terrain.py describe
   series: Record<string, SeriesPoint[]>; // pest_id → 기본 모델 시계열
   series_by_model?: Record<string, SeriesPoint[]>; // model_id → 추가 모델 시계열
   weather: WeatherDay[];

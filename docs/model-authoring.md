@@ -100,3 +100,18 @@ cd apps/web && npm run dev                          # /pests/<id> 에서 카드�
 - **잎젖음시간이 관측에 없는데?** `DailyWeather.estimated_lwd()`가 습도·강우로 추정합니다. 시간별 자료가 연결되면 실측으로 바뀝니다.
 - **학습한 계수를 어떻게 넣나?** `python -m pipeline.train_template --pest <id>` 출력(center/scale/weight/bias)을 `params`에 옮깁니다. 비선형 모델은 `predict()`에서 pickle을 읽도록 재정의합니다.
 - **비래·트랩 자료는?** `predict(weather, history)`의 `history`에 외부 관측(유아등·페로몬트랩)을 넘기는 자리를 마련해 두었습니다. 파이프라인 연동은 2단계.
+
+## 지형 정적 피처(site_·sgg_)
+
+`pipeline/terrain.py`가 국토지리정보원 90m DEM에서 만든 지형값을 모든 모델에 넘긴다. 유형 C(`StatModel`)·D(`MLModel`)는 `params.features`에 이름만 적으면 쓰고, 직접 만든 `model.py`는 `predict(weather, history=None, site=None)`처럼 `site` 키워드 인자를 받으면 배치가 넘겨 준다(안 받으면 넘기지 않음).
+
+| 이름 | 뜻 |
+|---|---|
+| `site_elev` `site_slope` `site_northness` `site_eastness` | 관측지점 해발고도(m)·경사(도)·북향·동향 성분 |
+| `site_tpi_1k` `site_tpi_4k` | 지형위치지수(음수=골짜기·분지 → 찬 공기·습기 고임) |
+| `site_relief_5k` `site_dist_sea_km` | 주변 기복(m)·바다까지 거리(km) |
+| `sgg_elev_gentle` `sgg_tpi_1k_gentle` `sgg_tpi_4k_gentle` `sgg_dist_sea_km_gentle` | 지점이 속한 시군의 완경사지(경사 7도 미만 = 재배 가능지) 평균 |
+| `sgg_gentle_share` `sgg_steep_share` `sgg_relief_5k_mean` `sgg_northness_mean` `sgg_elev_mean` | 시군 완경사지·급경사지(15도 이상) 비율, 평균 기복·사면, 전체 평균 고도 |
+| `site_lapse_dt` | 관측지점 → 시군 재배지 평균 고도로 옮길 때 기온 보정(℃, 감률 6.5℃/km) — 생육(적산온도 등) 보정용 |
+
+예찰(시군 단위) 학습 표본(`survey_train.build_samples`)에는 `sgg_` 피처만 들어 있다. 효과 분석은 `docs/terrain-analysis.md`.

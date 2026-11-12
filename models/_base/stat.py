@@ -117,7 +117,7 @@ class StatModel(BaseModel):
         prob = 1.0 / (1.0 + math.exp(-z_total))
         return prob, detail
 
-    def predict(self, weather: Sequence[DailyWeather], history: Optional[list] = None) -> list[RiskPoint]:
+    def predict(self, weather: Sequence[DailyWeather], history: Optional[list] = None, site: Optional[dict] = None) -> list[RiskPoint]:
         n = int(self.params.get("window_days", 30))
         seq = sorted(weather, key=lambda x: x.date)
         uses_survey = any(f.get("name") == "prev_survey_log" for f in self.params.get("features", []))
@@ -125,6 +125,8 @@ class StatModel(BaseModel):
         for i, w in enumerate(seq):
             window = seq[max(0, i - n + 1): i + 1]
             feats = compute_features(window)
+            if site:
+                feats.update(site)  # 지형 등 정적 피처(site_·sgg_)
             ref = None
             if uses_survey:
                 # 학습과 같은 규칙: 그날 이전(같은 해) 최신 예찰값, 아직 조사 전이면 0

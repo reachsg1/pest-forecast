@@ -156,6 +156,9 @@ class BaseModel:
 
     # --- 하위 클래스가 구현 -------------------------------------------------
     def predict(self, weather: Sequence[DailyWeather], history: Optional[list] = None) -> list[RiskPoint]:
+        """weather: 일자료(오름차순 아니어도 됨). history: 예찰 이력(예찰값을 쓰는 모델만).
+        정적 피처(지형 등)를 쓰는 모델은 키워드 인자 site: dict 를 더 받는다(pipeline/terrain.py 의 site_·sgg_ 피처).
+        site 를 받지 않는 모델도 그대로 동작한다(배치가 시그니처를 보고 넘김)."""
         raise NotImplementedError
 
     # --- 공통 유틸 ---------------------------------------------------------

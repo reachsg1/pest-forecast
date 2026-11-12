@@ -91,6 +91,12 @@ def main(argv: list[str] | None = None) -> int:
     feats["dist_sea_km"] = np.where(sea, np.nan, distance_transform_edt(~sea) * CELL / 1000.0).astype(np.float32)
     names = list(feats)
 
+    # 시군 경계 격자(지점의 시군 판정과 시군 요약에 함께 씀)
+    geo = json.loads(GEO.read_text(encoding="utf-8"))
+    keys = [f["properties"]["key"] for f in geo["features"]]
+    shapes = [(transform_geom("EPSG:4326", crs, f["geometry"]), i + 1) for i, f in enumerate(geo["features"])]
+    lab = rasterize(shapes, out_shape=z.shape, transform=tr, fill=0, dtype="int32")
+
     # --- 관측지점 -------------------------------------------------------------
     spots = json.loads(SPOTS.read_text(encoding="utf-8"))
     pts = [s for s in spots if s.get("lat") is not None and s.get("lon") is not None]
@@ -100,8 +106,12 @@ def main(argv: list[str] | None = None) -> int:
     for s, x, y in zip(pts, xs, ys):
         c, r = inv * (x, y)
         r, c = int(math.floor(r)), int(math.floor(c))
-        rec = {"spot_code": s["spot_code"], "name": s.get("name", ""), "station_alt": s.get("altitude")}
         inside = 0 <= r < z.shape[0] and 0 <= c < z.shape[1]
+        li = int(lab[r, c]) if inside else 0
+        if inside and li == 0:  # 해안선 단순화로 경계 밖이면 주변 3×3에서 찾는다
+            blk = lab[max(0, r - 1): r + 2, max(0, c - 1): c + 2]
+            li = int(blk[blk > 0][0]) if (blk > 0).any() else 0
+        rec = {"spot_code": s["spot_code"], "name": s.get("name", ""), "station_alt": s.get("altitude"), "sgg_key": keys[li - 1] if li else ""}
         for n in names:
             v = feats[n][r, c] if inside else np.nan
             if not np.isfinite(v) and inside:  # 해안 지점이 바다 격자에 걸리면 3×3 이웃 평균
@@ -110,16 +120,12 @@ def main(argv: list[str] | None = None) -> int:
             rec[n] = None if not np.isfinite(v) else round(float(v), 3)
         rows.append(rec)
     with OUT_SPOTS.open("w", encoding="utf-8", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=["spot_code", "name", "station_alt", *names])
+        w = csv.DictWriter(f, fieldnames=["spot_code", "name", "station_alt", "sgg_key", *names])
         w.writeheader()
         w.writerows(rows)
     print(f"저장: {OUT_SPOTS} ({len(rows)}개 지점)")
 
     # --- 시군 요약 --------------------------------------------------------------
-    geo = json.loads(GEO.read_text(encoding="utf-8"))
-    keys = [f["properties"]["key"] for f in geo["features"]]
-    shapes = [(transform_geom("EPSG:4326", crs, f["geometry"]), i + 1) for i, f in enumerate(geo["features"])]
-    lab = rasterize(shapes, out_shape=z.shape, transform=tr, fill=0, dtype="int32")
     land = (lab > 0) & ~sea
     gentle = land & (feats["slope"] < GENTLE)
     n = len(keys) + 1

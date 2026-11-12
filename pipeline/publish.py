@@ -22,7 +22,7 @@ from typing import Any
 from models._base import GRADES, DailyWeather
 from models._base.registry import LoadedModel
 
-from . import config
+from . import config, terrain
 
 log = logging.getLogger(__name__)
 
@@ -274,6 +274,7 @@ def publish(
                 "issued_date": issued.isoformat(),
                 "missing_rate": round(missing_rate_by_spot.get(code, 0.0), 3),
                 "phenology": phen,   # 작물별 재배 여부·재배 기간 판정 근거
+                "terrain": terrain.describe(code),  # 지형(DEM): 고도·경사·사면·지형 위치·바다 거리·재배지 기온 보정
                 "series": series,
                 "series_by_model": series_by_model,
                 "weather": wx,

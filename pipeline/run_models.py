@@ -9,8 +9,17 @@ from models._base import DailyWeather
 from models._base.interface import clamp, grade_of
 from models._base.registry import LoadedModel
 
-from . import config
+from . import config, terrain
 from .phenology import OK, Phenology, SpotCrop
+
+
+def _accepts_site(model) -> bool:
+    import inspect
+
+    try:
+        return "site" in inspect.signature(model.predict).parameters
+    except (TypeError, ValueError):
+        return False
 
 log = logging.getLogger(__name__)
 
@@ -42,6 +51,7 @@ def run_all(
         wx = weather_by_spot.get(code) or []
         if not wx:
             continue
+        site = terrain.spot_features(code)  # 지형 정적 피처(없으면 빈 사전)
         for lm in models:
             crop = lm.card.crop
             sc = phenology.assess(crop, sp.get("sigungu", "")) if phenology else None
@@ -51,7 +61,8 @@ def run_all(
                 continue  # 앙상블은 구성 모델 결과로 아래에서 만든다
             try:
                 hist = (survey_history or {}).get(lm.id)
-                pts = lm.model.predict(wx, hist.get(code, []) if hist is not None else None)
+                h = hist.get(code, []) if hist is not None else None
+                pts = lm.model.predict(wx, h, site=site) if _accepts_site(lm.model) else lm.model.predict(wx, h)
             except Exception as e:  # noqa: BLE001
                 log.exception("모델 %s 지점 %s 실패: %s", lm.id, code, e)
                 continue

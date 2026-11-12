@@ -51,7 +51,7 @@ class MLModel(BaseModel):
             raise ValueError(f"알 수 없는 algorithm: {algo}")
         return self._model
 
-    def predict(self, weather: Sequence[DailyWeather], history: Optional[list] = None) -> list[RiskPoint]:
+    def predict(self, weather: Sequence[DailyWeather], history: Optional[list] = None, site: Optional[dict] = None) -> list[RiskPoint]:
         import numpy as np
 
         names: list[str] = list(self.params.get("features", []))
@@ -63,6 +63,8 @@ class MLModel(BaseModel):
         rows, details = [], []
         for i, w in enumerate(seq):
             feats = compute_features(seq[max(0, i - n + 1): i + 1])
+            if site:
+                feats.update(site)  # 지형 등 정적 피처(site_·sgg_)
             ref = survey_asof(history, w.date)
             feats["prev_survey_log"] = math.log1p(max(0.0, float(ref["value"]))) if ref else 0.0
             x = []

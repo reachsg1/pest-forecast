@@ -176,6 +176,38 @@ export default function SpotPanel({ code, pestId, model, models = [], pests, hor
         </div>
       )}
 
+      {data.terrain && data.terrain.elev != null && (
+        <div>
+          <div className="text-xs font-semibold text-slate-500">지점 지형</div>
+          <dl className="mt-2 grid grid-cols-3 gap-2">
+            {[
+              { k: "해발", v: Math.round(data.terrain.elev), u: "m" },
+              { k: "경사", v: data.terrain.slope != null ? Math.round(data.terrain.slope) : "–", u: "°", sub: data.terrain.aspect ? `${data.terrain.aspect}향` : "평지" },
+              { k: "바다까지", v: data.terrain.dist_sea_km != null ? Math.round(data.terrain.dist_sea_km) : "–", u: "km" },
+            ].map((t) => (
+              <div key={t.k} className="rounded-xl border border-slate-100 px-3 py-2">
+                <dt className="text-[11px] text-slate-400">{t.k}</dt>
+                <dd className="num mt-0.5 font-semibold text-slate-900">
+                  {t.v}
+                  <span className="ml-0.5 text-xs font-normal text-slate-400">{t.u}</span>
+                  {t.sub && <span className="block text-[11px] font-normal text-slate-400">{t.sub}</span>}
+                </dd>
+              </div>
+            ))}
+          </dl>
+          <p className="mt-2 text-xs leading-relaxed text-slate-500">
+            {data.terrain.position}
+            {data.terrain.sgg_elev_gentle != null && data.terrain.lapse_dt != null && Math.abs(data.terrain.lapse_dt) >= 0.3 && (
+              <>
+                {" "}
+                · {data.terrain.sgg_key.split(" ").slice(-1)[0]} 재배지 평균 해발 {Math.round(data.terrain.sgg_elev_gentle)}m라 재배지 기온은 이 지점보다 약{" "}
+                {Math.abs(data.terrain.lapse_dt).toFixed(1)}℃ {data.terrain.lapse_dt > 0 ? "높을" : "낮을"} 수 있어요
+              </>
+            )}
+          </p>
+        </div>
+      )}
+
       <div>
         <div className="text-xs font-semibold text-slate-500">이 지점의 다른 병해충 · 오늘</div>
         <ul className="mt-1.5 divide-y divide-slate-100">

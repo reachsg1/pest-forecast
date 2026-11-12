@@ -42,7 +42,7 @@ from models._base.registry import discover  # noqa: E402
 from models._base.stat import compute_features  # noqa: E402
 from pipeline import config  # noqa: E402
 from pipeline.fetch.agriweather import to_daily_weather  # noqa: E402
-from pipeline import regions  # noqa: E402
+from pipeline import regions, terrain  # noqa: E402
 
 FEATURES = [
     "tavg_14d", "rh_14d", "rain_14d", "rain_days_14d", "lwd_14d", "lwd_30d",
@@ -216,6 +216,7 @@ def build_samples(pest: str, train_years: list[int], test_years: list[int], feat
                 skipped["기상 부족"] += 1
                 continue
         f = compute_features(window)
+        f.update(terrain.sgg_features(key))  # 예찰 시군의 재배지 지형(sgg_). 시군 단위라 site_ 는 없음
         samples.append({
             "sigungu": key, "sido": r["sido"], "date": d, "year": d.year, "hm": half_month(d),
             "wx_key": src.key, "wx_km": src.distance_km,
