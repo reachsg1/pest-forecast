@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Map as MLMap } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import RiskBadge from "./RiskBadge";
+import AddressSearch, { type GeoHit } from "./AddressSearch";
 import SpotPanel from "./SpotPanel";
 import { Icon } from "./ui";
 import { GRADES, NA, TYPE_LABEL, fmtIndex, gradeOf, gradeRank, perfText } from "@/lib/grades";
@@ -262,6 +263,18 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
   const counts = GRADES.map((g) => ({ ...g, n: entries.filter((e) => e.grade === g.name).length }));
   const naCount = entries.filter((e) => e.grade == null).length;
 
+  // 주소 검색 → 그 위치로 이동하고 가장 가까운 관측지점을 연다
+  const goTo = (h: GeoHit) => {
+    mapRef.current?.flyTo({ center: [h.lon, h.lat], zoom: 10.5, speed: 1.4 });
+    let best: { code: string; d: number } | null = null;
+    for (const s of spots) {
+      if (s.lat == null || s.lon == null) continue;
+      const d = (s.lat - h.lat) ** 2 + ((s.lon - h.lon) * Math.cos((h.lat * Math.PI) / 180)) ** 2;
+      if (!best || d < best.d) best = { code: s.spot_code, d };
+    }
+    if (best) setParams({ spot: best.code });
+  };
+
   const [copied, setCopied] = useState(false);
   const share = () => {
     navigator.clipboard?.writeText(window.location.href).then(() => {
@@ -279,6 +292,7 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
 
           {/* 조건 패널 (지도 위에 떠 있는 유리 패널) */}
           <div className="glass-dark absolute left-3 right-14 top-3 space-y-3 p-3.5 sm:right-auto sm:w-[380px]" role="group" aria-label="예측 조건">
+            <AddressSearch dark onPick={goTo} placeholder="주소·지명으로 이동 (예: 영양군)" />
             <div className="grid grid-cols-[1fr_1.5fr] gap-2">
               <label>
                 <span className="mb-1 block text-[11px] font-medium text-white/60">작물</span>

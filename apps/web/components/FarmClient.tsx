@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import AddressSearch from "./AddressSearch";
+import FarmSite from "./FarmSite";
+import { ActionBox } from "./ControlGuide";
 import RiskBadge from "./RiskBadge";
 import { Icon } from "./ui";
 import { NA, NA_REASONS, fmtIndex, gradeMeta } from "@/lib/grades";
@@ -82,8 +85,13 @@ export default function FarmClient({ spots, pests, horizon }: { spots: Spot[]; p
 
   const add = () => {
     const la = Number(lat), lo = Number(lon);
-    if (!name.trim() || !crop || !Number.isFinite(la) || !Number.isFinite(lo)) {
-      setMsg("농장 이름, 작물, 위도·경도를 입력하세요.");
+    // 빈 칸은 Number("")=0 이 되므로 따로 막고, 우리나라 범위만 받는다
+    if (!name.trim() || !crop || !lat.trim() || !lon.trim() || !Number.isFinite(la) || !Number.isFinite(lo)) {
+      setMsg("농장 이름, 작물, 위치(주소 검색 또는 위도·경도)를 입력하세요.");
+      return;
+    }
+    if (!(la > 32 && la < 39.5 && lo > 124 && lo < 132)) {
+      setMsg("우리나라 안의 위치를 입력하세요(위도 33~39, 경도 124~132).");
       return;
     }
     const n = nearest(spots, la, lo);
@@ -137,6 +145,16 @@ export default function FarmClient({ spots, pests, horizon }: { spots: Spot[]; p
             ))}
           </select>
         </label>
+        <div className="block">
+          <span className="field-label">위치 찾기</span>
+          <AddressSearch
+            onPick={(h) => {
+              setLat(h.lat.toFixed(5));
+              setLon(h.lon.toFixed(5));
+              setMsg("");
+            }}
+          />
+        </div>
         <div className="grid grid-cols-2 gap-3">
           <label className="block">
             <span className="field-label">위도</span>
@@ -156,7 +174,7 @@ export default function FarmClient({ spots, pests, horizon }: { spots: Spot[]; p
           </button>
         </div>
         {msg && <p className="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">{msg}</p>}
-        <p className="text-xs leading-relaxed text-slate-400">주소 검색(지오코딩)은 2단계에서 연결합니다. 지금은 지도 앱에서 좌표를 복사해 넣어 주세요.</p>
+        <p className="text-xs leading-relaxed text-slate-400">주소·지명을 검색하거나 현재 위치를 쓰면 위도·경도가 채워져요. 농장 정보는 이 브라우저에만 저장돼요.</p>
       </form>
 
       <section className="space-y-4" aria-label="등록한 농장">
@@ -235,6 +253,15 @@ export default function FarmClient({ spots, pests, horizon }: { spots: Spot[]; p
                   </table>
                 </div>
               )}
+              {file && (
+                <div className="space-y-2 px-5 pb-4">
+                  {myPests.map((p) => {
+                    const t = (file.series[p.pest_id] ?? []).find((x) => x.offset === 0);
+                    return t?.grade && t.grade !== "정상" ? <ActionBox key={p.pest_id} pestId={p.pest_id} grade={t.grade} pestName={p.name_ko} /> : null;
+                  })}
+                </div>
+              )}
+              <FarmSite lat={f.lat} lon={f.lon} spot={f.spot_code} />
             </article>
           );
         })}

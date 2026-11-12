@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { ActionBox } from "./ControlGuide";
 import RiskBadge from "./RiskBadge";
 import Sparkline from "./Sparkline";
 import { Icon } from "./ui";
@@ -131,6 +132,8 @@ export default function SpotPanel({ code, pestId, model, models = [], pests, hor
           </div>
         </section>
       )}
+
+      {today?.grade && today.grade !== "정상" && <ActionBox pestId={pestId} grade={today.grade} pestName={pestName} />}
 
       <div className="rounded-xl bg-slate-50 p-4">
         <div className="text-xs font-medium text-slate-500">

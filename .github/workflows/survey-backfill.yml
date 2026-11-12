@@ -1,0 +1,60 @@
+# 매일 06:30 KST(= 21:30 UTC 전날) NCPMS 예찰을 하루 호출 상한 안에서 이어 받고(모든 작물, 2015~2025),
+# 병해충별 예찰 CSV·연도별 발생 추이를 갱신해 커밋한다. 응답 캐시는 actions/cache로 다음 실행에 넘긴다.
+# NCPMS 개발계정은 일 1,000건 — 05:00 예측 배치가 쓰는 몇십 건을 빼고 700건까지만 쓴다.
+name: survey-backfill
+
+on:
+  schedule:
+    - cron: "30 21 * * *"
+  workflow_dispatch:
+    inputs:
+      max_calls:
+        description: "이번 실행 NCPMS 호출 상한"
+        default: "700"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: survey-backfill
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      TZ: Asia/Seoul
+      NCPMS_API_KEY: ${{ secrets.NCPMS_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install
+        run: pip install -r requirements.txt
+      - name: Restore survey cache
+        uses: actions/cache@v4
+        with:
+          path: data/cache/ncpms/survey
+          key: ncpms-survey-${{ github.run_id }}
+          restore-keys: ncpms-survey-
+      - name: Backfill
+        run: python scripts/backfill_survey.py --skip-known --max-calls ${{ inputs.max_calls || '700' }}
+      - name: Trends
+        run: python -m pipeline.survey_trend
+      - name: Commit
+        run: |
+          git config user.name "forecast-bot"
+          git config user.email "forecast-bot@users.noreply.github.com"
+          git add data/survey data/trend data/surveyview || true
+          if git diff --cached --quiet; then echo "변경 없음"; exit 0; fi
+          git commit -m "chore(data): survey backfill $(date +%F)"
+          for i in 1 2 3; do
+            git pull --rebase -X theirs origin "${GITHUB_REF_NAME}" && git push && exit 0
+            echo "push 재시도 $i"; sleep 5
+          done
+          exit 1

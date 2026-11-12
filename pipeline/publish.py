@@ -221,7 +221,9 @@ def publish(
     # --- 예찰 기반 정적 자료 복사(배치가 다시 만들지 않음) ----------------------------------
     #  backtest/<pest>.json: 과거 예찰 회차 되돌려 보기(pipeline/survey_backtest.py)
     #  trend/<pest>.json   : 연도별 발생 추이(pipeline/survey_trend.py)
-    for sub in ("backtest", "trend"):
+    #  surveyview/<pest>.json: 예찰 탐색(회차별 시군 조사값, pipeline/survey_trend.py)
+    #  control/<pest>.json: 방제 요령·등록 농약(scripts/build_control_info.py)
+    for sub in ("backtest", "trend", "surveyview", "control"):
         src_dir = config.DATA_DIR / sub
         (web / sub).mkdir(parents=True, exist_ok=True)
         for p in (web / sub).glob("*.json"):

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import BacktestReplay from "./BacktestReplay";
+import ControlGuide from "./ControlGuide";
 import ModelCard from "./ModelCard";
 import RiskBadge from "./RiskBadge";
 import SurveyEvalCard from "./SurveyEvalCard";
@@ -49,6 +50,8 @@ export default function PestTabs({
   const series = spotFile?.series[pest.pest_id] ?? [];
   const countMap = Object.fromEntries(GRADES.map((g) => [g.name, entries.filter((e) => e.grade_today === g.name).length])) as Record<Grade, number>;
   const naCount = entries.filter((e) => e.grade_today == null).length;
+  // 오늘 전국 최고 등급(방제 정보 탭의 '지금 할 일' 기준)
+  const maxGrade = [...GRADES].reverse().find((g) => countMap[g.name] > 0)?.name ?? null;
   const top = entries.filter((e) => e.grade_today != null).slice(0, 10);
   const surveyEvalModels = models.filter((m) => m.eval?.status === "survey_evaluated" && m.eval.test);
   const defaultLabel = models.find((m) => m.is_default)?.label ?? "기본 모델";
@@ -203,38 +206,7 @@ export default function PestTabs({
 
         {tab === "control" && (
           <section role="tabpanel" id="panel-control" aria-labelledby="tab-control" className="space-y-4 text-sm">
-            {pest.control ? (
-              <dl className="grid gap-3 md:grid-cols-3">
-                {[
-                  ["발생 환경", pest.control.environment],
-                  ["증상·피해", pest.control.symptoms],
-                  ["방제 방법", pest.control.control],
-                ].map(([k, v]) => (
-                  <div key={k} className="rounded-xl border border-slate-100 p-4">
-                    <dt className="text-xs font-semibold text-slate-500">{k}</dt>
-                    <dd className="mt-1.5 whitespace-pre-line leading-relaxed text-slate-700">{v}</dd>
-                  </div>
-                ))}
-              </dl>
-            ) : (
-              <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50/60 p-5 text-slate-600">
-                <p className="font-medium text-slate-700">NCPMS 방제 정보 연동 전입니다.</p>
-                <p className="mt-1 text-xs leading-relaxed text-slate-500">
-                  모델 카드의 <code>ncpms_key</code>가 채워지면 배치가 자동으로 발생환경·증상·방제법을 가져옵니다.
-                </p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <a className="btn-secondary btn-sm" href="https://ncpms.rda.go.kr/npms/Main.np" target="_blank" rel="noreferrer">
-                    NCPMS 도감에서 {pest.name_ko} 찾기 ↗
-                  </a>
-                  <a className="btn-secondary btn-sm" href="https://psis.rda.go.kr/" target="_blank" rel="noreferrer">
-                    농약안전정보시스템 ↗
-                  </a>
-                </div>
-              </div>
-            )}
-            <p className="text-xs leading-relaxed text-slate-500">
-              권고 방제 시점: 주의보 단계에서 예방 약제를 검토하고, 경보 단계에서는 등록 약제로 적기 방제합니다. 농약은 작물별 등록 약제와 안전사용기준(PLS)을 반드시 확인하세요.
-            </p>
+            <ControlGuide pestId={pest.pest_id} pestName={pest.name_ko} grade={maxGrade} />
             {otherPests.length > 0 && (
               <div className="flex flex-wrap items-center gap-1.5 text-xs text-slate-500">
                 같은 작물의 다른 병해충

@@ -28,6 +28,7 @@ ITEMS: dict[str, tuple[str, str]] = {
 
 SRC = config.DATA_DIR / "survey"
 OUT = config.DATA_DIR / "trend"
+OUT_VIEW = config.DATA_DIR / "surveyview"  # 예찰 탐색 화면용: 회차별 시군 조사값
 
 
 def _num(v) -> float | None:
@@ -94,14 +95,42 @@ def build(pest_id: str) -> dict | None:
     }
 
 
+def build_view(pest_id: str) -> dict | None:
+    """회차(조사일) → 시군별 조사값. 화면에서 날짜를 골라 지도·표로 본다."""
+    item, unit = ITEMS[pest_id]
+    path = SRC / f"ncpms_{pest_id}_sigungu.csv"
+    if not path.exists():
+        return None
+    from . import regions
+
+    by_date: dict[str, list] = defaultdict(list)
+    with path.open(encoding="utf-8") as f:
+        for r in csv.DictReader(f):
+            v = _num(r.get("value"))
+            if r.get("item") != item or v is None or not r.get("sigungu"):
+                continue
+            by_date[r["survey_date"]].append([regions.key_of(r["sido"], r["sigungu"]), v])
+    if not by_date:
+        return None
+    return {
+        "pest_id": pest_id, "item": item, "unit": unit,
+        "source": "NCPMS 병해충 예찰 OpenAPI(SVC51~53) 시군구 조사값",
+        "rounds": [{"date": d, "rows": sorted(rows, key=lambda x: -x[1])} for d, rows in sorted(by_date.items())],
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     OUT.mkdir(parents=True, exist_ok=True)
+    OUT_VIEW.mkdir(parents=True, exist_ok=True)
     for pid in ITEMS:
         doc = build(pid)
         if doc is None:
             print(f"{pid}: 자료 없음(건너뜀)")
             continue
         (OUT / f"{pid}.json").write_text(json.dumps(doc, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+        view = build_view(pid)
+        if view:
+            (OUT_VIEW / f"{pid}.json").write_text(json.dumps(view, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
         ys = [y["year"] for y in doc["years"]]
         print(f"{pid}: {ys[0]}~{ys[-1]}년 {len(ys)}개 연도 · 조사 {sum(y['n_records'] for y in doc['years'])}건")
     return 0

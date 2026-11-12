@@ -8,6 +8,8 @@ const NAV = [
   { href: "/map", label: "예측 지도" },
   { href: "/farm", label: "내 농장" },
   { href: "/pests", label: "병해충" },
+  { href: "/calendar", label: "방제 캘린더" },
+  { href: "/survey", label: "예찰 탐색" },
 ];
 // 관리자 코드로 들어온 경우만 보인다(미들웨어가 경로도 막음)
 const ADMIN_NAV = [
