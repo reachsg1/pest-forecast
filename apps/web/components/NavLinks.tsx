@@ -25,7 +25,7 @@ function Logout({ className }: { className: string }) {
   );
 }
 
-export default function NavLinks({ isAdmin = false, canLogout = false }: { isAdmin?: boolean; canLogout?: boolean }) {
+export default function NavLinks({ isAdmin = false, canLogout = false, kakaoNo = "" }: { isAdmin?: boolean; canLogout?: boolean; kakaoNo?: string }) {
   const path = usePathname();
   const [open, setOpen] = useState(false);
   useEffect(() => setOpen(false), [path]);
@@ -49,6 +49,11 @@ export default function NavLinks({ isAdmin = false, canLogout = false }: { isAdm
           ))}
           {canLogout && (
             <li className="ml-auto flex items-center gap-2">
+              {kakaoNo && (
+                <span className="num select-all text-[11px] text-slate-400" title="카카오 회원번호 — 관리자 지정(KAKAO_ADMIN_IDS)에 씁니다">
+                  카카오 {kakaoNo}
+                </span>
+              )}
               {isAdmin && <span className="chip bg-slate-900 text-white">관리자</span>}
               <Logout className="rounded-lg px-3 py-2 text-sm font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-900" />
             </li>
@@ -83,6 +88,9 @@ export default function NavLinks({ isAdmin = false, canLogout = false }: { isAdm
                 </Link>
               </li>
             ))}
+            {kakaoNo && (
+              <li className="num select-all px-3 pt-1 text-[11px] text-slate-400">카카오 회원번호 {kakaoNo}</li>
+            )}
             {canLogout && (
               <li className="border-t border-slate-100 pt-1">
                 <Logout className="block w-full rounded-lg px-3 py-2.5 text-left text-sm font-medium text-slate-500 hover:bg-slate-50" />

@@ -21,6 +21,7 @@ export type Role = "user" | "admin";
 
 export const AUTH_COOKIE = "pf_auth";
 export const ROLE_HEADER = "x-pf-role";
+export const SUB_HEADER = "x-pf-sub"; // 카카오 회원번호(k…) — 화면 표시용
 export const SESSION_DAYS = 30;
 
 /** 관리자만 여는 경로(메뉴에서도 숨김) */
@@ -141,6 +142,12 @@ export async function readSession(token: string | undefined, secret: string): Pr
   if (Number(exp) < Date.now() / 1000) return null;
   const body = parts.slice(0, -1).join(".");
   return safeEqual(sig, await hmac(body, secret)) ? { role, sub } : null;
+}
+
+/** 쿠키의 역할 + 카카오 관리자 명단 재확인(명단 추가 후 다시 로그인 없이 반영) */
+export function effectiveRole(s: Session): Role {
+  if (s.role !== "admin" && s.sub.startsWith("k") && authConfig().kakaoAdmins.includes(s.sub.slice(1))) return "admin";
+  return s.role;
 }
 
 export async function verifySession(token: string | undefined, secret: string): Promise<Role | null> {

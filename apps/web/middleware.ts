@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { AUTH_COOKIE, ROLE_HEADER, authConfig, isAdminPath, verifySession } from "@/lib/auth";
+import { AUTH_COOKIE, ROLE_HEADER, SUB_HEADER, authConfig, effectiveRole, isAdminPath, readSession } from "@/lib/auth";
 
 /**
  * 접속 제어: 로그인(접속 코드)이 켜져 있으면 모든 화면·데이터(/data/*.json 포함)·API에 쿠키가 필요하다.
@@ -9,7 +9,9 @@ import { AUTH_COOKIE, ROLE_HEADER, authConfig, isAdminPath, verifySession } from
 export async function middleware(req: NextRequest) {
   const { pathname, search } = req.nextUrl;
   const { secret, loginRequired } = authConfig();
-  const role = await verifySession(req.cookies.get(AUTH_COOKIE)?.value, secret);
+  const session = await readSession(req.cookies.get(AUTH_COOKIE)?.value, secret);
+  // 카카오 관리자 명단(KAKAO_ADMIN_IDS)은 요청마다 다시 확인 — 명단에 추가된 뒤 다시 로그인하지 않아도 된다
+  const role = session ? effectiveRole(session) : null;
 
   const isApi = pathname.startsWith("/api/") || (pathname.startsWith("/data/") && pathname.endsWith(".json"));
   const toLogin = (reason?: string) => {
@@ -28,6 +30,7 @@ export async function middleware(req: NextRequest) {
 
   const headers = new Headers(req.headers);
   headers.set(ROLE_HEADER, role ?? (loginRequired ? "" : "guest"));
+  headers.set(SUB_HEADER, session?.sub ?? "");
   return NextResponse.next({ request: { headers } });
 }
 

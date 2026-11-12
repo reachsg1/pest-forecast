@@ -1,7 +1,7 @@
 import Link from "next/link";
 import NavLinks from "./NavLinks";
 
-export default function Header({ demo, role = "" }: { demo?: boolean; role?: string }) {
+export default function Header({ demo, role = "", kakaoNo = "" }: { demo?: boolean; role?: string; kakaoNo?: string }) {
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-white/80 backdrop-blur-md supports-[backdrop-filter]:bg-white/70">
       <a href="#main" className="sr-only sr-only-focusable">
@@ -19,7 +19,7 @@ export default function Header({ demo, role = "" }: { demo?: boolean; role?: str
             <span className="hidden text-[11px] font-medium text-slate-400 sm:block">농촌진흥청 · 농업기상 기반</span>
           </span>
         </Link>
-        {role ? <NavLinks isAdmin={role === "admin"} canLogout={role === "user" || role === "admin"} /> : <span className="flex-1" />}
+        {role ? <NavLinks isAdmin={role === "admin"} canLogout={role === "user" || role === "admin"} kakaoNo={kakaoNo} /> : <span className="flex-1" />}
         {demo && (
           <span className="ml-auto hidden items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700 ring-1 ring-inset ring-amber-200 sm:inline-flex md:ml-0" title="합성 기상으로 만든 데모 데이터입니다">
             <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-amber-500" />

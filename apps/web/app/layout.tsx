@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import { getStatus } from "@/lib/data";
 import { fmtDate } from "@/lib/format";
 import { headers } from "next/headers";
-import { ROLE_HEADER } from "@/lib/auth";
+import { ROLE_HEADER, SUB_HEADER } from "@/lib/auth";
 
 export const metadata: Metadata = {
   title: { default: "병해충 발생 예측", template: "%s · 병해충 발생 예측" },
@@ -16,11 +16,13 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const status = await getStatus();
   // 미들웨어가 확인한 역할: admin | user | guest(로그인 꺼짐) | ""(로그인 전)
-  const role = (await headers()).get(ROLE_HEADER) ?? "";
+  const h = await headers();
+  const role = h.get(ROLE_HEADER) ?? "";
+  const sub = h.get(SUB_HEADER) ?? "";
   return (
     <html lang="ko">
       <body className="flex min-h-screen flex-col">
-        <Header demo={status?.mode === "demo"} role={role} />
+        <Header demo={status?.mode === "demo"} role={role} kakaoNo={sub.startsWith("k") ? sub.slice(1) : ""} />
         {status && !status.ok && (
           <div role="status" className="border-b border-red-100 bg-red-50 px-4 py-2 text-center text-sm text-red-700">
             최근 배치가 실패해 이전 결과를 표시하고 있습니다. (기준일 {fmtDate(status.issued_date)})
