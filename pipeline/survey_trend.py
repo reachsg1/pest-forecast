@@ -26,6 +26,12 @@ ITEMS: dict[str, tuple[str, str]] = {
     # 벼: 항목 이름 확인 후 추가(scripts/fetch_survey.py --predictn 00204 --crop FC010101 --examin 01322)
 }
 
+# 자동 확정된 항목(scripts/auto_models.py가 예찰 CSV에서 후보가 하나뿐일 때 기록) — 위 ITEMS에 없을 때만 쓴다
+_AUTO = config.DATA_DIR / "survey" / "items_auto.json"
+if _AUTO.exists():
+    for _k, _v in json.loads(_AUTO.read_text(encoding="utf-8")).items():
+        ITEMS.setdefault(_k, (_v[0], _v[1]))
+
 SRC = config.DATA_DIR / "survey"
 OUT = config.DATA_DIR / "trend"
 OUT_VIEW = config.DATA_DIR / "surveyview"  # 예찰 탐색 화면용: 회차별 시군 조사값

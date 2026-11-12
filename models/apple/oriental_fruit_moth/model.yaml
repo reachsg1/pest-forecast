@@ -50,3 +50,5 @@ status: draft
 ncpms_key: ''
 ncpms_kind: insect
 label: 적산온도형
+# 자동 지정(scripts/auto_models.py): 예찰 검증 앙상블이 규칙형보다 우수
+default_variant: survey_ens

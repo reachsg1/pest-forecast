@@ -4,7 +4,7 @@ import FarmClient from "@/components/FarmClient";
 import { PageHeader } from "@/components/ui";
 import { getPests, getSpots, getSummary } from "@/lib/data";
 
-export const metadata: Metadata = { title: "내 농장" };
+export const metadata: Metadata = { title: "내 농장 위험도" };
 
 export default async function FarmPage() {
   const [spots, pests, summary] = await Promise.all([getSpots(), getPests(), getSummary()]);

@@ -5,16 +5,16 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const NAV = [
-  { href: "/map", label: "예측 지도" },
-  { href: "/farm", label: "내 농장" },
-  { href: "/pests", label: "병해충" },
-  { href: "/calendar", label: "방제 캘린더" },
-  { href: "/survey", label: "예찰 탐색" },
+  { href: "/map", label: "위험도 지도" },
+  { href: "/farm", label: "내 농장 위험도" },
+  { href: "/pests", label: "병해충 정보" },
+  { href: "/calendar", label: "방제 일정" },
+  { href: "/survey", label: "과거 발생 현황" },
 ];
 // 관리자 코드로 들어온 경우만 보인다(미들웨어가 경로도 막음)
 const ADMIN_NAV = [
-  { href: "/data", label: "데이터·API" },
-  { href: "/about", label: "검증·소개" },
+  { href: "/data", label: "데이터 내려받기" },
+  { href: "/about", label: "모델 검증" },
 ];
 
 function Logout({ className }: { className: string }) {
@@ -43,7 +43,7 @@ export default function NavLinks({ isAdmin = false, canLogout = false, kakaoNo =
               <Link
                 href={n.href}
                 aria-current={active(n.href) ? "page" : undefined}
-                className={`rounded-lg px-3 py-2 text-sm font-medium transition ${active(n.href) ? "bg-brand-50 text-brand-700" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"}`}
+                className={`whitespace-nowrap rounded-lg px-2.5 py-2 text-sm font-medium transition xl:px-3 ${active(n.href) ? "bg-brand-50 text-brand-700" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"}`}
               >
                 {n.label}
               </Link>

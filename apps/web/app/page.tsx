@@ -123,7 +123,7 @@ export default async function HomePage() {
                 <Icon name="farm" /> 내 농장
               </Link>
               <Link href="/map" className="btn-light">
-                <Icon name="map" /> 예측 지도 열기
+                <Icon name="map" /> 위험도 지도 열기
               </Link>
             </div>
           </div>

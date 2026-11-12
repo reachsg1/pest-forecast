@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { PageHeader } from "@/components/ui";
 import { getPests, getStatus } from "@/lib/data";
 
-export const metadata: Metadata = { title: "데이터·API" };
+export const metadata: Metadata = { title: "데이터 내려받기" };
 
 const ENDPOINTS = [
   { m: "GET", p: "/api/v1/status", d: "배치 상태(기준일, 지점·모델 수, 결측률, 경고)" },
@@ -30,7 +30,7 @@ export default async function DataPage() {
     <div className="max-w-5xl space-y-8">
       <PageHeader
         eyebrow="Open API"
-        title="데이터 · API"
+        title="데이터 내려받기 · API"
         desc="예측 결과를 JSON으로 재개방합니다. 인증 없이 사용할 수 있으며(1단계), 응답은 1시간 캐시됩니다. 공공누리 제1유형(출처표시)으로 이용하세요."
       />
 

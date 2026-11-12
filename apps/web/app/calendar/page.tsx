@@ -7,7 +7,7 @@ import { getPests, getSummary } from "@/lib/data";
 import { GRADES } from "@/lib/grades";
 import type { Grade } from "@/lib/types";
 
-export const metadata: Metadata = { title: "방제 캘린더" };
+export const metadata: Metadata = { title: "방제 일정" };
 
 const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
 const rank = (g: Grade | null | undefined) => (g ? GRADES.findIndex((x) => x.name === g) : -1);
@@ -36,7 +36,7 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
 
   return (
     <div className="space-y-5">
-      <PageHeader eyebrow="작물별 방제 시기" title="방제 캘린더" desc="병해충별로 발생·방제를 챙길 시기와, 오늘 위험이 높은 병해충의 할 일을 함께 봅니다." />
+      <PageHeader eyebrow="작물별 방제 시기" title="방제 일정" desc="병해충별로 발생·방제를 챙길 시기와, 오늘 위험이 높은 병해충의 할 일을 함께 봅니다." />
 
       <nav aria-label="작물 선택" className="no-scrollbar -mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
         <ul className="flex gap-2">

@@ -30,6 +30,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--pest", required=True)
     ap.add_argument("--item", required=True, help="NCPMS 조사 항목에 포함될 글자(예: 역병)")
     ap.add_argument("--unit", default="피해율", help="화면 설명용(예: 피해주율)")
+    ap.add_argument("--kncr", default="", help="NCPMS 작물 코드(비우면 본보기와 같음 — 고추)")
+    ap.add_argument("--examin", default="", help="NCPMS 조사 구분 코드")
+    ap.add_argument("--predictn", default="", help="NCPMS 예찰 구분(00204 논벼, 00209 그 외)")
     args = ap.parse_args(argv)
 
     base = next(m for m in discover() if m.card.pest_id == args.pest and m.is_base)
@@ -56,9 +59,15 @@ def main(argv: list[str] | None = None) -> int:
         if v == "survey_ens":
             card["params"] = {"members": [f"{args.pest}__survey_hist", f"{args.pest}__survey_rf", f"{args.pest}__survey_xgb"]}
         else:
-            card["params"] = {"survey": {**spec, "item": args.item}} if spec else {}
-        card["references"] = [r.replace("'탄저병(피해과율)'", f"'{args.item}({args.unit})'").replace("노지고추 '탄저병", f"노지고추 '{args.item}")
-                              for r in card.get("references", [])]
+            if spec:
+                spec = {**spec, "item": args.item}
+                for k in ("kncr", "examin", "predictn"):
+                    if getattr(args, k):
+                        spec[k] = getattr(args, k)
+            card["params"] = {"survey": spec} if spec else {}
+        crop_ko = {"pepper": "노지고추", "apple": "사과", "rice": "논벼"}.get(base.card.crop, base.card.crop)
+        card["references"] = [r.replace("'탄저병(피해과율)'", f"'{args.item}({args.unit})'").replace("노지고추 '탄저병", f"{crop_ko} '{args.item}")
+                              .replace("pepper_anthracnose", args.pest) for r in card.get("references", [])]
         (dst / "model.yaml").write_text(yaml.safe_dump(card, allow_unicode=True, sort_keys=False), encoding="utf-8")
         print("만듦:", dst)
     return 0

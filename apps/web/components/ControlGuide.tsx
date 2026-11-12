@@ -96,7 +96,7 @@ export default function ControlGuide({ pestId, pestName, grade }: { pestId: stri
             <li key={t}>{t}</li>
           ))}
         </ul>
-        <p className="mt-2 text-xs text-slate-500">내 지역 등급은 예측 지도에서 지점을 눌러 확인하세요. 예보 단계부터 아래 요령과 등록 약제를 준비하는 것이 좋아요.</p>
+        <p className="mt-2 text-xs text-slate-500">내 지역 등급은 위험도 지도에서 지점을 눌러 확인하세요. 예보 단계부터 아래 요령과 등록 약제를 준비하는 것이 좋아요.</p>
       </div>
 
       {/* NCPMS 요령 */}

@@ -1,0 +1,569 @@
+{
+  "pest_id": "apple_oriental_fruit_moth",
+  "generated": "2026-11-12",
+  "target": "시군구 예찰 조사값 > 0 (발생)",
+  "train_years": "2015-2022",
+  "test_years": "2023-2025",
+  "threshold": 0.5,
+  "features": [
+    "tavg_14d",
+    "rh_14d",
+    "rain_14d",
+    "rain_days_14d",
+    "lwd_14d",
+    "lwd_30d",
+    "tmin_7d",
+    "rain_days_season",
+    "wet_warm_days_season",
+    "doy",
+    "prev_survey_log",
+    "sgg_elev_gentle",
+    "sgg_tpi_1k_gentle",
+    "sgg_tpi_4k_gentle",
+    "sgg_dist_sea_km_gentle",
+    "sgg_gentle_share",
+    "sgg_steep_share",
+    "sgg_relief_5k_mean",
+    "sgg_northness_mean"
+  ],
+  "static": "terrain",
+  "n_sigungu": 25,
+  "skipped": {
+    "좌표 없음": 152
+  },
+  "hyperparams": {
+    "rf": {
+      "n_estimators": 500,
+      "min_samples_leaf": 5,
+      "max_features": "sqrt"
+    },
+    "xgb": {
+      "n_estimators": 200,
+      "max_depth": 3,
+      "learning_rate": 0.05,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "min_child_weight": 5
+    },
+    "rf_cv_logloss": {
+      "5": 0.3019,
+      "10": 0.3096,
+      "20": 0.3345
+    },
+    "xgb_cv_logloss": {
+      "d3_n200": 0.303,
+      "d3_n400": 0.3268,
+      "d4_n200": 0.3082,
+      "d4_n400": 0.3327,
+      "d6_n200": 0.3076,
+      "d6_n400": 0.3274
+    }
+  },
+  "test": {
+    "n": 580,
+    "positive_rate": 0.141,
+    "models": {
+      "survey_rf": {
+        "auc": 0.923,
+        "within_round_auc": 0.926,
+        "brier": 0.0663,
+        "accuracy": 0.934,
+        "precision": 0.789,
+        "recall": 0.732,
+        "f1": 0.759,
+        "confusion": {
+          "tp": 60,
+          "fp": 16,
+          "fn": 22,
+          "tn": 482
+        }
+      },
+      "survey_xgb": {
+        "auc": 0.921,
+        "within_round_auc": 0.926,
+        "brier": 0.0617,
+        "accuracy": 0.928,
+        "precision": 0.733,
+        "recall": 0.768,
+        "f1": 0.75,
+        "confusion": {
+          "tp": 63,
+          "fp": 23,
+          "fn": 19,
+          "tn": 475
+        }
+      },
+      "survey_hist": {
+        "auc": 0.827,
+        "within_round_auc": 0.779,
+        "brier": 0.0859,
+        "accuracy": 0.905,
+        "precision": 0.846,
+        "recall": 0.402,
+        "f1": 0.545,
+        "confusion": {
+          "tp": 33,
+          "fp": 6,
+          "fn": 49,
+          "tn": 492
+        }
+      },
+      "survey_ens": {
+        "auc": 0.923,
+        "within_round_auc": 0.921,
+        "brier": 0.0633,
+        "accuracy": 0.924,
+        "precision": 0.788,
+        "recall": 0.634,
+        "f1": 0.703,
+        "confusion": {
+          "tp": 52,
+          "fp": 14,
+          "fn": 30,
+          "tn": 484
+        }
+      }
+    },
+    "baselines": {
+      "default_rule": {
+        "auc": 0.541,
+        "within_round_auc": 0.523,
+        "accuracy": 0.569,
+        "precision": 0.153,
+        "recall": 0.451,
+        "f1": 0.228,
+        "confusion": {
+          "tp": 37,
+          "fp": 205,
+          "fn": 45,
+          "tn": 293
+        }
+      },
+      "climatology": {
+        "auc": 0.69,
+        "within_round_auc": 0.5,
+        "accuracy": 0.859,
+        "precision": null,
+        "recall": 0.0,
+        "f1": null,
+        "confusion": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 82,
+          "tn": 498
+        },
+        "brier": 0.1221
+      },
+      "persistence": {
+        "auc": 0.827,
+        "within_round_auc": 0.809
+      }
+    }
+  },
+  "test_by_year": {
+    "2023": {
+      "n": 208,
+      "positive_rate": 0.125,
+      "models": {
+        "survey_rf": {
+          "auc": 0.952,
+          "within_round_auc": 0.961,
+          "brier": 0.0499,
+          "accuracy": 0.947,
+          "precision": 0.826,
+          "recall": 0.731,
+          "f1": 0.776,
+          "confusion": {
+            "tp": 19,
+            "fp": 4,
+            "fn": 7,
+            "tn": 178
+          }
+        },
+        "survey_xgb": {
+          "auc": 0.951,
+          "within_round_auc": 0.959,
+          "brier": 0.0473,
+          "accuracy": 0.933,
+          "precision": 0.7,
+          "recall": 0.808,
+          "f1": 0.75,
+          "confusion": {
+            "tp": 21,
+            "fp": 9,
+            "fn": 5,
+            "tn": 173
+          }
+        },
+        "survey_hist": {
+          "auc": 0.859,
+          "within_round_auc": 0.809,
+          "brier": 0.0722,
+          "accuracy": 0.933,
+          "precision": 0.929,
+          "recall": 0.5,
+          "f1": 0.65,
+          "confusion": {
+            "tp": 13,
+            "fp": 1,
+            "fn": 13,
+            "tn": 181
+          }
+        },
+        "survey_ens": {
+          "auc": 0.955,
+          "within_round_auc": 0.961,
+          "brier": 0.0489,
+          "accuracy": 0.942,
+          "precision": 0.792,
+          "recall": 0.731,
+          "f1": 0.76,
+          "confusion": {
+            "tp": 19,
+            "fp": 5,
+            "fn": 7,
+            "tn": 177
+          }
+        }
+      },
+      "baselines": {
+        "default_rule": {
+          "auc": 0.601,
+          "within_round_auc": 0.541,
+          "accuracy": 0.606,
+          "precision": 0.159,
+          "recall": 0.5,
+          "f1": 0.241,
+          "confusion": {
+            "tp": 13,
+            "fp": 69,
+            "fn": 13,
+            "tn": 113
+          }
+        },
+        "climatology": {
+          "auc": 0.714,
+          "within_round_auc": 0.5,
+          "accuracy": 0.875,
+          "precision": null,
+          "recall": 0.0,
+          "f1": null,
+          "confusion": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 26,
+            "tn": 182
+          },
+          "brier": 0.1118
+        },
+        "persistence": {
+          "auc": 0.818,
+          "within_round_auc": 0.782
+        }
+      }
+    },
+    "2024": {
+      "n": 175,
+      "positive_rate": 0.171,
+      "models": {
+        "survey_rf": {
+          "auc": 0.906,
+          "within_round_auc": 0.896,
+          "brier": 0.0792,
+          "accuracy": 0.937,
+          "precision": 0.828,
+          "recall": 0.8,
+          "f1": 0.814,
+          "confusion": {
+            "tp": 24,
+            "fp": 5,
+            "fn": 6,
+            "tn": 140
+          }
+        },
+        "survey_xgb": {
+          "auc": 0.913,
+          "within_round_auc": 0.906,
+          "brier": 0.0705,
+          "accuracy": 0.931,
+          "precision": 0.821,
+          "recall": 0.767,
+          "f1": 0.793,
+          "confusion": {
+            "tp": 23,
+            "fp": 5,
+            "fn": 7,
+            "tn": 140
+          }
+        },
+        "survey_hist": {
+          "auc": 0.809,
+          "within_round_auc": 0.776,
+          "brier": 0.0985,
+          "accuracy": 0.886,
+          "precision": 0.857,
+          "recall": 0.4,
+          "f1": 0.545,
+          "confusion": {
+            "tp": 12,
+            "fp": 2,
+            "fn": 18,
+            "tn": 143
+          }
+        },
+        "survey_ens": {
+          "auc": 0.909,
+          "within_round_auc": 0.896,
+          "brier": 0.0742,
+          "accuracy": 0.909,
+          "precision": 0.818,
+          "recall": 0.6,
+          "f1": 0.692,
+          "confusion": {
+            "tp": 18,
+            "fp": 4,
+            "fn": 12,
+            "tn": 141
+          }
+        }
+      },
+      "baselines": {
+        "default_rule": {
+          "auc": 0.572,
+          "within_round_auc": 0.572,
+          "accuracy": 0.589,
+          "precision": 0.208,
+          "recall": 0.5,
+          "f1": 0.294,
+          "confusion": {
+            "tp": 15,
+            "fp": 57,
+            "fn": 15,
+            "tn": 88
+          }
+        },
+        "climatology": {
+          "auc": 0.664,
+          "within_round_auc": 0.5,
+          "accuracy": 0.829,
+          "precision": null,
+          "recall": 0.0,
+          "f1": null,
+          "confusion": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 30,
+            "tn": 145
+          },
+          "brier": 0.1395
+        },
+        "persistence": {
+          "auc": 0.822,
+          "within_round_auc": 0.816
+        }
+      }
+    },
+    "2025": {
+      "n": 197,
+      "positive_rate": 0.132,
+      "models": {
+        "survey_rf": {
+          "auc": 0.908,
+          "within_round_auc": 0.927,
+          "brier": 0.0723,
+          "accuracy": 0.919,
+          "precision": 0.708,
+          "recall": 0.654,
+          "f1": 0.68,
+          "confusion": {
+            "tp": 17,
+            "fp": 7,
+            "fn": 9,
+            "tn": 164
+          }
+        },
+        "survey_xgb": {
+          "auc": 0.902,
+          "within_round_auc": 0.919,
+          "brier": 0.0692,
+          "accuracy": 0.919,
+          "precision": 0.679,
+          "recall": 0.731,
+          "f1": 0.704,
+          "confusion": {
+            "tp": 19,
+            "fp": 9,
+            "fn": 7,
+            "tn": 162
+          }
+        },
+        "survey_hist": {
+          "auc": 0.805,
+          "within_round_auc": 0.753,
+          "brier": 0.0892,
+          "accuracy": 0.893,
+          "precision": 0.727,
+          "recall": 0.308,
+          "f1": 0.432,
+          "confusion": {
+            "tp": 8,
+            "fp": 3,
+            "fn": 18,
+            "tn": 168
+          }
+        },
+        "survey_ens": {
+          "auc": 0.906,
+          "within_round_auc": 0.912,
+          "brier": 0.0688,
+          "accuracy": 0.919,
+          "precision": 0.75,
+          "recall": 0.577,
+          "f1": 0.652,
+          "confusion": {
+            "tp": 15,
+            "fp": 5,
+            "fn": 11,
+            "tn": 166
+          }
+        }
+      },
+      "baselines": {
+        "default_rule": {
+          "auc": 0.448,
+          "within_round_auc": 0.449,
+          "accuracy": 0.513,
+          "precision": 0.102,
+          "recall": 0.346,
+          "f1": 0.158,
+          "confusion": {
+            "tp": 9,
+            "fp": 79,
+            "fn": 17,
+            "tn": 92
+          }
+        },
+        "climatology": {
+          "auc": 0.695,
+          "within_round_auc": 0.5,
+          "accuracy": 0.868,
+          "precision": null,
+          "recall": 0.0,
+          "f1": null,
+          "confusion": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 26,
+            "tn": 171
+          },
+          "brier": 0.1176
+        },
+        "persistence": {
+          "auc": 0.84,
+          "within_round_auc": 0.826
+        }
+      }
+    }
+  },
+  "train": {
+    "n": 630,
+    "positive_rate": 0.206,
+    "models": {
+      "survey_rf": {
+        "auc": 0.983,
+        "within_round_auc": 0.985,
+        "brier": 0.0512,
+        "accuracy": 0.932,
+        "precision": 0.931,
+        "recall": 0.723,
+        "f1": 0.814,
+        "confusion": {
+          "tp": 94,
+          "fp": 7,
+          "fn": 36,
+          "tn": 493
+        }
+      },
+      "survey_xgb": {
+        "auc": 0.976,
+        "within_round_auc": 0.971,
+        "brier": 0.0499,
+        "accuracy": 0.93,
+        "precision": 0.898,
+        "recall": 0.746,
+        "f1": 0.815,
+        "confusion": {
+          "tp": 97,
+          "fp": 11,
+          "fn": 33,
+          "tn": 489
+        }
+      },
+      "survey_hist": {
+        "auc": 0.829,
+        "within_round_auc": 0.79,
+        "brier": 0.1135,
+        "accuracy": 0.856,
+        "precision": 0.842,
+        "recall": 0.369,
+        "f1": 0.513,
+        "confusion": {
+          "tp": 48,
+          "fp": 9,
+          "fn": 82,
+          "tn": 491
+        }
+      },
+      "survey_ens": {
+        "auc": 0.972,
+        "within_round_auc": 0.973,
+        "brier": 0.0639,
+        "accuracy": 0.911,
+        "precision": 0.902,
+        "recall": 0.638,
+        "f1": 0.748,
+        "confusion": {
+          "tp": 83,
+          "fp": 9,
+          "fn": 47,
+          "tn": 491
+        }
+      }
+    },
+    "baselines": {
+      "default_rule": {
+        "auc": 0.516,
+        "within_round_auc": 0.482,
+        "accuracy": 0.587,
+        "precision": 0.215,
+        "recall": 0.377,
+        "f1": 0.274,
+        "confusion": {
+          "tp": 49,
+          "fp": 179,
+          "fn": 81,
+          "tn": 321
+        }
+      },
+      "climatology": {
+        "auc": 0.708,
+        "within_round_auc": 0.5,
+        "accuracy": 0.794,
+        "precision": null,
+        "recall": 0.0,
+        "f1": null,
+        "confusion": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 130,
+          "tn": 500
+        },
+        "brier": 0.1495
+      },
+      "persistence": {
+        "auc": 0.753,
+        "within_round_auc": 0.708
+      }
+    }
+  }
+}

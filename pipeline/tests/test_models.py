@@ -34,7 +34,8 @@ def test_discover_finds_eight_models():
     # 병해충 8종 = 기본 모델 8개 + 실제 추가 모델(variants, demo_only 제외)
     assert len({m.card.pest_id for m in models}) == 8
     assert sum(1 for m in models if m.is_default) == 8
-    assert len(ids) == 21  # 고추 역병·담배나방 예찰 학습형 4개씩 추가(11-12)
+    # 예찰 학습 모델은 scripts/auto_models.py가 매주 자동으로 늘린다 → 최소 개수만 확인(11-12: 25개)
+    assert len(ids) >= 25
     assert "apple_anthracnose" in ids
     assert "pepper_anthracnose__survey_logit" in ids and "pepper_anthracnose__survey_hist" in ids
     assert all(m.card.type in {"A", "B", "C", "D", "E"} for m in models)

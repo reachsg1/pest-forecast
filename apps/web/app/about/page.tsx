@@ -6,7 +6,7 @@ import { getPests, getStatus } from "@/lib/data";
 import { CROP_LABEL, GRADES, TYPE_LABEL, pestFullName } from "@/lib/grades";
 import { fmtDateTime } from "@/lib/format";
 
-export const metadata: Metadata = { title: "검증·소개" };
+export const metadata: Metadata = { title: "모델 검증" };
 
 const MEANING: Record<string, string> = { 정상: "발생 조건 미충족", 예보: "발생 조건 형성 중", 주의보: "감염·발생 가능성 높음", 경보: "발생 조건 충족, 확산 우려" };
 
@@ -16,7 +16,7 @@ export default async function AboutPage() {
     <div className="max-w-4xl space-y-8">
       <PageHeader
         eyebrow="서비스 소개"
-        title="검증 · 소개"
+        title="모델 검증 · 서비스 소개"
         desc="농촌진흥청이 보유한 농업기상 관측자료(농업날씨365)와 기상청 예보를 입력으로, 작물별 병해충 발생 위험도를 매일 계산해 공개합니다. 모델의 입력 변수·임계값·근거 문헌(모델 카드)과 검증 지표를 함께 공개해 누구나 판단 근거를 확인할 수 있게 합니다."
       />
 

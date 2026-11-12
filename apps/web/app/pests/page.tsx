@@ -6,7 +6,7 @@ import { getPests, getSummary } from "@/lib/data";
 import { GRADES, TYPE_LABEL, gradeMeta } from "@/lib/grades";
 import type { Grade } from "@/lib/types";
 
-export const metadata: Metadata = { title: "병해충" };
+export const metadata: Metadata = { title: "병해충 정보" };
 
 const rank = (g: Grade | null | undefined) => (g ? GRADES.findIndex((x) => x.name === g) : -1);
 
@@ -33,7 +33,7 @@ export default async function PestsPage({ searchParams }: { searchParams: Promis
 
   return (
     <div className="space-y-5">
-      <PageHeader eyebrow={`작물 ${crops.length}종 · 병해충 ${pests.length}종`} title="병해충" desc="작물을 고르면 그 작물의 병해충과 오늘 전국 위험도를 볼 수 있어요." />
+      <PageHeader eyebrow={`작물 ${crops.length}종 · 병해충 ${pests.length}종`} title="병해충 정보" desc="작물을 고르면 그 작물의 병해충과 오늘 전국 위험도를 볼 수 있어요." />
 
       {/* 작물 선택: 한 줄, 많아지면 옆으로 넘김 */}
       <nav aria-label="작물 선택" className="no-scrollbar -mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">

@@ -181,7 +181,7 @@ export default function PestTabs({
           <section role="tabpanel" id="panel-why" aria-labelledby="tab-why" className="space-y-5">
             {models.length > 1 && (
               <div>
-                <div className="text-xs font-semibold text-slate-500">이 병해충의 예측 모델 {models.length}개 · 예측 지도에서 골라 볼 수 있어요</div>
+                <div className="text-xs font-semibold text-slate-500">이 병해충의 예측 모델 {models.length}개 · 위험도 지도에서 골라 볼 수 있어요</div>
                 <div className="segmented mt-2 flex-wrap" role="radiogroup" aria-label="예측 모델">
                   {models.map((m) => (
                     <button key={m.model_id} role="radio" aria-checked={m.model_id === whyModel?.model_id} onClick={() => setWhyModelId(m.model_id)} className="segmented-item">
@@ -198,7 +198,7 @@ export default function PestTabs({
             <ModelCard pest={whyModel ? (whyModel as unknown as PestCard) : pest} />
             {models.length > 1 && whyModel && (
               <Link href={`/map?crop=${pest.crop}&pest=${pest.pest_id}${whyModel.is_default ? "" : `&model=${whyModel.model_id}`}`} className="link-arrow text-xs">
-                이 모델로 예측 지도 보기 <Icon name="arrow" className="h-3.5 w-3.5" />
+                이 모델로 위험도 지도 보기 <Icon name="arrow" className="h-3.5 w-3.5" />
               </Link>
             )}
           </section>
