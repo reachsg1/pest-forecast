@@ -112,13 +112,18 @@ def load_weather_by_sigungu(years: list[int], extra_regions: list[str] | None = 
 
 
 def load_survey(pest: str) -> list[dict]:
+    """예찰 CSV → 표본 행. 조사 항목은 pipeline/survey_trend.ITEMS 의 정확한 이름만 쓴다
+    (예: 사과 '복숭아순나방(피해과율)' — 같은 CSV의 피해신초율·트랩 마리수·'복숭아순나방붙이'는 제외)."""
+    from .survey_trend import ITEMS
+
+    item = ITEMS.get(pest, (None, ""))[0]
     p = config.DATA_DIR / "survey" / f"ncpms_{pest}_sigungu.csv"
     with p.open(encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
     out = []
     for r in rows:
         name = r["sigungu"]
-        if not name:
+        if not name or (item and r.get("item") != item):
             continue
         try:
             v = float(r["value"])

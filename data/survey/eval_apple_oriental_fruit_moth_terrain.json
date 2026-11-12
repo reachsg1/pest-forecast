@@ -1,0 +1,281 @@
+{
+  "pest_id": "apple_oriental_fruit_moth",
+  "generated": "2026-11-12",
+  "train_years": "2021-2023",
+  "test_years": "2024-2025",
+  "n_train": 470,
+  "n_test": 372,
+  "terrain_features": [
+    "elev_gentle",
+    "tpi_4k_gentle",
+    "tpi_1k_gentle",
+    "dist_sea_km_gentle",
+    "gentle_share",
+    "steep_share",
+    "relief_5k_mean",
+    "northness_mean"
+  ],
+  "experiments": {
+    "기상+직전예찰|rf|지형 없음": {
+      "auc": 0.868,
+      "within_round_auc": 0.859,
+      "brier": 0.082,
+      "by_year_auc": {
+        "2024": 0.875,
+        "2025": 0.858
+      }
+    },
+    "기상+직전예찰|rf|지형 포함": {
+      "auc": 0.928,
+      "within_round_auc": 0.922,
+      "brier": 0.0704,
+      "by_year_auc": {
+        "2024": 0.942,
+        "2025": 0.909
+      }
+    },
+    "기상+직전예찰|xgb|지형 없음": {
+      "auc": 0.852,
+      "within_round_auc": 0.843,
+      "brier": 0.0888,
+      "by_year_auc": {
+        "2024": 0.877,
+        "2025": 0.826
+      }
+    },
+    "기상+직전예찰|xgb|지형 포함": {
+      "auc": 0.903,
+      "within_round_auc": 0.908,
+      "brier": 0.0762,
+      "by_year_auc": {
+        "2024": 0.926,
+        "2025": 0.876
+      }
+    },
+    "기상만|rf|지형 없음": {
+      "auc": 0.725,
+      "within_round_auc": 0.647,
+      "brier": 0.1201,
+      "by_year_auc": {
+        "2024": 0.744,
+        "2025": 0.706
+      }
+    },
+    "기상만|rf|지형 포함": {
+      "auc": 0.855,
+      "within_round_auc": 0.849,
+      "brier": 0.0966,
+      "by_year_auc": {
+        "2024": 0.873,
+        "2025": 0.834
+      }
+    },
+    "기상만|xgb|지형 없음": {
+      "auc": 0.704,
+      "within_round_auc": 0.658,
+      "brier": 0.1491,
+      "by_year_auc": {
+        "2024": 0.723,
+        "2025": 0.688
+      }
+    },
+    "기상만|xgb|지형 포함": {
+      "auc": 0.889,
+      "within_round_auc": 0.893,
+      "brier": 0.0793,
+      "by_year_auc": {
+        "2024": 0.924,
+        "2025": 0.85
+      }
+    }
+  },
+  "permutation_importance_rf": {
+    "기상+직전예찰": [
+      {
+        "feature": "prev_survey_log",
+        "auc_drop": 0.1125
+      },
+      {
+        "feature": "elev_gentle",
+        "auc_drop": 0.0127
+      },
+      {
+        "feature": "gentle_share",
+        "auc_drop": 0.0119
+      },
+      {
+        "feature": "dist_sea_km_gentle",
+        "auc_drop": 0.0095
+      },
+      {
+        "feature": "wet_warm_days_season",
+        "auc_drop": 0.0083
+      },
+      {
+        "feature": "relief_5k_mean",
+        "auc_drop": 0.0064
+      },
+      {
+        "feature": "rh_14d",
+        "auc_drop": 0.0057
+      },
+      {
+        "feature": "tavg_14d",
+        "auc_drop": 0.0044
+      },
+      {
+        "feature": "rain_days_season",
+        "auc_drop": 0.0044
+      },
+      {
+        "feature": "tpi_4k_gentle",
+        "auc_drop": 0.0022
+      },
+      {
+        "feature": "tmin_7d",
+        "auc_drop": 0.0017
+      },
+      {
+        "feature": "northness_mean",
+        "auc_drop": 0.0016
+      },
+      {
+        "feature": "rain_14d",
+        "auc_drop": 0.001
+      },
+      {
+        "feature": "doy",
+        "auc_drop": 0.0007
+      },
+      {
+        "feature": "rain_days_14d",
+        "auc_drop": -0.0002
+      },
+      {
+        "feature": "steep_share",
+        "auc_drop": -0.0006
+      },
+      {
+        "feature": "lwd_14d",
+        "auc_drop": -0.002
+      },
+      {
+        "feature": "tpi_1k_gentle",
+        "auc_drop": -0.0022
+      },
+      {
+        "feature": "lwd_30d",
+        "auc_drop": -0.0035
+      }
+    ],
+    "기상만": [
+      {
+        "feature": "dist_sea_km_gentle",
+        "auc_drop": 0.0265
+      },
+      {
+        "feature": "relief_5k_mean",
+        "auc_drop": 0.0215
+      },
+      {
+        "feature": "northness_mean",
+        "auc_drop": 0.0172
+      },
+      {
+        "feature": "gentle_share",
+        "auc_drop": 0.0119
+      },
+      {
+        "feature": "elev_gentle",
+        "auc_drop": 0.0114
+      },
+      {
+        "feature": "tpi_4k_gentle",
+        "auc_drop": 0.0059
+      },
+      {
+        "feature": "rh_14d",
+        "auc_drop": 0.0037
+      },
+      {
+        "feature": "rain_days_season",
+        "auc_drop": 0.0036
+      },
+      {
+        "feature": "steep_share",
+        "auc_drop": 0.0033
+      },
+      {
+        "feature": "tavg_14d",
+        "auc_drop": 0.0023
+      },
+      {
+        "feature": "wet_warm_days_season",
+        "auc_drop": 0.0022
+      },
+      {
+        "feature": "tmin_7d",
+        "auc_drop": 0.001
+      },
+      {
+        "feature": "rain_14d",
+        "auc_drop": 0.0009
+      },
+      {
+        "feature": "tpi_1k_gentle",
+        "auc_drop": 0.0
+      },
+      {
+        "feature": "rain_days_14d",
+        "auc_drop": -0.0003
+      },
+      {
+        "feature": "doy",
+        "auc_drop": -0.0015
+      },
+      {
+        "feature": "lwd_14d",
+        "auc_drop": -0.009
+      },
+      {
+        "feature": "lwd_30d",
+        "auc_drop": -0.0124
+      }
+    ]
+  },
+  "sigungu_spearman": {
+    "elev_gentle": {
+      "rho": -0.072,
+      "p": 0.7381
+    },
+    "tpi_4k_gentle": {
+      "rho": -0.049,
+      "p": 0.8209
+    },
+    "tpi_1k_gentle": {
+      "rho": -0.068,
+      "p": 0.7528
+    },
+    "dist_sea_km_gentle": {
+      "rho": -0.118,
+      "p": 0.5844
+    },
+    "gentle_share": {
+      "rho": 0.05,
+      "p": 0.8159
+    },
+    "steep_share": {
+      "rho": 0.019,
+      "p": 0.9313
+    },
+    "relief_5k_mean": {
+      "rho": -0.011,
+      "p": 0.9605
+    },
+    "northness_mean": {
+      "rho": -0.014,
+      "p": 0.9467
+    }
+  },
+  "n_sigungu_corr": 24
+}

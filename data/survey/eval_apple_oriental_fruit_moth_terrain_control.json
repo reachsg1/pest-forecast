@@ -1,0 +1,58 @@
+{
+  "pest_id": "apple_oriental_fruit_moth",
+  "generated": "2026-11-12",
+  "train_years": "2021-2023",
+  "test_years": "2024-2025",
+  "n_train": 470,
+  "n_test": 372,
+  "n_sigungu": 25,
+  "test_sigungu_unseen_in_train": 2,
+  "year_split": {
+    "기상+직전예찰": {
+      "A_기본": {
+        "auc": 0.868,
+        "within_round_auc": 0.859
+      },
+      "B_지형": {
+        "auc": 0.928,
+        "within_round_auc": 0.922
+      },
+      "C_시군발생률": {
+        "auc": 0.907,
+        "within_round_auc": 0.899
+      },
+      "D_발생률+지형": {
+        "auc": 0.919,
+        "within_round_auc": 0.923
+      }
+    },
+    "기상만": {
+      "A_기본": {
+        "auc": 0.725,
+        "within_round_auc": 0.647
+      },
+      "B_지형": {
+        "auc": 0.855,
+        "within_round_auc": 0.849
+      },
+      "C_시군발생률": {
+        "auc": 0.861,
+        "within_round_auc": 0.856
+      },
+      "D_발생률+지형": {
+        "auc": 0.884,
+        "within_round_auc": 0.884
+      }
+    }
+  },
+  "unseen_sigungu": {
+    "기상만": {
+      "auc": 0.628,
+      "within_round_auc": 0.377
+    },
+    "기상+지형": {
+      "auc": 0.43,
+      "within_round_auc": 0.242
+    }
+  }
+}

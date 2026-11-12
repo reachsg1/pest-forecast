@@ -1,0 +1,58 @@
+{
+  "pest_id": "apple_anthracnose",
+  "generated": "2026-11-12",
+  "train_years": "2021-2023",
+  "test_years": "2024-2025",
+  "n_train": 471,
+  "n_test": 372,
+  "n_sigungu": 25,
+  "test_sigungu_unseen_in_train": 2,
+  "year_split": {
+    "기상+직전예찰": {
+      "A_기본": {
+        "auc": 0.907,
+        "within_round_auc": 0.744
+      },
+      "B_지형": {
+        "auc": 0.92,
+        "within_round_auc": 0.842
+      },
+      "C_시군발생률": {
+        "auc": 0.929,
+        "within_round_auc": 0.876
+      },
+      "D_발생률+지형": {
+        "auc": 0.927,
+        "within_round_auc": 0.887
+      }
+    },
+    "기상만": {
+      "A_기본": {
+        "auc": 0.826,
+        "within_round_auc": 0.552
+      },
+      "B_지형": {
+        "auc": 0.879,
+        "within_round_auc": 0.77
+      },
+      "C_시군발생률": {
+        "auc": 0.895,
+        "within_round_auc": 0.81
+      },
+      "D_발생률+지형": {
+        "auc": 0.901,
+        "within_round_auc": 0.83
+      }
+    }
+  },
+  "unseen_sigungu": {
+    "기상만": {
+      "auc": 0.817,
+      "within_round_auc": 0.33
+    },
+    "기상+지형": {
+      "auc": 0.836,
+      "within_round_auc": 0.403
+    }
+  }
+}

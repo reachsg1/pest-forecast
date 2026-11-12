@@ -1,0 +1,58 @@
+{
+  "pest_id": "pepper_oriental_tobacco_budworm",
+  "generated": "2026-11-12",
+  "train_years": "2015-2022",
+  "test_years": "2023-2025",
+  "n_train": 3434,
+  "n_test": 1241,
+  "n_sigungu": 72,
+  "test_sigungu_unseen_in_train": 0,
+  "year_split": {
+    "기상+직전예찰": {
+      "A_기본": {
+        "auc": 0.896,
+        "within_round_auc": 0.788
+      },
+      "B_지형": {
+        "auc": 0.899,
+        "within_round_auc": 0.803
+      },
+      "C_시군발생률": {
+        "auc": 0.892,
+        "within_round_auc": 0.778
+      },
+      "D_발생률+지형": {
+        "auc": 0.89,
+        "within_round_auc": 0.785
+      }
+    },
+    "기상만": {
+      "A_기본": {
+        "auc": 0.813,
+        "within_round_auc": 0.572
+      },
+      "B_지형": {
+        "auc": 0.816,
+        "within_round_auc": 0.6
+      },
+      "C_시군발생률": {
+        "auc": 0.81,
+        "within_round_auc": 0.587
+      },
+      "D_발생률+지형": {
+        "auc": 0.809,
+        "within_round_auc": 0.601
+      }
+    }
+  },
+  "unseen_sigungu": {
+    "기상만": {
+      "auc": 0.798,
+      "within_round_auc": 0.544
+    },
+    "기상+지형": {
+      "auc": 0.812,
+      "within_round_auc": 0.599
+    }
+  }
+}
