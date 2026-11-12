@@ -15,7 +15,10 @@ export default function PrivacyPage() {
         <h2 className="font-semibold text-slate-900">1. 수집하는 정보와 목적</h2>
         <ul className="mt-2 list-disc space-y-1.5 pl-5">
           <li>
-            <b>구글 로그인 시 이메일 주소</b>: 이용이 허용된 계정인지 확인하는 데에만 씁니다. 확인 직후 버리며 서버·데이터베이스·로그 어디에도 저장하지 않습니다.
+            <b>구글·네이버 로그인 시 이메일 주소</b>: 이용 허용·관리자 여부를 확인하는 데에만 씁니다. 확인 직후 버리며 서버·데이터베이스·로그 어디에도 저장하지 않습니다.
+          </li>
+          <li>
+            <b>카카오 로그인 시 회원번호</b>(이 서비스에서만 쓰이는 카카오 고유 번호, 이메일·이름 등은 받지 않음): 이용·관리자 여부 확인과 관리자 지정 안내에 씁니다. 아래 로그인 쿠키에만 담기며 서버에 저장하지 않습니다.
           </li>
           <li>
             <b>접속 코드</b>: 입력한 코드가 맞는지 확인하는 데에만 쓰고 저장하지 않습니다.
@@ -28,10 +31,10 @@ export default function PrivacyPage() {
         <h2 className="font-semibold text-slate-900">2. 쿠키</h2>
         <ul className="mt-2 list-disc space-y-1.5 pl-5">
           <li>
-            <code>pf_auth</code>: 로그인 상태(일반 이용자/관리자 구분만)를 서명해 담은 쿠키로, 30일 뒤 만료됩니다. 이메일 등 신원 정보는 들어 있지 않습니다.
+            <code>pf_auth</code>: 로그인 상태(일반 이용자/관리자 구분, 카카오 로그인은 회원번호 포함)를 서명해 담은 쿠키로, 30일 뒤 만료됩니다. 이메일은 들어 있지 않습니다.
           </li>
           <li>
-            <code>pf_oauth</code>: 구글 로그인 위조 방지용 임시값으로, 10분 뒤 만료됩니다.
+            <code>pf_oauth</code>: 소셜 로그인 위조 방지용 임시값으로, 10분 뒤 만료됩니다.
           </li>
           <li>&lsquo;나가기&rsquo;를 누르면 로그인 쿠키가 삭제됩니다.</li>
         </ul>
@@ -46,7 +49,7 @@ export default function PrivacyPage() {
         <h2 className="font-semibold text-slate-900">4. 제3자 제공·위탁</h2>
         <ul className="mt-2 list-disc space-y-1.5 pl-5">
           <li>개인정보를 제3자에게 제공하지 않습니다.</li>
-          <li>구글 로그인은 Google LLC의 인증 서비스를 이용합니다(이메일 확인 범위만 요청).</li>
+          <li>소셜 로그인은 Google LLC(이메일), ㈜카카오(회원번호), 네이버㈜(이메일)의 인증 서비스를 이용하며, 괄호 안 정보만 요청합니다.</li>
           <li>서비스는 Vercel Inc.에서 호스팅되며, 호스팅 업체가 보안·운영을 위해 접속 기록(IP 주소 등)을 일정 기간 보관할 수 있습니다.</li>
         </ul>
       </section>

@@ -22,3 +22,7 @@ apps/web/next-env.d.ts.bak
 
 # 일별 예측 스냅샷: CSV는 하루 수 MB라 로컬에만 두고, 같은 내용의 Parquet만 커밋
 data/predictions/*.csv
+
+# 토양 통계(공공누리 제4유형: 변경금지·상업이용금지) — 원자료·가공 피처는 저장소에 올리지 않음(scripts/fetch_soil_stats.py로 재생성)
+data/reference/soil_stats_raw.json
+data/reference/soil_sigungu.csv

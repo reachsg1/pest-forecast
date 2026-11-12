@@ -1,15 +1,22 @@
 import type { Metadata } from "next";
-import { authConfig, safeNext } from "@/lib/auth";
+import { cookies } from "next/headers";
+import { AUTH_COOKIE, authConfig, readSession, safeNext } from "@/lib/auth";
 
 export const metadata: Metadata = { title: "로그인", robots: { index: false } };
 export const dynamic = "force-dynamic";
 
 const ERRORS: Record<string, string> = {
   "1": "코드가 맞지 않아요. 다시 확인해 주세요.",
-  google_denied: "이 구글 계정은 이용이 허용되지 않았어요. 담당 기관에 문의하세요.",
+  social_denied: "이 계정은 이용이 허용되지 않았어요. 담당 기관에 문의하세요.",
+  google_denied: "이 계정은 이용이 허용되지 않았어요. 담당 기관에 문의하세요.",
+  social_state: "로그인 시간이 지났거나 요청이 바뀌었어요. 다시 시도해 주세요.",
   google_state: "로그인 시간이 지났거나 요청이 바뀌었어요. 다시 시도해 주세요.",
-  google_token: "구글 로그인을 확인하지 못했어요. 잠시 뒤 다시 시도해 주세요.",
+  social_token: "로그인을 확인하지 못했어요. 잠시 뒤 다시 시도해 주세요.",
+  google_token: "로그인을 확인하지 못했어요. 잠시 뒤 다시 시도해 주세요.",
+  social_cancel: "로그인을 취소했어요.",
   google_off: "구글 로그인이 아직 설정되지 않았어요.",
+  kakao_off: "카카오 로그인이 아직 설정되지 않았어요.",
+  naver_off: "네이버 로그인이 아직 설정되지 않았어요.",
 };
 
 function GoogleMark() {
@@ -23,12 +30,37 @@ function GoogleMark() {
   );
 }
 
+// 카카오 로그인 버튼 가이드: 배경 #FEE500, 말풍선 심볼 #000000, 레이블 85% 검정
+function KakaoMark() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
+      <path fill="#000" d="M12 3C6.48 3 2 6.48 2 10.78c0 2.78 1.86 5.22 4.66 6.6l-.95 3.48c-.08.3.26.54.52.37l4.13-2.73c.54.06 1.08.09 1.64.09 5.52 0 10-3.48 10-7.81S17.52 3 12 3Z" />
+    </svg>
+  );
+}
+
+// 네이버 로그인 버튼 가이드: 배경 #03C75A, 흰색 N 로고
+function NaverMark() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
+      <path fill="#fff" d="M15.56 12.85 8.17 2H2v20h6.44V11.15L15.83 22H22V2h-6.44v10.85Z" />
+    </svg>
+  );
+}
+
 export default async function LoginPage({ searchParams }: { searchParams: Promise<{ next?: string; error?: string; reason?: string }> }) {
   const { next, error, reason } = await searchParams;
   const cfg = authConfig();
   const admin = reason === "admin";
   const nextPath = safeNext(next);
   const showCode = admin ? cfg.admin !== "" : cfg.site !== "" || cfg.admin !== "";
+  const social = cfg.google || cfg.kakao || cfg.naver;
+  // 카카오로 로그인했는데 관리자가 아닌 경우: 관리자 지정에 쓸 회원번호를 보여 준다
+  const session = await readSession((await cookies()).get(AUTH_COOKIE)?.value, cfg.secret);
+  const kakaoNo = admin && session?.sub?.startsWith("k") ? session.sub.slice(1) : null;
+  const href = (p: string) => `/api/auth/${p}?next=${encodeURIComponent(nextPath)}`;
+  const btn = "flex w-full items-center justify-center gap-2.5 rounded-xl px-4 py-2.5 text-sm font-semibold shadow-sm transition";
+
   return (
     <div className="mx-auto flex max-w-sm flex-col items-center py-10 sm:py-16">
       <span aria-hidden="true" className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-card">
@@ -42,22 +74,34 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         {admin ? "이 메뉴는 관리자만 볼 수 있어요." : "병해충 발생 예측 서비스는 로그인한 분만 볼 수 있어요."}
       </p>
 
-      <div className="card mt-6 w-full space-y-4 p-5">
+      <div className="card mt-6 w-full space-y-3 p-5">
         {error && ERRORS[error] && (
           <p id="login-error" role="alert" className="rounded-lg bg-rose-50 px-3 py-2 text-xs font-medium text-rose-700">
             {ERRORS[error]}
           </p>
         )}
+        {kakaoNo && (
+          <p className="rounded-lg bg-slate-50 px-3 py-2 text-xs leading-relaxed text-slate-600">
+            카카오 회원번호 <b className="num select-all text-slate-900">{kakaoNo}</b> — 관리자로 지정받으려면 이 번호를 담당자에게 알려 주세요.
+          </p>
+        )}
+        {cfg.kakao && (
+          <a href={href("kakao")} className={`${btn} bg-[#FEE500] text-black/85 hover:brightness-95`}>
+            <KakaoMark /> 카카오 로그인
+          </a>
+        )}
+        {cfg.naver && (
+          <a href={href("naver")} className={`${btn} bg-[#03C75A] text-white hover:brightness-95`}>
+            <NaverMark /> 네이버 로그인
+          </a>
+        )}
         {cfg.google && (
-          <a
-            href={`/api/auth/google?next=${encodeURIComponent(nextPath)}`}
-            className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50"
-          >
+          <a href={href("google")} className={`${btn} border border-slate-200 bg-white text-slate-800 hover:bg-slate-50`}>
             <GoogleMark /> Google 계정으로 로그인
           </a>
         )}
-        {cfg.google && showCode && (
-          <div className="flex items-center gap-3 text-[11px] text-slate-400" aria-hidden="true">
+        {social && showCode && (
+          <div className="flex items-center gap-3 pt-1 text-[11px] text-slate-400" aria-hidden="true">
             <span className="h-px flex-1 bg-slate-200" />
             또는 {admin ? "관리자 코드" : "접속 코드"}
             <span className="h-px flex-1 bg-slate-200" />
@@ -70,15 +114,18 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
               <span className="text-xs font-medium text-slate-500">{admin ? "관리자 코드" : "접속 코드"}</span>
               <input name="code" type="password" required autoComplete="off" aria-describedby={error ? "login-error" : undefined} className="field mt-1 w-full" />
             </label>
-            <button type="submit" className={`${cfg.google ? "btn-secondary" : "btn-primary"} w-full justify-center`}>
+            <button type="submit" className={`${social ? "btn-secondary" : "btn-primary"} w-full justify-center`}>
               들어가기
             </button>
           </form>
         )}
-        {!cfg.google && !showCode && <p className="text-center text-sm text-slate-500">아직 로그인 방법이 설정되지 않았어요.</p>}
+        {!social && !showCode && <p className="text-center text-sm text-slate-500">아직 로그인 방법이 설정되지 않았어요.</p>}
       </div>
       <p className="mt-4 text-center text-xs leading-relaxed text-slate-400">
-        {cfg.google && "구글 계정 이메일은 이용 허용 여부 확인에만 쓰고 저장하지 않아요. "}이 기기에서 30일 동안 다시 묻지 않아요.
+        {social && "로그인 정보(이메일·회원번호)는 이용 확인에만 쓰고 따로 저장하지 않아요. "}이 기기에서 30일 동안 다시 묻지 않아요.{" "}
+        <a href="/privacy" className="underline underline-offset-2 hover:text-slate-600">
+          개인정보 처리 안내
+        </a>
       </p>
     </div>
   );
