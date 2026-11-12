@@ -1,0 +1,151 @@
+{
+  "pest_id": "pepper_oriental_tobacco_budworm",
+  "generated": "2026-11-12",
+  "train_years": "2015-2022",
+  "test_years": "2023-2025",
+  "n_train": 3434,
+  "n_test": 1241,
+  "n_sigungu": 72,
+  "sigungu_without_soil": [],
+  "soil_features": [
+    "soil_drain_idx",
+    "soil_drain_poor",
+    "soil_depth_idx",
+    "soil_depth_shallow",
+    "soil_texture_idx",
+    "soil_texture_sandy",
+    "soil_slope_idx",
+    "soil_field_good",
+    "soil_fruit_good",
+    "soil_paddy_good",
+    "soil_land_paddy",
+    "soil_land_field",
+    "soil_land_orchard"
+  ],
+  "year_split": {
+    "기상+직전예찰": {
+      "A_기본": {
+        "auc": 0.896,
+        "within_round_auc": 0.788
+      },
+      "T_지형": {
+        "auc": 0.899,
+        "within_round_auc": 0.803
+      },
+      "S_토양": {
+        "auc": 0.897,
+        "within_round_auc": 0.797
+      },
+      "TS_지형+토양": {
+        "auc": 0.894,
+        "within_round_auc": 0.791
+      },
+      "C_시군발생률": {
+        "auc": 0.892,
+        "within_round_auc": 0.778
+      }
+    },
+    "기상만": {
+      "A_기본": {
+        "auc": 0.813,
+        "within_round_auc": 0.572
+      },
+      "T_지형": {
+        "auc": 0.816,
+        "within_round_auc": 0.6
+      },
+      "S_토양": {
+        "auc": 0.814,
+        "within_round_auc": 0.597
+      },
+      "TS_지형+토양": {
+        "auc": 0.812,
+        "within_round_auc": 0.601
+      },
+      "C_시군발생률": {
+        "auc": 0.81,
+        "within_round_auc": 0.587
+      }
+    }
+  },
+  "unseen_sigungu": {
+    "기상만": {
+      "auc": 0.799,
+      "within_round_auc": 0.546
+    },
+    "+지형": {
+      "auc": 0.811,
+      "within_round_auc": 0.599
+    },
+    "+토양": {
+      "auc": 0.808,
+      "within_round_auc": 0.587
+    },
+    "+지형+토양": {
+      "auc": 0.808,
+      "within_round_auc": 0.592
+    }
+  },
+  "permutation_importance_TS": [
+    {
+      "feature": "prev_survey_log",
+      "auc_drop": 0.1337
+    },
+    {
+      "feature": "doy",
+      "auc_drop": 0.0184
+    },
+    {
+      "feature": "rain_days_season",
+      "auc_drop": 0.0042
+    },
+    {
+      "feature": "wet_warm_days_season",
+      "auc_drop": 0.0022
+    },
+    {
+      "feature": "tmin_7d",
+      "auc_drop": 0.0012
+    },
+    {
+      "feature": "tavg_14d",
+      "auc_drop": 0.0009
+    },
+    {
+      "feature": "soil_texture_sandy",
+      "auc_drop": 0.0005
+    },
+    {
+      "feature": "soil_texture_idx",
+      "auc_drop": 0.0004
+    },
+    {
+      "feature": "rain_days_14d",
+      "auc_drop": 0.0001
+    },
+    {
+      "feature": "rh_14d",
+      "auc_drop": -0.0
+    },
+    {
+      "feature": "rain_14d",
+      "auc_drop": -0.0001
+    },
+    {
+      "feature": "lwd_14d",
+      "auc_drop": -0.0001
+    },
+    {
+      "feature": "soil_land_orchard",
+      "auc_drop": -0.0001
+    },
+    {
+      "feature": "terrain:5",
+      "auc_drop": -0.0002
+    },
+    {
+      "feature": "terrain:3",
+      "auc_drop": -0.0004
+    }
+  ]
+}
