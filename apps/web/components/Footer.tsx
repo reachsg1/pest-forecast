@@ -49,6 +49,11 @@ export default function Footer({ generatedAt, issuedDate, isAdmin = false }: { g
                 </li>
               </>
             )}
+            <li>
+              <Link href="/privacy" className="hover:text-slate-900">
+                개인정보 처리 안내
+              </Link>
+            </li>
             <li>재개방 데이터는 공공누리 제1유형(출처표시)</li>
           </ul>
         </div>
