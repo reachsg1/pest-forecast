@@ -1,0 +1,174 @@
+{
+  "model_id": "pepper_phytophthora__survey_ens",
+  "version": "0.1.0",
+  "evaluated_at": "2026-11-12",
+  "status": "survey_evaluated",
+  "uses_survey": true,
+  "algorithm": "앙상블(로지스틱·RF·XGBoost 평균)",
+  "method": "연도 분리 검증: 학습 2015-2022, 시험 2023-2025. 정답 = 시군구 예찰값 > 0. 정확도·정밀도·재현율은 위험지수 50(주의보) 이상을 '발생'으로 볼 때.",
+  "n_sigungu": 72,
+  "skipped": {},
+  "test": {
+    "n": 1241,
+    "positive_rate": 0.109,
+    "auc": {
+      "survey_logit": 0.897,
+      "climatology": 0.768,
+      "default_rule": 0.5,
+      "persistence": 0.804
+    },
+    "within_round_auc": {
+      "survey_logit": 0.821,
+      "climatology": 0.5,
+      "default_rule": 0.415,
+      "persistence": 0.717
+    },
+    "brier": {
+      "survey_logit": 0.0545,
+      "climatology": 0.0899
+    },
+    "classification": {
+      "survey_logit": {
+        "accuracy": 0.941,
+        "precision": 0.919,
+        "recall": 0.504,
+        "f1": 0.651
+      },
+      "default_rule": {
+        "accuracy": 0.479,
+        "precision": 0.108,
+        "recall": 0.519,
+        "f1": 0.178
+      },
+      "climatology": {
+        "accuracy": 0.891,
+        "precision": null,
+        "recall": 0.0,
+        "f1": null
+      }
+    }
+  },
+  "test_by_year": {
+    "2023": {
+      "n": 346,
+      "positive_rate": 0.095,
+      "auc": {
+        "survey_logit": 0.901,
+        "climatology": 0.82,
+        "default_rule": 0.515,
+        "persistence": 0.755
+      },
+      "within_round_auc": {
+        "survey_logit": 0.8,
+        "climatology": 0.5,
+        "default_rule": 0.473,
+        "persistence": 0.637
+      },
+      "brier": {
+        "survey_logit": 0.0533,
+        "climatology": 0.0789
+      },
+      "classification": {
+        "survey_logit": {
+          "accuracy": 0.945,
+          "precision": 0.938,
+          "recall": 0.455,
+          "f1": 0.612
+        },
+        "default_rule": {
+          "accuracy": 0.451,
+          "precision": 0.106,
+          "recall": 0.636,
+          "f1": 0.181
+        },
+        "climatology": {
+          "accuracy": 0.905,
+          "precision": null,
+          "recall": 0.0,
+          "f1": null
+        }
+      }
+    },
+    "2024": {
+      "n": 452,
+      "positive_rate": 0.135,
+      "auc": {
+        "survey_logit": 0.9,
+        "climatology": 0.738,
+        "default_rule": 0.496,
+        "persistence": 0.842
+      },
+      "within_round_auc": {
+        "survey_logit": 0.842,
+        "climatology": 0.5,
+        "default_rule": 0.418,
+        "persistence": 0.78
+      },
+      "brier": {
+        "survey_logit": 0.0611,
+        "climatology": 0.1071
+      },
+      "classification": {
+        "survey_logit": {
+          "accuracy": 0.931,
+          "precision": 0.969,
+          "recall": 0.508,
+          "f1": 0.667
+        },
+        "default_rule": {
+          "accuracy": 0.511,
+          "precision": 0.126,
+          "recall": 0.443,
+          "f1": 0.196
+        },
+        "climatology": {
+          "accuracy": 0.865,
+          "precision": null,
+          "recall": 0.0,
+          "f1": null
+        }
+      }
+    },
+    "2025": {
+      "n": 443,
+      "positive_rate": 0.093,
+      "auc": {
+        "survey_logit": 0.889,
+        "climatology": 0.768,
+        "default_rule": 0.508,
+        "persistence": 0.788
+      },
+      "within_round_auc": {
+        "survey_logit": 0.814,
+        "climatology": 0.5,
+        "default_rule": 0.367,
+        "persistence": 0.712
+      },
+      "brier": {
+        "survey_logit": 0.0487,
+        "climatology": 0.0809
+      },
+      "classification": {
+        "survey_logit": {
+          "accuracy": 0.948,
+          "precision": 0.846,
+          "recall": 0.537,
+          "f1": 0.657
+        },
+        "default_rule": {
+          "accuracy": 0.47,
+          "precision": 0.092,
+          "recall": 0.537,
+          "f1": 0.158
+        },
+        "climatology": {
+          "accuracy": 0.907,
+          "precision": null,
+          "recall": 0.0,
+          "f1": null
+        }
+      }
+    }
+  },
+  "note": "AUC 1.0=완벽, 0.5=무작위. '같은 회차 변별력'은 같은 조사일의 시군끼리 비교한 AUC로, 계절(시기) 효과를 뺀 성능입니다."
+}

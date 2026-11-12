@@ -99,6 +99,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--train", default="2015-2022")
     ap.add_argument("--test", default="2023-2025")
     ap.add_argument("--export", action="store_true", help="variants(survey_rf/xgb/ens) 파일과 eval.json 갱신")
+    ap.add_argument("--static", choices=["none", "terrain"], default="none",
+                    help="RF·XGBoost에 정적 피처 추가(terrain = 시군 재배지 지형 sgg_*, pipeline/terrain.py)")
     args = ap.parse_args(argv)
 
     import joblib
@@ -107,7 +109,10 @@ def main(argv: list[str] | None = None) -> int:
     from xgboost import XGBClassifier
 
     train_years, test_years = _years(args.train), _years(args.test)
-    samples, skipped = build_samples(args.pest, train_years, test_years, FEATS_HIST)
+    from .terrain import SGG_COLS
+
+    feats = FEATS_HIST + ([f"sgg_{c}" for c in SGG_COLS if c != "elev_mean"] if args.static == "terrain" else [])
+    samples, skipped = build_samples(args.pest, train_years, test_years, feats)
     tr = [s for s in samples if s["year"] in train_years]
     te = [s for s in samples if s["year"] in test_years]
 
@@ -184,7 +189,7 @@ def main(argv: list[str] | None = None) -> int:
     result = {
         "pest_id": args.pest, "generated": date.today().isoformat(),
         "target": "시군구 예찰 조사값 > 0 (발생)", "train_years": args.train, "test_years": args.test,
-        "threshold": THRESHOLD, "features": FEATS_HIST, "n_sigungu": len({s["sigungu"] for s in samples}),
+        "threshold": THRESHOLD, "features": feats, "static": args.static, "n_sigungu": len({s["sigungu"] for s in samples}),
         "skipped": skipped,
         "hyperparams": {"rf": rf_best, "xgb": xgb_best,
                         "rf_cv_logloss": {str(g["min_samples_leaf"]): round(v, 4) for v, g in rf_scores},
@@ -202,7 +207,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"저장: {out}")
 
     if args.export:
-        export(vdir, result, rf, xgb, fill.tolist(), joblib)
+        export(vdir, result, rf, xgb, fill.tolist(), joblib, feats)
     return 0
 
 
@@ -235,7 +240,7 @@ ALGO = {
 }
 
 
-def export(vdir: Path, result: dict, rf, xgb, fill: list[float], joblib) -> None:
+def export(vdir: Path, result: dict, rf, xgb, fill: list[float], joblib, feats: list[str] | None = None) -> None:
     import sklearn
     import xgboost
 
@@ -244,7 +249,7 @@ def export(vdir: Path, result: dict, rf, xgb, fill: list[float], joblib) -> None
     (vdir / "survey_xgb").mkdir(parents=True, exist_ok=True)
     joblib.dump(rf, vdir / "survey_rf" / "model.joblib", compress=3)
     xgb.get_booster().save_model(str(vdir / "survey_xgb" / "model.ubj"))
-    common = {"window_days": WINDOW_DAYS, "features": FEATS_HIST, "fill": [round(v, 4) for v in fill], "threshold_note": "확률×100 = 위험지수"}
+    common = {"window_days": WINDOW_DAYS, "features": feats or FEATS_HIST, "fill": [round(v, 4) for v in fill], "threshold_note": "확률×100 = 위험지수"}
     hp = result["hyperparams"]
     updates = {
         "survey_rf": {**common, "algorithm": "random_forest", "artifact": "model.joblib", "hyperparams": hp["rf"],

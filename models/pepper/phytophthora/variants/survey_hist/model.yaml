@@ -1,0 +1,89 @@
+id: pepper_phytophthora__survey_hist
+pest_id: pepper_phytophthora
+name_ko: 고추 역병
+name_sci: Phytophthora capsici
+crop: pepper
+kind: disease
+type: C
+version: 0.1.0
+horizon_days: 7
+season:
+  start_month: 6
+  end_month: 8
+inputs:
+- tavg
+- tmin
+- rh
+- rain
+- lwd_hours(결로시간 관측)
+- NCPMS 최신 예찰값(시군 피해주율)
+label: 로지스틱 회귀(예찰+기상)
+description: 예찰 학습형에 '그 시군의 가장 최근 예찰 조사값'을 더한 모델. 직전 회차에 발생한 시군은 다음에도 발생할 가능성이 높다는
+  점을 반영합니다. 지점 시군에 예찰이 없으면 가장 가까운 예찰 시군의 값을 씁니다.
+logic: 기상 피처 10개 + 최근 예찰값 log(1+피해주율)을 표준화해 가중합 → 로지스틱 확률. 예찰값은 매일 배치 때 NCPMS(SVC51~53)에서
+  올해 회차를 받아, 그날 이전 가장 최근 회차 값을 씁니다(첫 회차 전에는 0). 2023~2025년(학습에 쓰지 않은 해) 검증에서 같은 시기
+  시군 간 변별력이 기상만 쓴 모델보다 크게 높습니다(검증 탭).
+params:
+  window_days: 150
+  bias: -1.9816
+  features:
+  - name: tavg_14d
+    center: 23.399
+    scale: 2.823
+    weight: 0.3791
+  - name: rh_14d
+    center: 79.436
+    scale: 8.521
+    weight: 0.386
+  - name: rain_14d
+    center: 86.444
+    scale: 145.65
+    weight: -0.0542
+  - name: rain_days_14d
+    center: 4.385
+    scale: 2.552
+    weight: -0.1144
+  - name: lwd_14d
+    center: 5.526
+    scale: 4.265
+    weight: -0.1243
+  - name: lwd_30d
+    center: 5.304
+    scale: 3.973
+    weight: 0.2485
+  - name: tmin_7d
+    center: 19.088
+    scale: 3.613
+    weight: -0.0858
+  - name: rain_days_season
+    center: 16.003
+    scale: 12.746
+    weight: 0.3617
+  - name: wet_warm_days_season
+    center: 13.134
+    scale: 11.768
+    weight: -0.3801
+  - name: doy
+    center: 204.384
+    scale: 33.657
+    weight: 0.5425
+  - name: prev_survey_log
+    center: 0.078
+    scale: 0.345
+    weight: 0.7971
+  survey:
+    kncr: VC011205
+    examin: '01320'
+    predictn: 00209
+    item: 역병
+references:
+- '학습 자료: NCPMS 병해충 예찰 OpenAPI(SVC51~53) 노지고추 ''역병(피해주율)'' 시군구 조사값 2015~2025 (scripts/fetch_survey.py)'
+- '기상 자료: 국립농업과학원 농업기상 기본 관측데이터 V3(공공데이터포털 15078057) 일자료, 관측지점 상세정보(15073274) 설치 주소로
+  같은 시군 관측소를 짝지어 평균 (scripts/fetch_weather_all.py)'
+- '학습·검증 절차: pipeline/survey_train.py — 학습 2015~2022, 시험 2023~2025, 결과 data/survey/eval_pepper_phytophthora_survey.json'
+- '운영 입력: NCPMS 병해충 예찰 OpenAPI 올해 회차(pipeline/survey_live.py), 지점↔예찰 시군 짝짓기와 가까운 시군
+  대체(pipeline/regions.py)'
+owner: ''
+status: draft
+ncpms_key: ''
+ncpms_kind: sick

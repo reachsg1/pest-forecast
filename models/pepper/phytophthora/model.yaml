@@ -46,3 +46,5 @@ status: draft
 ncpms_key: ''
 ncpms_kind: sick
 label: 감염조건형
+# 화면 기본 모델: 예찰 검증(2023~2025)에서 앙상블이 규칙형(AUC 0.5 안팎)보다 크게 우수 — 규칙형은 비교용으로 남김
+default_variant: survey_ens

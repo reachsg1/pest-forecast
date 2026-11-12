@@ -1,0 +1,94 @@
+pest_id: pepper_phytophthora
+name_ko: 고추 역병
+name_sci: Phytophthora capsici
+crop: pepper
+kind: disease
+id: pepper_phytophthora__survey_xgb
+type: D
+version: 0.1.0
+horizon_days: 7
+season:
+  start_month: 6
+  end_month: 8
+inputs:
+- tavg
+- tmin
+- rh
+- rain
+- lwd_hours(결로시간 관측)
+- NCPMS 최신 예찰값(시군 피해주율)
+label: XGBoost
+description: 기상 피처와 최근 예찰값으로 학습한 XGBoost(그래디언트 부스팅 결정나무). 앞선 나무가 틀린 부분을 다음 나무가 보완하며
+  쌓는 방식입니다.
+logic: NCPMS 노지고추 역병 예찰(2015~2022)로 학습. 깊이·나무 수는 학습 연도 교차검증으로 선택(시험 연도 미사용). 확률×100
+  = 위험지수.
+params:
+  window_days: 150
+  features:
+  - tavg_14d
+  - rh_14d
+  - rain_14d
+  - rain_days_14d
+  - lwd_14d
+  - lwd_30d
+  - tmin_7d
+  - rain_days_season
+  - wet_warm_days_season
+  - doy
+  - prev_survey_log
+  - sgg_elev_gentle
+  - sgg_tpi_1k_gentle
+  - sgg_tpi_4k_gentle
+  - sgg_dist_sea_km_gentle
+  - sgg_gentle_share
+  - sgg_steep_share
+  - sgg_relief_5k_mean
+  - sgg_northness_mean
+  fill:
+  - 23.3987
+  - 79.4355
+  - 86.4443
+  - 4.3853
+  - 5.5264
+  - 5.3043
+  - 19.0884
+  - 16.0026
+  - 13.1337
+  - 204.3838
+  - 0.0782
+  - 147.1394
+  - -5.361
+  - -24.8459
+  - 46.4685
+  - 0.445
+  - 0.2522
+  - 370.4349
+  - -0.0082
+  threshold_note: 확률×100 = 위험지수
+  algorithm: xgboost
+  artifact: model.ubj
+  hyperparams:
+    n_estimators: 200
+    max_depth: 3
+    learning_rate: 0.05
+    subsample: 0.8
+    colsample_bytree: 0.8
+    min_child_weight: 5
+  library: xgboost 3.4.1
+  survey:
+    kncr: VC011205
+    examin: '01320'
+    predictn: 00209
+    item: 역병
+references:
+- '학습 자료: NCPMS 병해충 예찰 OpenAPI(SVC51~53) 노지고추 ''역병(피해주율)'' 시군구 조사값 2015~2025 (scripts/fetch_survey.py)'
+- '기상 자료: 국립농업과학원 농업기상 기본 관측데이터 V3(공공데이터포털 15078057) 일자료, 관측지점 상세정보(15073274) 설치 주소로
+  같은 시군 관측소를 짝지어 평균 (scripts/fetch_weather_all.py)'
+- '학습·검증 절차: pipeline/survey_train.py — 학습 2015~2022, 시험 2023~2025, 결과 data/survey/eval_pepper_phytophthora_survey.json'
+- '운영 입력: NCPMS 병해충 예찰 OpenAPI 올해 회차(pipeline/survey_live.py), 지점↔예찰 시군 짝짓기와 가까운 시군
+  대체(pipeline/regions.py)'
+- '알고리즘: XGBoost XGBClassifier(학습 파일 model.ubj)'
+owner: ''
+status: draft
+ncpms_key: ''
+ncpms_kind: sick
