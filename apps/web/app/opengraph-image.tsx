@@ -1,74 +1,19 @@
 import { ImageResponse } from "next/og";
 import { promises as fs } from "fs";
 import path from "path";
-import { getPests, getSummary } from "@/lib/data";
-import { pestFullName } from "@/lib/grades";
-import { outlook, seasonRecaps } from "@/lib/home";
-import { MAP_H, MAP_W, featurePath, idxColor, obsColor, p90 } from "@/lib/mapColor";
-import { assignSpots, sggValues, type SggGeo } from "@/lib/sgg";
-import type { Grade, RiskFile } from "@/lib/types";
+import { MAP_H, MAP_W, featurePath } from "@/lib/mapColor";
+import { todayMap } from "@/lib/todayMap";
 
-// 카카오톡·메신저 링크 미리보기 그림(1200×630). 매일 배치 커밋 → 재배포 때 다시 만든다.
+// 카카오톡·메신저 링크 미리보기 그림(1200×630). 매일 배치 커밋 → 재배포 때 다시 만든다. 내용은 lib/todayMap(로그인 화면 맛보기와 같음).
 export const alt = "병해충 발생 예측 — 오늘의 위험 지도";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const PUB = path.join(process.cwd(), "public");
-const read = async <T,>(rel: string): Promise<T | null> => {
-  try {
-    return JSON.parse(await fs.readFile(path.join(PUB, rel), "utf-8")) as T;
-  } catch {
-    return null;
-  }
-};
-const ALERT: Grade[] = ["주의보", "경보"];
-
 export default async function OgImage() {
-  const [summary, pests, geo, font] = await Promise.all([
-    getSummary(),
-    getPests(),
-    read<SggGeo>("geo/sigungu.json"),
+  const [{ eyebrow, title, sub, geo, colors }, font] = await Promise.all([
+    todayMap(),
     fs.readFile(path.join(process.cwd(), "assets", "Pretendard-Bold.ttf")),
   ]);
-
-  let eyebrow = "병해충 발생 예측";
-  let title: string[] = ["오늘의 병해충", "발생 위험"];
-  let sub = "농업기상으로 매일 계산하는 시군별 병해충 위험도";
-  let colors = new Map<string, string>();
-
-  if (summary) {
-    const inSeason = summary.pests.some((p) => (p.n_applicable ?? 0) > 0);
-    const date = summary.issued_date.replace(/^(\d{4})-(\d{2})-(\d{2})$/, (_, y, m, d) => `${y}.${Number(m)}.${Number(d)}.`);
-    if (inSeason) {
-      const alerting = summary.pests.filter((p) => ALERT.some((g) => (p.grade_counts[g] ?? 0) > 0));
-      const n = (await outlook(summary)).todayAlert; // 병해충이 겹쳐도 한 곳으로 센 관측지점 수
-      eyebrow = `${date} 병해충 위험도`;
-      title = n > 0 ? ["오늘 주의보 이상", `${n}곳`] : ["오늘은 주의보 이상인", "곳이 없어요"];
-      sub = alerting.length ? alerting.slice(0, 3).map((p) => pestFullName(p.crop_ko, p.name_ko)).join(" · ") : "앞으로 7일 전망과 내 농장 위험도를 확인하세요";
-      const lead = alerting[0] ?? summary.pests.find((p) => (p.n_applicable ?? 0) > 0);
-      const r = lead ? await read<RiskFile>(`data/risk/${lead.pest_id}.json`) : null;
-      if (geo && r) {
-        const vals = sggValues(geo, assignSpots(geo, r.spots), new Map(r.spots.map((s) => [s.spot_code, { name: s.name, index: s.index_today }])));
-        colors = new Map(vals.map((v) => [v.key, idxColor(v.idx, "rgba(255,255,255,0.08)")]));
-      }
-    } else {
-      const recaps = await seasonRecaps(pests);
-      const lead = recaps.sort((a, b) => b.sggOcc - a.sggOcc)[0];
-      if (lead) {
-        eyebrow = `${lead.year} 시즌 돌아보기 · NCPMS 예찰`;
-        title = [`올해 ${pestFullName(lead.crop_ko, lead.name_ko)},`, `조사 시군 ${Math.round(lead.sggOcc * 100)}%에서 발생`];
-        sub = lead.normal != null ? `평년 ${Math.round(lead.normal * 100)}% · 가장 심했던 곳 ${lead.top[0]?.sigungu.split(" ").slice(1).join(" ")} ${lead.top[0]?.max}%` : "";
-        const v = await read<{ rounds: { date: string; rows: [string, number][] }[] }>(`data/surveyview/${lead.pest_id}.json`);
-        if (v) {
-          const rounds = v.rounds.filter((x) => x.date.startsWith(String(lead.year)));
-          const max = new Map<string, number>();
-          rounds.forEach((x) => x.rows.forEach(([k, val]) => max.set(k, Math.max(max.get(k) ?? 0, val))));
-          const vmax = p90(Array.from(max.values()));
-          colors = new Map(Array.from(max.entries()).map(([k, val]) => [k, obsColor(val, vmax, "rgba(255,255,255,0.08)")]));
-        }
-      }
-    }
-  }
 
   return new ImageResponse(
     (

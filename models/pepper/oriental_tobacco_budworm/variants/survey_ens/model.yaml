@@ -17,6 +17,7 @@ inputs:
 - rain
 - lwd_hours(결로시간 관측)
 - NCPMS 최신 예찰값(시군 피해과율)
+- 기상청 ASOS 일조·일사·바람 등(가장 가까운 지점)
 label: 앙상블(3개 모델 평균)
 description: 로지스틱 회귀·Random Forest·XGBoost 세 모델의 위험지수를 평균한 종합 판단입니다. 한 모델이 튀어도 영향을
   줄여 가장 안정적입니다.
@@ -34,6 +35,8 @@ references:
 - '학습·검증 절차: pipeline/survey_train.py — 학습 2015~2022, 시험 2023~2025, 결과 data/survey/eval_pepper_oriental_tobacco_budworm_survey.json'
 - '운영 입력: NCPMS 병해충 예찰 OpenAPI 올해 회차(pipeline/survey_live.py), 지점↔예찰 시군 짝짓기와 가까운 시군
   대체(pipeline/regions.py)'
+- '기상청 ASOS 새 항목(a_*: 일조·일사·강수 지속시간·풍속·이슬점·구름양·최저습도·습한 날): 공공데이터포털 기상청_지상(종관, ASOS)
+  일자료 조회서비스, 예찰 시군(학습)·지점 시군(배치)에서 가장 가까운 ASOS 시군의 전날까지 값(pipeline/asos.py, 검증 docs/asos-analysis.md)'
 owner: ''
 status: draft
 ncpms_key: ''

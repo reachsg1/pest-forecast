@@ -178,5 +178,54 @@
     "subsample": 0.8,
     "colsample_bytree": 0.8,
     "min_child_weight": 5
+  },
+  "importance": {
+    "basis": "gain(XGBoost)",
+    "values": [
+      {
+        "feature": "prev_survey_log",
+        "share": 0.5946
+      },
+      {
+        "feature": "doy",
+        "share": 0.1279
+      },
+      {
+        "feature": "rain_days_season",
+        "share": 0.0843
+      },
+      {
+        "feature": "wet_warm_days_season",
+        "share": 0.0383
+      },
+      {
+        "feature": "rh_14d",
+        "share": 0.0285
+      },
+      {
+        "feature": "tavg_14d",
+        "share": 0.0269
+      },
+      {
+        "feature": "tmin_7d",
+        "share": 0.0234
+      },
+      {
+        "feature": "lwd_30d",
+        "share": 0.0207
+      },
+      {
+        "feature": "rain_days_14d",
+        "share": 0.0197
+      },
+      {
+        "feature": "lwd_14d",
+        "share": 0.0182
+      },
+      {
+        "feature": "rain_14d",
+        "share": 0.0176
+      }
+    ]
   }
 }

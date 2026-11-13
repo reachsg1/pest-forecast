@@ -17,6 +17,7 @@ inputs:
 - rain
 - lwd_hours(결로시간 관측)
 - NCPMS 최신 예찰값(시군 피해주율)
+- 기상청 ASOS 일조·일사·바람 등(가장 가까운 지점)
 label: XGBoost
 description: 기상 피처와 최근 예찰값으로 학습한 XGBoost(그래디언트 부스팅 결정나무). 앞선 나무가 틀린 부분을 다음 나무가 보완하며
   쌓는 방식입니다.
@@ -44,6 +45,15 @@ params:
   - sgg_steep_share
   - sgg_relief_5k_mean
   - sgg_northness_mean
+  - a_sun_14d
+  - a_rad_14d
+  - a_rndur_14d
+  - a_wind_14d
+  - a_td_14d
+  - a_cloud_14d
+  - a_rhmin_14d
+  - a_humid_days_14d
+  - a_rndur_season
   fill:
   - 23.3987
   - 79.4355
@@ -64,6 +74,15 @@ params:
   - 0.2522
   - 370.4349
   - -0.0082
+  - 6.1234
+  - 17.1353
+  - 34.5571
+  - 1.6312
+  - 18.5238
+  - 6.3618
+  - 53.7571
+  - 3.8745
+  - 95.4527
   threshold_note: 확률×100 = 위험지수
   algorithm: xgboost
   artifact: model.ubj
@@ -88,6 +107,8 @@ references:
 - '운영 입력: NCPMS 병해충 예찰 OpenAPI 올해 회차(pipeline/survey_live.py), 지점↔예찰 시군 짝짓기와 가까운 시군
   대체(pipeline/regions.py)'
 - '알고리즘: XGBoost XGBClassifier(학습 파일 model.ubj)'
+- '기상청 ASOS 새 항목(a_*: 일조·일사·강수 지속시간·풍속·이슬점·구름양·최저습도·습한 날): 공공데이터포털 기상청_지상(종관, ASOS)
+  일자료 조회서비스, 예찰 시군(학습)·지점 시군(배치)에서 가장 가까운 ASOS 시군의 전날까지 값(pipeline/asos.py, 검증 docs/asos-analysis.md)'
 owner: ''
 status: draft
 ncpms_key: ''

@@ -1,13 +1,15 @@
 {
   "model_id": "pepper_phytophthora__survey_hist",
   "version": "0.1.0",
-  "evaluated_at": "2026-11-12",
+  "evaluated_at": "2026-11-13",
   "status": "survey_evaluated",
   "uses_survey": true,
   "algorithm": "로지스틱 회귀",
   "method": "연도 분리 검증: 학습 2015-2022, 시험 2023-2025. 정답 = 시군구 예찰값 > 0. 정확도·정밀도·재현율은 위험지수 50(주의보) 이상을 '발생'으로 볼 때.",
   "n_sigungu": 72,
-  "skipped": {},
+  "skipped": {
+    "좌표 없음": 469
+  },
   "test": {
     "n": 1241,
     "positive_rate": 0.109,

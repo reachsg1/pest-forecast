@@ -9,12 +9,8 @@
 from __future__ import annotations
 
 import argparse
-import csv
 import json
 import sys
-import time
-import urllib.parse
-import urllib.request
 from datetime import date, timedelta
 from pathlib import Path
 
@@ -22,33 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from pipeline import config  # noqa: E402
 
-URL = "http://apis.data.go.kr/1360000/AsosDalyInfoService/getWthrDataList"
-CACHE = config.CACHE_DIR / "asos" / "daily"
-
-
-def stations() -> list[dict]:
-    with (config.DATA_DIR / "reference" / "asos_stations.csv").open(encoding="utf-8") as f:
-        return list(csv.DictReader(f))
-
-
-def fetch_year(key: str, stn: str, year: int) -> list[dict]:
-    end = min(date(year, 12, 31), date.today() - timedelta(days=1))
-    q = urllib.parse.urlencode({"serviceKey": key, "pageNo": 1, "numOfRows": 400, "dataType": "JSON", "dataCd": "ASOS", "dateCd": "DAY",
-                                "startDt": f"{year}0101", "endDt": end.strftime("%Y%m%d"), "stnIds": stn})
-    for attempt in range(3):
-        try:
-            d = json.loads(urllib.request.urlopen(f"{URL}?{q}", timeout=60).read().decode("utf-8"))
-            h = d["response"]["header"]
-            if h["resultCode"] == "03":  # NO_DATA
-                return []
-            if h["resultCode"] != "00":
-                raise RuntimeError(h["resultMsg"])
-            return d["response"]["body"]["items"]["item"] or []
-        except Exception as e:  # noqa: BLE001
-            if attempt == 2:
-                raise RuntimeError(f"{stn} {year}: {type(e).__name__}") from None
-            time.sleep(2)
-    return []
+from pipeline.asos import CACHE, fetch_year, stations  # noqa: E402,F401
 
 
 def main(argv: list[str] | None = None) -> int:

@@ -13,11 +13,11 @@ from . import config, terrain
 from .phenology import OK, Phenology, SpotCrop
 
 
-def _accepts_site(model) -> bool:
+def _accepts(model, name: str) -> bool:
     import inspect
 
     try:
-        return "site" in inspect.signature(model.predict).parameters
+        return name in inspect.signature(model.predict).parameters
     except (TypeError, ValueError):
         return False
 
@@ -34,6 +34,7 @@ def run_all(
     phenology: Phenology | None = None,
     assessments: dict[tuple[str, str], SpotCrop] | None = None,
     survey_history: dict[str, dict[str, list]] | None = None,
+    daily_extra: dict[str, dict[date, dict]] | None = None,
 ) -> list[dict]:
     """반환 행: spot_code, pest_id, model_id, model_version, issued_date, target_date,
     offset_days(음수=과거), index, grade, is_forecast, inputs, na_reason, raw_index
@@ -42,6 +43,7 @@ def run_all(
     na_reason(not_grown | off_season)을 채운다. raw_index는 검증·디버깅용 원래 모델 값이다.
     assessments가 주어지면 (spot_code, crop)별 판정 결과를 거기에 기록한다.
     survey_history[model_id][spot_code]는 예찰 이력(pipeline/survey_live.py)으로, 예찰값을 쓰는 모델에 넘긴다.
+    daily_extra[spot_code][날짜]는 날짜별 추가 피처(ASOS a_, pipeline/asos.py)로, 받을 수 있는 모델(daily_extra 인자)에 넘긴다.
     """
     models = list(models)
     rows: list[dict] = []
@@ -62,7 +64,12 @@ def run_all(
             try:
                 hist = (survey_history or {}).get(lm.id)
                 h = hist.get(code, []) if hist is not None else None
-                pts = lm.model.predict(wx, h, site=site) if _accepts_site(lm.model) else lm.model.predict(wx, h)
+                kw = {}
+                if _accepts(lm.model, "site"):
+                    kw["site"] = site
+                if daily_extra is not None and _accepts(lm.model, "daily_extra"):
+                    kw["daily_extra"] = daily_extra.get(code)
+                pts = lm.model.predict(wx, h, **kw)
             except Exception as e:  # noqa: BLE001
                 log.exception("모델 %s 지점 %s 실패: %s", lm.id, code, e)
                 continue

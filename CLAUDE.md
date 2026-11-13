@@ -40,7 +40,8 @@ python scripts/fetch_weather_all.py --years 2015-2025 --months 4-9   # 전국 �
 python scripts/fetch_survey.py --crop VC011205 --examin 01320 --item 탄저병 --pest pepper_anthracnose  # NCPMS 시군구 예찰
 python -m pipeline.survey_train --pest pepper_anthracnose [--with-history] [--export <variant 폴더>]   # 예찰 학습형 학습·연도 분리 검증
 python scripts/fetch_sigungu_centroids.py                # 시군 대표 좌표(가까운 시군 대체용)
-python -m pipeline.survey_ml --pest pepper_anthracnose --export [--static terrain]   # 로지스틱·RF·XGBoost·앙상블 비교·내보내기(학습 파일 갱신)
+python -m pipeline.survey_ml --pest pepper_anthracnose --export [--static terrain] [--asos]   # 로지스틱·RF·XGBoost·앙상블 비교·내보내기(학습 파일 갱신). --asos = 기상청 ASOS 새 항목(고추 역병·담배나방 배포 모델이 사용 — 다시 내보낼 때 꼭 붙일 것)
+python scripts/fetch_asos.py --years 2015-2026             # ASOS 일자료 캐시(학습용, 배치는 pipeline/asos.py가 올해분만 매일 받음)
 python scripts/scaffold_survey_variants.py --pest <pest> --item <예찰 항목> --unit <단위>   # 예찰 학습형 variants 뼈대
 python scripts/backfill_survey.py --max-calls 700        # NCPMS 예찰 백필(매일 Actions survey-backfill.yml)
 python scripts/build_control_info.py                     # 방제 요령·등록 농약(data/control)

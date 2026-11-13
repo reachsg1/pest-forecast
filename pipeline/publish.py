@@ -62,6 +62,7 @@ def publish(
     assessments: dict[tuple[str, str], Any] | None = None,
     phenology_info: dict[str, Any] | None = None,
     survey_info: dict[str, Any] | None = None,
+    asos_info: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     assessments = assessments or {}
     config.ensure_dirs()
@@ -313,6 +314,7 @@ def publish(
         "grades": [{"name": g[0], "min": g[1], "max": g[2]} for g in GRADES],
         "phenology": phenology_info or {},
         "survey": {mid: {k: v for k, v in inf.items() if k != "spots"} for mid, inf in (survey_info or {}).items()},
+        **({"asos": asos_info} if asos_info else {}),
     }
     _dump(web / "status.json", status)
 

@@ -13,7 +13,7 @@ const NAV = [
 ];
 // 관리자 코드로 들어온 경우만 보인다(미들웨어가 경로도 막음)
 const ADMIN_NAV = [
-  { href: "/data", label: "데이터 내려받기" },
+  { href: "/data", label: "데이터 명세" },
   { href: "/about", label: "모델 검증" },
 ];
 

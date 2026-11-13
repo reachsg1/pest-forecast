@@ -47,6 +47,7 @@ export interface EvalSummary {
   test_by_year?: Record<string, SurveyEvalBlock>;
   with_history_reference?: { note: string; test: SurveyEvalBlock };
   uses_survey?: boolean; // 최근 예찰값을 입력으로 쓰는 모델
+  importance?: { basis: string; values: { feature: string; share: number }[] }; // RF·XGBoost 변수 중요도(합 1)
   algorithm?: string;
   substituted?: { n: number; n_sigungu: number; max_km: number };
   years?: Record<

@@ -8,6 +8,8 @@ model.yaml params:
     window_days: 150
     survey: {kncr, examin, item}          (prev_survey_log 피처를 쓰면 배치가 예찰 이력을 history로 넘긴다)
 
+a_ 로 시작하는 피처(기상청 ASOS 새 항목, pipeline/asos.py)는 배치가 날짜별 값(daily_extra)으로 넘긴다. 없으면 fill 값.
+
 피처 계산은 models._base.stat.compute_features 와 같고, prev_survey_log 는 StatModel 과 같은 규칙
 (그날 이전·같은 해 최신 예찰값, 아직 조사 전이면 0)이다. 위험지수 = 발생 확률 × 100.
 """
@@ -51,7 +53,8 @@ class MLModel(BaseModel):
             raise ValueError(f"알 수 없는 algorithm: {algo}")
         return self._model
 
-    def predict(self, weather: Sequence[DailyWeather], history: Optional[list] = None, site: Optional[dict] = None) -> list[RiskPoint]:
+    def predict(self, weather: Sequence[DailyWeather], history: Optional[list] = None, site: Optional[dict] = None,
+                daily_extra: Optional[dict] = None) -> list[RiskPoint]:
         import numpy as np
 
         names: list[str] = list(self.params.get("features", []))
@@ -65,6 +68,8 @@ class MLModel(BaseModel):
             feats = compute_features(seq[max(0, i - n + 1): i + 1])
             if site:
                 feats.update(site)  # 지형 등 정적 피처(site_·sgg_)
+            if daily_extra and w.date in daily_extra:
+                feats.update(daily_extra[w.date])  # 날짜별 추가 피처(ASOS a_)
             ref = survey_asof(history, w.date)
             feats["prev_survey_log"] = math.log1p(max(0.0, float(ref["value"]))) if ref else 0.0
             x = []
@@ -73,6 +78,8 @@ class MLModel(BaseModel):
                 x.append(fill[j] if v is None or (isinstance(v, float) and math.isnan(v)) else float(v))
             rows.append(x)
             d = {k: round(feats[k], 1) for k in EXPLAIN if isinstance(feats.get(k), float) and not math.isnan(feats[k])}
+            if any(k.startswith("a_") for k in names) and not (daily_extra and w.date in daily_extra):
+                d["asos_missing"] = True
             if "prev_survey_log" in names:
                 if history is None:
                     d["survey_missing"] = True

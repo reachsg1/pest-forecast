@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import ModelFeatures from "@/components/ModelFeatures";
 import { PageHeader } from "@/components/ui";
 import { getPests, getStatus } from "@/lib/data";
 
-export const metadata: Metadata = { title: "데이터 내려받기" };
+export const metadata: Metadata = { title: "데이터 명세" };
 
 const ENDPOINTS = [
   { m: "GET", p: "/api/v1/status", d: "배치 상태(기준일, 지점·모델 수, 결측률, 경고)" },
@@ -29,10 +30,17 @@ export default async function DataPage() {
   return (
     <div className="max-w-5xl space-y-8">
       <PageHeader
-        eyebrow="Open API"
-        title="데이터 내려받기 · API"
-        desc="예측 결과를 JSON으로 재개방합니다. 인증 없이 사용할 수 있으며(1단계), 응답은 1시간 캐시됩니다. 공공누리 제1유형(출처표시)으로 이용하세요."
+        eyebrow="관리자"
+        title="데이터 명세"
+        desc="모델이 어떤 자료로 무엇을 계산하는지(입력 변수·출처·중요도), 결과를 가져가는 API를 한곳에 정리했어요."
       />
+
+      <ModelFeatures pests={pests} />
+
+      <div className="border-t border-slate-200 pt-6">
+        <h2 className="text-lg font-bold tracking-tight text-slate-900">결과 API</h2>
+        <p className="mt-1 text-sm text-slate-500">예측 결과를 JSON으로 제공해요. 응답은 1시간 캐시되고, 공공누리 제1유형(출처표시)으로 이용할 수 있어요.</p>
+      </div>
 
       <section className="card overflow-hidden">
         <h2 className="section-title px-5 pt-5 sm:px-6">엔드포인트</h2>

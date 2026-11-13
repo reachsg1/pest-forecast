@@ -175,5 +175,54 @@
     "n_estimators": 500,
     "min_samples_leaf": 20,
     "max_features": "sqrt"
+  },
+  "importance": {
+    "basis": "불순도 감소(RF)",
+    "values": [
+      {
+        "feature": "prev_survey_log",
+        "share": 0.4188
+      },
+      {
+        "feature": "doy",
+        "share": 0.1781
+      },
+      {
+        "feature": "rain_days_season",
+        "share": 0.1267
+      },
+      {
+        "feature": "wet_warm_days_season",
+        "share": 0.103
+      },
+      {
+        "feature": "rh_14d",
+        "share": 0.0462
+      },
+      {
+        "feature": "tavg_14d",
+        "share": 0.038
+      },
+      {
+        "feature": "tmin_7d",
+        "share": 0.0278
+      },
+      {
+        "feature": "lwd_30d",
+        "share": 0.0249
+      },
+      {
+        "feature": "lwd_14d",
+        "share": 0.0153
+      },
+      {
+        "feature": "rain_14d",
+        "share": 0.014
+      },
+      {
+        "feature": "rain_days_14d",
+        "share": 0.0072
+      }
+    ]
   }
 }

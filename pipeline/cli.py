@@ -114,6 +114,29 @@ def _live_weather(spots: list[dict], issued: date, horizon: int, warnings: list[
     return out
 
 
+def _asos_extra(models, spots: list[dict], issued: date, horizon: int, mode: str, warnings: list[str]):
+    """ASOS 피처(a_)를 쓰는 모델이 있으면 기상청 ASOS 일자료를 전날까지 받아 지점별 날짜 피처를 만든다.
+    데모·실패 때는 None — 모델은 학습 평균(fill)으로 계산하고 경고를 남긴다."""
+    from pipeline import asos
+
+    users = [m.id for m in models if asos.uses_asos(m.card.params.get("features", []) or [])]
+    if not users:
+        return None, None
+    if mode != "live":
+        warnings.append(f"데모 실행: ASOS 피처는 학습 평균으로 채움({len(users)}개 모델)")
+        return None, None
+    try:
+        asos.refresh(config.data_go_kr_key(), issued, warnings)
+        start = issued - timedelta(days=config.HISTORY_DAYS_SHOWN)
+        extra, info = asos.for_spots(spots, issued, start, issued + timedelta(days=horizon))
+        if not info["n_spots"]:
+            warnings.append("ASOS 피처를 만든 지점이 없어 학습 평균으로 채움")
+        return extra, {**info, "models": users}
+    except Exception as e:  # noqa: BLE001
+        warnings.append(f"ASOS 처리 실패 — 학습 평균으로 채움: {str(e)[:200]}")
+        return None, None
+
+
 def cmd_run(args: argparse.Namespace) -> int:
     issued = _parse_date(args.date)
     horizon = int(args.horizon)
@@ -162,9 +185,11 @@ def cmd_run(args: argparse.Namespace) -> int:
     assessments: dict = {}
     # 예찰값을 쓰는 모델(예찰 학습형 + 직전 예찰)에 지점별 예찰 이력 — 운영은 NCPMS 실시간, 데모는 전년도 실제값
     survey_hist, survey_info = survey_live.build(models, spots, issued, mode, warnings)
-    rows = run_all(spots, filled, models, issued, horizon, phenology=phen, assessments=assessments, survey_history=survey_hist)
+    extra, asos_info = _asos_extra(models, spots, issued, horizon, mode, warnings)
+    rows = run_all(spots, filled, models, issued, horizon, phenology=phen, assessments=assessments, survey_history=survey_hist,
+                   daily_extra=extra)
     status = publish(rows, spots, filled, models, issued, horizon, missing, mode, warnings, assessments=assessments,
-                     phenology_info=phen_info, survey_info=survey_info)
+                     phenology_info=phen_info, survey_info=survey_info, asos_info=asos_info)
     print(json.dumps(status, ensure_ascii=False, indent=1))
     return 0 if status["ok"] else 1
 

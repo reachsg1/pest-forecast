@@ -52,7 +52,6 @@ def main(argv: list[str] | None = None) -> int:
     from xgboost import XGBClassifier
 
     train_years, test_years = _years(args.train), _years(args.test)
-    samples, _ = build_samples(args.pest, train_years, test_years, FEATS_HIST)
     crop, pest = _pest_folder(args.pest)
     vdir = config.MODELS_DIR / crop / pest / "variants"
 
@@ -61,6 +60,14 @@ def main(argv: list[str] | None = None) -> int:
         return yaml.safe_load(p.read_text(encoding="utf-8"))["params"] if p.exists() else None
 
     rf_p, xgb_p = params("survey_rf"), params("survey_xgb")
+    feats = list(rf_p.get("features") or FEATS_HIST)  # 배포 모델과 같은 피처(지형 sgg_·ASOS a_ 포함)
+    samples, _ = build_samples(args.pest, train_years, test_years, feats)
+    from . import asos
+
+    if asos.uses_asos(feats):
+        asos.attach(samples)
+        for s in samples:
+            s["x"] = [s["feats"].get(k, float("nan")) for k in feats]
     rf = joblib.load(vdir / "survey_rf" / rf_p["artifact"])
     xgb = XGBClassifier()
     xgb.load_model(str(vdir / "survey_xgb" / xgb_p["artifact"]))

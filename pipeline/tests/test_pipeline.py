@@ -151,3 +151,29 @@ def test_survey_item_name_normalized_for_2026_prefix():
     assert normalize_item("노지고추 - 탄저병(피해과율)") == "탄저병(피해과율)"
     assert normalize_item("탄저병(피해과율)") == "탄저병(피해과율)"
     assert normalize_item("복숭아순나방붙이(트랩마리수)") == "복숭아순나방붙이(트랩마리수)"
+
+
+def test_asos_features_and_daily_extra_reach_ml_model():
+    """ASOS 피처: 전날까지 자료로 계산(최근 30일 중 25일 미만이면 None), MLModel은 daily_extra 값을 쓰고 없으면 표시한다."""
+    from pipeline import asos
+
+    d0 = date(2026, 7, 31)
+    days = {d0 - timedelta(days=j): {"tavg": 25.0, "tmin": 20.0, "rain": 2.0 if j % 2 else 0.0, "rndur": 3.0, "rh": 90.0, "rhmin": 60.0,
+                                      "wind": 2.0, "td": 21.0, "sun": 5.0, "rad": 15.0, "cloud": 6.0} for j in range(0, 60)}
+    f = asos.features(days, d0)
+    assert f is not None and f["a_sun_14d"] == 5.0 and f["a_rndur_14d"] == 3.0 * 14 and f["a_humid_days_14d"] == 14
+    sparse = {k: v for k, v in days.items() if (d0 - k).days > 10}
+    assert asos.features(sparse, d0) is None
+    assert asos.uses_asos(["tavg_14d", "a_sun_14d"]) and not asos.uses_asos(["tavg_14d"])
+
+    from models._base.registry import discover
+
+    m = next((m for m in discover() if asos.uses_asos(m.card.params.get("features", []) or [])), None)
+    if m is None:
+        return  # ASOS 피처를 쓰는 모델이 아직 없으면 연결 검사만 생략
+    wx = [DailyWeather(date=date(2026, 3, 1) + timedelta(days=i), tavg=24.0, tmin=19.0, tmax=30.0, rh=80.0, rain=1.0, lwd_hours=6.0)
+          for i in range(160)]
+    last = wx[-1].date
+    hi = {last: {k: 0.0 for k in asos.NEW} | {"a_rndur_season": 400.0, "a_humid_days_14d": 14.0}}
+    pts = m.model.predict(wx, [], daily_extra=hi)
+    assert "asos_missing" not in pts[-1].inputs and pts[-2].inputs.get("asos_missing") is True

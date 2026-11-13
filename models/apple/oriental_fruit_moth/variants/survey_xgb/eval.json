@@ -180,5 +180,86 @@
     "subsample": 0.8,
     "colsample_bytree": 0.8,
     "min_child_weight": 5
+  },
+  "importance": {
+    "basis": "gain(XGBoost)",
+    "values": [
+      {
+        "feature": "prev_survey_log",
+        "share": 0.3464
+      },
+      {
+        "feature": "sgg_dist_sea_km_gentle",
+        "share": 0.0674
+      },
+      {
+        "feature": "doy",
+        "share": 0.066
+      },
+      {
+        "feature": "sgg_tpi_1k_gentle",
+        "share": 0.0592
+      },
+      {
+        "feature": "sgg_relief_5k_mean",
+        "share": 0.0482
+      },
+      {
+        "feature": "rain_days_season",
+        "share": 0.0433
+      },
+      {
+        "feature": "sgg_gentle_share",
+        "share": 0.0428
+      },
+      {
+        "feature": "sgg_elev_gentle",
+        "share": 0.0398
+      },
+      {
+        "feature": "sgg_northness_mean",
+        "share": 0.0356
+      },
+      {
+        "feature": "sgg_tpi_4k_gentle",
+        "share": 0.0297
+      },
+      {
+        "feature": "wet_warm_days_season",
+        "share": 0.0292
+      },
+      {
+        "feature": "rh_14d",
+        "share": 0.027
+      },
+      {
+        "feature": "lwd_14d",
+        "share": 0.0264
+      },
+      {
+        "feature": "tavg_14d",
+        "share": 0.0255
+      },
+      {
+        "feature": "lwd_30d",
+        "share": 0.0244
+      },
+      {
+        "feature": "sgg_steep_share",
+        "share": 0.0236
+      },
+      {
+        "feature": "tmin_7d",
+        "share": 0.0233
+      },
+      {
+        "feature": "rain_14d",
+        "share": 0.0219
+      },
+      {
+        "feature": "rain_days_14d",
+        "share": 0.0202
+      }
+    ]
   }
 }

@@ -2,6 +2,7 @@
 # 커밋이 main에 올라가면 Vercel이 자동으로 재배포한다.
 # GitHub 예약 실행은 몇 시간 밀리거나 빠지기도 해서 08:00·11:00·14:00 KST에 예비 실행을 둔다.
 # 예비 실행은 오늘 결과(summary.json issued_date = 오늘)가 이미 있으면 바로 끝낸다(호출 낭비 없음).
+# 고추 3종 학습 모델은 기상청 ASOS 일자료(전날까지)도 쓴다 — 배치가 지점당 1건(약 98건) 받아 data/cache/asos 에 캐시(pipeline/asos.py).
 name: daily-forecast
 
 on:

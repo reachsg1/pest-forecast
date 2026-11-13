@@ -15,89 +15,20 @@
 from __future__ import annotations
 
 import argparse
-import csv
 import json
 import math
-from collections import defaultdict
-from datetime import date, timedelta
+from datetime import date
 from statistics import mean
 
 import numpy as np
 
-from . import config, regions
+from . import asos, config, regions
+from .asos import ALL, DUP, NEW
 from .survey_ml import FEATS_HIST, within_round_auc
 from .survey_train import FEATURES, _years, auc, build_samples
 
-NEW = ["a_sun_14d", "a_rad_14d", "a_rndur_14d", "a_wind_14d", "a_td_14d", "a_cloud_14d", "a_rhmin_14d", "a_humid_days_14d", "a_rndur_season"]
-# 농업기상 피처 ↔ ASOS로 다시 계산한 같은 피처(잎 젖음은 ASOS에 없어 농업기상 유지)
-DUP = {"tavg_14d": "a_tavg_14d", "rh_14d": "a_rh_14d", "rain_14d": "a_rain_14d", "rain_days_14d": "a_rain_days_14d",
-       "tmin_7d": "a_tmin_7d", "rain_days_season": "a_rain_days_season", "wet_warm_days_season": "a_wet_warm_days_season"}
-ALL = NEW + list(DUP.values())
-
-
-def _f(v):
-    try:
-        return float(v) if v not in ("", None) else None
-    except ValueError:
-        return None
-
-
-def load_asos(years: list[int]) -> tuple[dict[str, dict[date, dict]], dict[str, tuple[float, float]]]:
-    """시군 키 → 날짜 → 그 시군 ASOS 지점 평균 값. 시군 위치는 시군 경계 파일의 대표점."""
-    with (config.DATA_DIR / "reference" / "asos_stations.csv").open(encoding="utf-8") as f:
-        st = {r["stn_id"]: r["sgg_key"] for r in csv.DictReader(f) if r["sgg_key"]}
-    geo = json.loads((config.ROOT / "apps" / "web" / "public" / "geo" / "sigungu.json").read_text(encoding="utf-8"))
-    loc = {g["properties"]["key"]: (g["properties"]["lat"], g["properties"]["lon"]) for g in geo["features"]}
-    cols = {"tavg": "avgTa", "tmin": "minTa", "rain": "sumRn", "rndur": "sumRnDur", "rh": "avgRhm", "rhmin": "minRhm",
-            "wind": "avgWs", "td": "avgTd", "sun": "sumSsHr", "rad": "sumGsr", "cloud": "avgTca"}
-    acc: dict[str, dict[date, list[dict]]] = defaultdict(lambda: defaultdict(list))
-    for stn, key in st.items():
-        for y in years:
-            p = config.CACHE_DIR / "asos" / "daily" / stn / f"{y}.json"
-            if not p.exists():
-                continue
-            for r in json.loads(p.read_text(encoding="utf-8")):
-                d = date.fromisoformat(r["tm"])
-                acc[key][d].append({k: _f(r.get(c)) for k, c in cols.items()})
-    out: dict[str, dict[date, dict]] = {}
-    for key, days in acc.items():
-        out[key] = {}
-        for d, rows in days.items():
-            v = {}
-            for k in cols:
-                xs = [r[k] for r in rows if r[k] is not None]
-                v[k] = mean(xs) if xs else None
-            if v["rain"] is None and v["tavg"] is not None:
-                v["rain"] = 0.0  # ASOS 일강수 빈칸 = 비 없음
-            out[key][d] = v
-    return out, {k: loc[k] for k in out if k in loc}
-
-
-def asos_features(days: dict[date, dict], d: date) -> dict[str, float] | None:
-    win = [days[d - timedelta(days=j)] | {"date": d - timedelta(days=j)} for j in range(150, 0, -1) if (d - timedelta(days=j)) in days]
-    last30 = [w for w in win if w["date"] >= d - timedelta(days=30)]
-    if len(last30) < 25:
-        return None
-    l14 = [w for w in win if w["date"] >= d - timedelta(days=14)]
-    l7 = [w for w in win if w["date"] >= d - timedelta(days=7)]
-    season = [w for w in win if w["date"].year == d.year and (w["date"].month, w["date"].day) >= (6, 1)]
-
-    def avg(seq, k):
-        xs = [w[k] for w in seq if w[k] is not None]
-        return mean(xs) if xs else float("nan")
-
-    rain = lambda w: w["rain"] or 0.0  # noqa: E731
-    return {
-        "a_sun_14d": avg(l14, "sun"), "a_rad_14d": avg(l14, "rad"),
-        "a_rndur_14d": float(sum(w["rndur"] or 0.0 for w in l14)), "a_wind_14d": avg(l14, "wind"),
-        "a_td_14d": avg(l14, "td"), "a_cloud_14d": avg(l14, "cloud"), "a_rhmin_14d": avg(l14, "rhmin"),
-        "a_humid_days_14d": float(sum(1 for w in l14 if (w["rh"] or 0) >= 85)),
-        "a_rndur_season": float(sum(w["rndur"] or 0.0 for w in season)),
-        "a_tavg_14d": avg(l14, "tavg"), "a_rh_14d": avg(l14, "rh"), "a_rain_14d": float(sum(rain(w) for w in l14)),
-        "a_rain_days_14d": float(sum(1 for w in l14 if rain(w) >= 1.0)), "a_tmin_7d": avg(l7, "tmin"),
-        "a_rain_days_season": float(sum(1 for w in season if rain(w) >= 1.0)),
-        "a_wet_warm_days_season": float(sum(1 for w in season if rain(w) >= 1.0 and w["tavg"] is not None and 20 <= w["tavg"] <= 30)),
-    }
+load_asos = asos.load
+asos_features = asos.features
 
 
 def main(argv: list[str] | None = None) -> int:

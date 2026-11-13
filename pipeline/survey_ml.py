@@ -101,6 +101,10 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--export", action="store_true", help="variants(survey_rf/xgb/ens) 파일과 eval.json 갱신")
     ap.add_argument("--static", choices=["none", "terrain"], default="none",
                     help="RF·XGBoost에 정적 피처 추가(terrain = 시군 재배지 지형 sgg_*, pipeline/terrain.py)")
+    ap.add_argument("--importance-only", action="store_true",
+                    help="학습 없이 배포된 RF·XGBoost 학습 파일에서 변수 중요도만 eval.json에 다시 쓴다")
+    ap.add_argument("--asos", action="store_true",
+                    help="RF·XGBoost에 기상청 ASOS 새 항목(a_*: 일조·일사·강수 지속시간·바람 등, pipeline/asos.py) 추가")
     args = ap.parse_args(argv)
 
     import joblib
@@ -108,11 +112,24 @@ def main(argv: list[str] | None = None) -> int:
     from sklearn.ensemble import RandomForestClassifier
     from xgboost import XGBClassifier
 
+    if args.importance_only:
+        crop, pest = _pest_folder(args.pest)
+        write_importance(config.MODELS_DIR / crop / pest / "variants")
+        return 0
     train_years, test_years = _years(args.train), _years(args.test)
     from .terrain import SGG_COLS
 
     feats = FEATS_HIST + ([f"sgg_{c}" for c in SGG_COLS if c != "elev_mean"] if args.static == "terrain" else [])
+    if args.asos:
+        from . import asos
+
+        feats = feats + asos.NEW
     samples, skipped = build_samples(args.pest, train_years, test_years, feats)
+    if args.asos:
+        n = asos.attach(samples)
+        for s in samples:
+            s["x"] = [s["feats"].get(k, float("nan")) for k in feats]
+        print(f"ASOS 피처: 표본 {n}/{len(samples)}건(나머지는 학습 평균으로 채움)")
     tr = [s for s in samples if s["year"] in train_years]
     te = [s for s in samples if s["year"] in test_years]
 
@@ -189,7 +206,7 @@ def main(argv: list[str] | None = None) -> int:
     result = {
         "pest_id": args.pest, "generated": date.today().isoformat(),
         "target": "시군구 예찰 조사값 > 0 (발생)", "train_years": args.train, "test_years": args.test,
-        "threshold": THRESHOLD, "features": feats, "static": args.static, "n_sigungu": len({s["sigungu"] for s in samples}),
+        "threshold": THRESHOLD, "features": feats, "static": args.static, "asos": args.asos, "n_sigungu": len({s["sigungu"] for s in samples}),
         "skipped": skipped,
         "hyperparams": {"rf": rf_best, "xgb": xgb_best,
                         "rf_cv_logloss": {str(g["min_samples_leaf"]): round(v, 4) for v, g in rf_scores},
@@ -283,6 +300,34 @@ def export(vdir: Path, result: dict, rf, xgb, fill: list[float], joblib, feats: 
             ev["hyperparams"] = hp["rf" if key == "survey_rf" else "xgb"]
         (folder / "eval.json").write_text(json.dumps(ev, ensure_ascii=False, indent=2), encoding="utf-8")
         print("내보냄:", folder)
+    write_importance(vdir)
+
+
+def write_importance(vdir: Path) -> None:
+    """RF·XGBoost 학습 파일의 변수 중요도(합 1, 큰 순)를 eval.json 'importance'에 쓴다 — 관리자 '데이터 명세' 화면용.
+    RF는 불순도 감소, XGBoost는 gain 기준이라 두 모델 값을 직접 비교하지 않는다."""
+    import joblib
+    from xgboost import XGBClassifier
+
+    for name in ("survey_rf", "survey_xgb"):
+        folder = vdir / name
+        if not (folder / "model.yaml").exists() or not (folder / "eval.json").exists():
+            continue
+        params = yaml.safe_load((folder / "model.yaml").read_text(encoding="utf-8"))["params"]
+        feats = list(params.get("features", []))
+        if params.get("algorithm") == "random_forest":
+            vals = joblib.load(folder / params["artifact"]).feature_importances_
+            basis = "불순도 감소(RF)"
+        else:
+            m = XGBClassifier()
+            m.load_model(str(folder / params["artifact"]))
+            vals = m.feature_importances_
+            basis = "gain(XGBoost)"
+        tot = float(sum(vals)) or 1.0
+        imp = sorted(((f, round(float(v) / tot, 4)) for f, v in zip(feats, vals)), key=lambda t: -t[1])
+        ev = json.loads((folder / "eval.json").read_text(encoding="utf-8"))
+        ev["importance"] = {"basis": basis, "values": [{"feature": f, "share": v} for f, v in imp]}
+        (folder / "eval.json").write_text(json.dumps(ev, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 if __name__ == "__main__":
