@@ -1,0 +1,54 @@
+{
+  "pest_id": "apple_anthracnose",
+  "generated": "2026-11-13",
+  "train_years": "2021-2023",
+  "test_years": "2024-2026",
+  "seeds": 3,
+  "n_train": 471,
+  "n_test": 612,
+  "n_sigungu": 25,
+  "distance_km": {
+    "농업기상_중앙값": 0.0,
+    "ASOS_중앙값": 0.0,
+    "ASOS가_더_가까운_표본_비율": 0.054,
+    "농업기상_자기시군_비율": 0.946
+  },
+  "year_split": {
+    "기상+직전예찰": {
+      "A_기존": {
+        "auc": 0.893,
+        "within_round_auc": 0.782
+      },
+      "B_+새항목": {
+        "auc": 0.89,
+        "within_round_auc": 0.779
+      },
+      "C_+ASOS전체": {
+        "auc": 0.881,
+        "within_round_auc": 0.78
+      },
+      "D_가까운쪽+새항목": {
+        "auc": 0.889,
+        "within_round_auc": 0.778
+      }
+    },
+    "기상만": {
+      "A_기존": {
+        "auc": 0.804,
+        "within_round_auc": 0.527
+      },
+      "B_+새항목": {
+        "auc": 0.816,
+        "within_round_auc": 0.535
+      },
+      "C_+ASOS전체": {
+        "auc": 0.811,
+        "within_round_auc": 0.539
+      },
+      "D_가까운쪽+새항목": {
+        "auc": 0.814,
+        "within_round_auc": 0.526
+      }
+    }
+  }
+}

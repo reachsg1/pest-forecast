@@ -1,6 +1,6 @@
 {
  "pest_id": "pepper_anthracnose",
- "generated": "2026-11-12",
+ "generated": "2026-11-13",
  "ncpms": [
   {
    "name": "탄저병",
@@ -21,7 +21,25 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "페니바실러스 폴리믹사 제이지90 고상제",
+   "brand": "케이엠 K-M",
+   "company": "(주)엠바이넥스",
+   "moa": "",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "메탈락실.테부코나졸 입제",
@@ -31,7 +49,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "- 4㎏/10a",
+   "timing": "정식기",
+   "times": "1회",
+   "method": "정식 전 토양처리"
   },
   {
    "product": "베노밀 수화제",
@@ -41,7 +63,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확2일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "베노밀 수화제",
@@ -51,7 +77,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확2일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "베노밀 수화제",
@@ -61,7 +91,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확2일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "베노밀 수화제",
@@ -71,7 +105,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확2일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "베노밀 수화제",
@@ -81,7 +119,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확2일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "베노밀 수화제",
@@ -91,7 +133,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확2일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "베노밀 수화제",
@@ -101,7 +147,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확2일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "베노밀 수화제",
@@ -111,7 +161,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확2일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "베노밀 수화제",
@@ -121,7 +175,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확2일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "베노밀 수화제",
@@ -131,7 +189,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확2일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "베노밀 수화제",
@@ -141,7 +203,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확2일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "베노밀 수화제",
@@ -151,7 +217,53 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확2일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "베노밀 수화제",
+   "brand": "팜한농베노밀",
+   "company": "(주)팜한농",
+   "moa": "나1",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확2일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "베노밀 수화제",
+   "brand": "하이베노밀",
+   "company": "(주)케이씨생명과학",
+   "moa": "나1",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확2일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "베노밀 수화제",
+   "brand": "하이베노밀",
+   "company": "(주)신농팜케미컬",
+   "moa": "나1",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확2일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "티오파네이트메틸 수화제",
@@ -161,7 +273,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "티오파네이트메틸 수화제",
@@ -171,7 +287,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "티오파네이트메틸 수화제",
@@ -181,7 +301,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "티오파네이트메틸 수화제",
@@ -191,7 +315,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "티오파네이트메틸 수화제",
@@ -201,7 +329,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "티오파네이트메틸 수화제",
@@ -211,7 +343,165 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "티오파네이트메틸 수화제",
+   "brand": "지오판",
+   "company": "(주)천지인바이오텍",
+   "moa": "나1",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "티오파네이트메틸 수화제",
+   "brand": "지오판",
+   "company": "(주)한얼싸이언스",
+   "moa": "나1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "티오파네이트메틸 수화제",
+   "brand": "지오판엠",
+   "company": "선문그린사이언스(주)",
+   "moa": "나1",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "티오파네이트메틸 수화제",
+   "brand": "치호톱",
+   "company": "(주)대유",
+   "moa": "나1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "티오파네이트메틸 수화제",
+   "brand": "키아로델타",
+   "company": "레인보우애그로사이언스(주)",
+   "moa": "나1",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "티오파네이트메틸 수화제",
+   "brand": "톱네이트엠",
+   "company": "(주)팜한농",
+   "moa": "나1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "티오파네이트메틸 수화제",
+   "brand": "톱신엠",
+   "company": "(주)경농",
+   "moa": "나1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "티오파네이트메틸 수화제",
+   "brand": "하이지오판",
+   "company": "(주)신농팜케미컬",
+   "moa": "나1",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "티오파네이트메틸 수화제",
+   "brand": "하이지오판",
+   "company": "(주)케이씨생명과학",
+   "moa": "나1",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "티오파네이트메틸 수화제",
+   "brand": "히타이트",
+   "company": "(주)위즈팜",
+   "moa": "나1",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "카벤다짐.크레속심메틸 수화제",
+   "brand": "탄제로",
+   "company": "(주)한얼싸이언스",
+   "moa": "나1+다3",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "카벤다짐.트리플록시스트로빈 입상수화제",
@@ -221,7 +511,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "4000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "카벤다짐.트리플록시스트로빈 입상수화제",
@@ -231,7 +525,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "4000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "카벤다짐.트리플록시스트로빈 입상수화제",
@@ -241,7 +539,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "4000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "카벤다짐.가스가마이신 수화제",
@@ -251,7 +553,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "카벤다짐.디페노코나졸 입상수화제",
@@ -261,7 +567,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "카벤다짐.디페노코나졸 입상수화제",
@@ -271,7 +581,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "카벤다짐.디페노코나졸 입상수화제",
@@ -281,7 +595,53 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "카벤다짐.테부코나졸 수화제",
+   "brand": "탄자꼬",
+   "company": "선문그린사이언스(주)",
+   "moa": "나1+사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "카벤다짐.테부코나졸 액상수화제",
+   "brand": "탄탄",
+   "company": "에버그린에이지",
+   "moa": "나1+사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "카벤다짐.테부코나졸 액상수화제",
+   "brand": "탄탄",
+   "company": "(주)경농",
+   "moa": "나1+사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "카벤다짐.헥사코나졸 수화제",
@@ -291,7 +651,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "티오파네이트메틸.트리플루미졸 수화제",
@@ -301,7 +665,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "티오파네이트메틸.트리플루미졸 수화제",
@@ -311,7 +679,39 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "카벤다짐.폴리옥신디 수화제",
+   "brand": "차세대",
+   "company": "(주)농협케미컬",
+   "moa": "나1+아4",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확7일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "카벤다짐.클로로탈로닐 액상수화제",
+   "brand": "탄프로",
+   "company": "에스비성보주식회사",
+   "moa": "나1+카",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "에타복삼.피라클로스트로빈 액상수화제",
@@ -321,7 +721,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "보스칼리드.피라클로스트로빈 액상수화제",
@@ -331,7 +735,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "보스칼리드.피라클로스트로빈 입상수화제",
@@ -341,7 +749,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "보스칼리드.피라클로스트로빈 입상수화제",
@@ -351,7 +763,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "보스칼리드.피라클로스트로빈 입상수화제",
@@ -361,7 +777,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "보스칼리드.피라클로스트로빈 입상수화제",
@@ -371,7 +791,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "보스칼리드.피라클로스트로빈 입상수화제",
@@ -381,7 +805,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "보스칼리드.피라클로스트로빈 입상수화제",
@@ -391,7 +819,39 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "보스칼리드.피라클로스트로빈 입상수화제",
+   "brand": "칸투리오",
+   "company": "(주)성심바이오메딕",
+   "moa": "다2+다3",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "펜티오피라드.트리플록시스트로빈 액상수화제",
+   "brand": "트리플캡",
+   "company": "한국삼공(주)",
+   "moa": "다2+다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "플루오피람.트리플록시스트로빈 액상수화제",
@@ -401,7 +861,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "4000배",
+   "timing": "수확3일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "플룩사피록사드.피라클로스트로빈 액상수화제",
@@ -411,7 +875,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "펜티오피라드.테부코나졸 액상수화제",
@@ -421,7 +889,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "만데스트로빈 액상수화제",
@@ -431,7 +903,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -441,7 +917,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -451,7 +931,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -461,7 +945,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -471,7 +959,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -481,7 +973,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -491,7 +987,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -501,7 +1001,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -511,7 +1015,25 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "아족시스트로빈 액상수화제",
+   "brand": "그리폰",
+   "company": "유원에코사이언스(주)",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -521,7 +1043,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -531,7 +1057,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -541,7 +1071,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -551,7 +1085,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -561,7 +1099,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -571,7 +1113,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -581,7 +1127,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -591,7 +1141,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -601,7 +1155,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -611,7 +1169,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -621,7 +1183,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -631,7 +1197,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -641,7 +1211,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -651,7 +1225,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -661,7 +1239,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -671,7 +1253,25 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "아족시스트로빈 액상수화제",
+   "brand": "에이스파머",
+   "company": "(주)융전",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -681,7 +1281,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -691,7 +1295,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -701,7 +1309,25 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "아족시스트로빈 액상수화제",
+   "brand": "원킥",
+   "company": "선문그린사이언스(주)",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -711,7 +1337,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈 액상수화제",
@@ -721,7 +1351,123 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "아족시스트로빈 액상수화제",
+   "brand": "탑앤탑",
+   "company": "(주)한얼싸이언스",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "아족시스트로빈 액상수화제",
+   "brand": "투빅",
+   "company": "에이치바이오텍",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "아족시스트로빈 액상수화제",
+   "brand": "파이토가드",
+   "company": "(주)그린시티",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "아족시스트로빈 액상수화제",
+   "brand": "폴리비전",
+   "company": "아그리젠토(주)",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "아족시스트로빈 액상수화제",
+   "brand": "프리건",
+   "company": "(주)유일",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "아족시스트로빈 액상수화제",
+   "brand": "행운",
+   "company": "(주)하나바이오",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "크레속심메틸 입상수화제",
+   "brand": "해비치",
+   "company": "에스비성보주식회사",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "트리플록시스트로빈 수화제",
+   "brand": "퍼펙쉴드",
+   "company": "인바이오(주)",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "트리플록시스트로빈 액상수화제",
@@ -731,7 +1477,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "트리플록시스트로빈 액상수화제",
@@ -741,7 +1491,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "트리플록시스트로빈 액상수화제",
@@ -751,7 +1505,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "트리플록시스트로빈 액상수화제",
@@ -761,7 +1519,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "트리플록시스트로빈 액상수화제",
@@ -771,7 +1533,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "트리플록시스트로빈 액상수화제",
@@ -781,7 +1547,81 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "트리플록시스트로빈 액상수화제",
+   "brand": "탄쟈비상",
+   "company": "(주)경농",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "트리플록시스트로빈 액상수화제",
+   "brand": "탐나내",
+   "company": "㈜이엑스아이디",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "트리플록시스트로빈 액상수화제",
+   "brand": "트랜디",
+   "company": "(주)태준아그로텍",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "트리플록시스트로빈 액상수화제",
+   "brand": "펀지킬",
+   "company": "(주)케이씨생명과학",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "트리플록시스트로빈 액상수화제",
+   "brand": "프린트",
+   "company": "바이엘크롭사이언스(주)",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "트리플록시스트로빈 입상수화제",
@@ -791,7 +1631,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "4000배",
+   "timing": "수확3일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "피라클로스트로빈 액상수화제",
@@ -801,7 +1645,25 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "피라클로스트로빈 액상수화제",
+   "brand": "프로키온",
+   "company": "한국삼공(주)",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "피라클로스트로빈 유제",
@@ -811,7 +1673,25 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "4000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "피라클로스트로빈 유제",
+   "brand": "로맨스",
+   "company": "(주)새한농",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "4000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "피라클로스트로빈 유제",
@@ -821,7 +1701,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "4000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "피라클로스트로빈 유제",
@@ -831,7 +1715,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "4000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "피라클로스트로빈 유제",
@@ -841,7 +1729,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "4000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "피라클로스트로빈 유제",
@@ -851,7 +1743,95 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "4000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "피라클로스트로빈 유제",
+   "brand": "조반니",
+   "company": "아다마코리아(주)",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "4000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "피라클로스트로빈 유제",
+   "brand": "카네기",
+   "company": "(주)태준아그로텍",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "4000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "피라클로스트로빈 유제",
+   "brand": "카브로빈",
+   "company": "(주)한얼싸이언스",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "4000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "피라클로스트로빈 유제",
+   "brand": "카브로빈",
+   "company": "(주)하나바이오",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "4000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "피라클로스트로빈 유제",
+   "brand": "카브리오",
+   "company": "한국바스프(주)",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "4000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "피라클로스트로빈 유제",
+   "brand": "카브리오",
+   "company": "한국삼공(주)",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "4000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "피라클로스트로빈 입상수화제",
@@ -861,7 +1841,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "피라클로스트로빈 입상수화제",
@@ -871,7 +1855,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "피라클로스트로빈 입상수화제",
@@ -881,7 +1869,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "피라클로스트로빈 입상수화제",
@@ -891,7 +1883,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "피라클로스트로빈 입상수화제",
@@ -901,7 +1897,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "피라클로스트로빈 입상수화제",
@@ -911,7 +1911,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "피라클로스트로빈 입상수화제",
@@ -921,7 +1925,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "피라클로스트로빈 입상수화제",
@@ -931,7 +1939,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "피라클로스트로빈 입상수화제",
@@ -941,7 +1953,25 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "피라클로스트로빈 입상수화제",
+   "brand": "세모리",
+   "company": "레인보우애그로사이언스(주)",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "피라클로스트로빈 입상수화제",
@@ -955,13 +1985,31 @@
   },
   {
    "product": "피라클로스트로빈 입상수화제",
+   "brand": "승부사",
+   "company": "(주)다보인터내셔널",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "피라클로스트로빈 입상수화제",
    "brand": "썬더킥",
    "company": "지넥스(주)",
    "moa": "다3",
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "피라클로스트로빈 입상수화제",
@@ -971,7 +2019,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "피라클로스트로빈 입상수화제",
@@ -981,7 +2033,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "피라클로스트로빈 입상수화제",
@@ -991,7 +2047,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "피라클로스트로빈 입상수화제",
@@ -1001,7 +2061,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "피라클로스트로빈 입상수화제",
@@ -1011,7 +2075,165 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "피라클로스트로빈 입상수화제",
+   "brand": "조반니",
+   "company": "아다마코리아(주)",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "피라클로스트로빈 입상수화제",
+   "brand": "카브골드",
+   "company": "준아그로",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "피라클로스트로빈 입상수화제",
+   "brand": "카브리오에이",
+   "company": "한국바스프(주)",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "피라클로스트로빈 입상수화제",
+   "brand": "카브리오에이",
+   "company": "(주)농협케미컬",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "피라클로스트로빈 입상수화제",
+   "brand": "카브밸런스",
+   "company": "(주)천지인바이오텍",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "피라클로스트로빈 입상수화제",
+   "brand": "카브프로",
+   "company": "유원에코사이언스(주)",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "피라클로스트로빈 입상수화제",
+   "brand": "케어업",
+   "company": "빅스타네이처사이언스(주)",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "피라클로스트로빈 입상수화제",
+   "brand": "쾌청탄",
+   "company": "(주)새한농",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "피라클로스트로빈 입상수화제",
+   "brand": "피라미드",
+   "company": "(주)한얼싸이언스",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "피라클로스트로빈 입상수화제",
+   "brand": "흥행탄",
+   "company": "(주)피에이치엘",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "피라클로스트로빈 입상수화제",
+   "brand": "흥행탄",
+   "company": "㈜이엑스아이디",
+   "moa": "다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "피콕시스트로빈 액상수화제",
@@ -1021,7 +2243,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "피콕시스트로빈 입상수화제",
@@ -1031,7 +2257,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 전 또는 발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈.티오파네이트메틸 액상수화제",
@@ -1041,7 +2271,67 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "아족시스트로빈.플로릴피콕사미드 액상수화제",
+   "brand": "플로빈",
+   "company": "한국삼공(주)",
+   "moa": "다3+다4",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "아족시스트로빈.플루아지남 액상수화제",
+   "brand": "프루락",
+   "company": "에프엠씨코리아(주)",
+   "moa": "다3+다5",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2500배",
+   "timing": "수확5일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "피라클로스트로빈.플루아지남 액상수화제",
+   "brand": "플렉스가드",
+   "company": "선문그린사이언스(주)",
+   "moa": "다3+다5",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "아족시스트로빈.플루디옥소닐 액상수화제",
+   "brand": "참누리",
+   "company": "(주)한얼싸이언스",
+   "moa": "다3+마2",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈.디페노코나졸 액상수화제",
@@ -1051,7 +2341,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈.테부코나졸 액상수화제",
@@ -1061,7 +2355,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈.테부코나졸 액상수화제",
@@ -1071,7 +2369,39 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "아족시스트로빈.테부코나졸 액상수화제",
+   "brand": "커스토디아",
+   "company": "아다마코리아(주)",
+   "moa": "다3+사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "아족시스트로빈.테부코나졸 액상수화제",
+   "brand": "트렉션",
+   "company": "선문그린사이언스(주)",
+   "moa": "다3+사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈.테부코나졸 입상수화제",
@@ -1081,7 +2411,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "5000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈.테트라코나졸 유현탁제",
@@ -1091,7 +2425,39 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "아족시스트로빈.헥사코나졸 액상수화제",
+   "brand": "클릭",
+   "company": "(주)팜한농",
+   "moa": "다3+사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "피라클로스트로빈.테부코나졸 액상수화제",
+   "brand": "포르투나",
+   "company": "에스비성보주식회사",
+   "moa": "다3+사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "피라클로스트로빈.테부코나졸 입상수화제",
@@ -1101,7 +2467,25 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "피리벤카브.테부코나졸 액상수화제",
+   "brand": "티업시",
+   "company": "(주)농협케미컬",
+   "moa": "다3+사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈.디메토모르프 액상수화제",
@@ -1111,7 +2495,25 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "아족시스트로빈.디메토모르프 액상수화제",
+   "brand": "탑브레인",
+   "company": "(주)천지인바이오텍",
+   "moa": "다3+아5",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈.디메토모르프 입상수화제",
@@ -1121,7 +2523,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈.디메토모르프 입상수화제",
@@ -1131,7 +2537,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈.디메토모르프 입상수화제",
@@ -1141,7 +2551,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈.디메토모르프 입상수화제",
@@ -1151,7 +2565,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈.클로로탈로닐 액상수화제",
@@ -1161,7 +2579,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈.클로로탈로닐 액상수화제",
@@ -1171,7 +2593,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "플로릴피콕사미드 액상수화제",
@@ -1181,7 +2607,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "사이아조파미드.트리플록시스트로빈 액상수화제",
@@ -1191,7 +2621,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "플로릴피콕사미드.플루아지남 액상수화제",
@@ -1201,7 +2635,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아미설브롬.클로로탈로닐 액상수화제",
@@ -1211,7 +2649,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "플루아지남 수화제",
@@ -1221,7 +2663,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "플루아지남 수화제",
@@ -1231,7 +2677,137 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "플루아지남 수화제",
+   "brand": "원티드",
+   "company": "(주)한얼싸이언스",
+   "moa": "다5",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "플루아지남 수화제",
+   "brand": "큰살림",
+   "company": "지넥스(주)",
+   "moa": "다5",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "플루아지남 수화제",
+   "brand": "프로파티",
+   "company": "(주)경농",
+   "moa": "다5",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "플루아지남 수화제",
+   "brand": "프로파티",
+   "company": "ISK바이오사이언스 코리아(주)",
+   "moa": "다5",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "플루아지남 수화제",
+   "brand": "후론골드",
+   "company": "인바이오(주)",
+   "moa": "다5",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "플루아지남 수화제",
+   "brand": "후론사이드",
+   "company": "(주)팜한농",
+   "moa": "다5",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "플루아지남 수화제",
+   "brand": "후론스타",
+   "company": "(주)케이씨생명과학",
+   "moa": "다5",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "플루아지남 수화제",
+   "brand": "후론스타",
+   "company": "(주)신농팜케미컬",
+   "moa": "다5",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "플루아지남 수화제",
+   "brand": "후론시티",
+   "company": "유원에코사이언스(주)",
+   "moa": "다5",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "플루아지남 액상수화제",
@@ -1241,7 +2817,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2500배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "플루아지남 액상수화제",
@@ -1251,7 +2831,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "플루아지남 액상수화제",
@@ -1261,7 +2845,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "플루아지남 액상수화제",
@@ -1271,7 +2859,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2500배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "플루아지남 액상수화제",
@@ -1281,7 +2873,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2500배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "플루아지남 액상수화제",
@@ -1291,7 +2887,81 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2500배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "플루아지남 액상수화제",
+   "brand": "젠토후론트",
+   "company": "아그리젠토(주)",
+   "moa": "다5",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2500배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "플루아지남 액상수화제",
+   "brand": "픽데이",
+   "company": "신젠타코리아(주)",
+   "moa": "다5",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "플루아지남 액상수화제",
+   "brand": "해머링",
+   "company": "(주)위즈팜",
+   "moa": "다5",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2500배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "플루아지남 액상수화제",
+   "brand": "후론골드",
+   "company": "인바이오(주)",
+   "moa": "다5",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2500배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "플루아지남 액상수화제",
+   "brand": "후론시티",
+   "company": "유원에코사이언스(주)",
+   "moa": "다5",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2500배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "플루아지남 입상수화제",
@@ -1301,7 +2971,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "플루아지남 입상수화제",
@@ -1311,7 +2985,25 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "플루아지남 입상수화제",
+   "brand": "후론사이드",
+   "company": "(주)팜한농",
+   "moa": "다5",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "플루아지남.트리플록시스트로빈 수화제",
@@ -1321,7 +3013,25 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 전 또는 발병 초부터 경엽처리"
+  },
+  {
+   "product": "플루아지남.피라클로스트로빈 액상수화제",
+   "brand": "힐링샷",
+   "company": "(주)농협케미컬",
+   "moa": "다5+다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "플루아지남.메펜트리플루코나졸 액상수화제",
@@ -1331,7 +3041,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "플루아지남.테부코나졸 액상수화제",
@@ -1341,7 +3055,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "가스가마이신.티오파네이트메틸 액상수화제",
@@ -1351,7 +3069,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "플루디옥소닐 분산성액제",
@@ -1361,7 +3083,25 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "이프로디온.트리플록시스트로빈 입상수화제",
+   "brand": "찬찬",
+   "company": "(주)동방아그로",
+   "moa": "마3+다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "이프로디온.프로클로라즈망가니즈 수화제",
@@ -1371,7 +3111,39 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "디페노코나졸 분산성액제",
+   "brand": "푸리온",
+   "company": "(주)한얼싸이언스",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "디페노코나졸 액상수화제",
+   "brand": "로티플",
+   "company": "인바이오(주)",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디페노코나졸 액상수화제",
@@ -1385,13 +3157,31 @@
   },
   {
    "product": "디페노코나졸 액상수화제",
+   "brand": "스페이드",
+   "company": "(주)천지인바이오텍",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "디페노코나졸 액상수화제",
    "brand": "아이템",
    "company": "지넥스(주)",
    "moa": "사1",
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디페노코나졸 액상수화제",
@@ -1404,6 +3194,62 @@
    "status": "확정"
   },
   {
+   "product": "디페노코나졸 액상수화제",
+   "brand": "탄저카트",
+   "company": "팜아그로텍(주)",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "디페노코나졸 액상수화제",
+   "brand": "파밍탑",
+   "company": "바이오캠주식회사",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "디페노코나졸 액상수화제",
+   "brand": "팜토닉",
+   "company": "㈜이엑스아이디",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "디페노코나졸 액상수화제",
+   "brand": "푸름이",
+   "company": "(주)팜한농",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
    "product": "시메코나졸 수화제",
    "brand": "디펜더",
    "company": "(주)동방아그로",
@@ -1411,7 +3257,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 미탁제",
@@ -1421,7 +3271,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 미탁제",
@@ -1431,7 +3285,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 미탁제",
@@ -1441,7 +3299,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 미탁제",
@@ -1451,7 +3313,25 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 미탁제",
+   "brand": "나무사랑",
+   "company": "유원에코사이언스(주)",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 미탁제",
@@ -1461,7 +3341,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 미탁제",
@@ -1471,7 +3355,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 미탁제",
@@ -1481,7 +3369,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 미탁제",
@@ -1491,7 +3383,39 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 미탁제",
+   "brand": "테부칸",
+   "company": "(주)케이씨생명과학",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 미탁제",
+   "brand": "힐링팜",
+   "company": "(주)태준아그로텍",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 분산성액제",
@@ -1501,7 +3425,25 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 분산성액제",
+   "brand": "티포라탄",
+   "company": "(주)한얼싸이언스",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 수화제",
@@ -1511,7 +3453,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 수화제",
@@ -1521,7 +3467,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 수화제",
@@ -1531,7 +3481,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 수화제",
@@ -1541,7 +3495,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 수화제",
@@ -1561,7 +3519,165 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 수화제",
+   "brand": "잼플러",
+   "company": "선문그린사이언스(주)",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 수화제",
+   "brand": "젠토실크로드",
+   "company": "아그리젠토(주)",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 수화제",
+   "brand": "탄보험",
+   "company": "인바이오(주)",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 수화제",
+   "brand": "탄부탄",
+   "company": "(주)유일",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 수화제",
+   "brand": "탄스타",
+   "company": "(주)한얼싸이언스",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 수화제",
+   "brand": "테바론",
+   "company": "아그로스타(주)",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 수화제",
+   "brand": "테부칸",
+   "company": "(주)케이씨생명과학",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 수화제",
+   "brand": "테부칸",
+   "company": "(주)신농팜케미컬",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 수화제",
+   "brand": "티메이드",
+   "company": "티아그로",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 수화제",
+   "brand": "해모수",
+   "company": "(주)팜한농",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 액상수화제",
+   "brand": "레베카",
+   "company": "(주)한얼싸이언스",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 액상수화제",
@@ -1571,7 +3687,53 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 액상수화제",
+   "brand": "타비야",
+   "company": "팜아그로텍(주)",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 액상수화제",
+   "brand": "파미조아",
+   "company": "바이오캠주식회사",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 액상수화제",
+   "brand": "파스칼",
+   "company": "(주)천지인바이오텍",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 유제",
@@ -1581,7 +3743,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확2일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 유제",
@@ -1591,7 +3757,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확2일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 유제",
@@ -1601,7 +3771,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확2일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 유제",
@@ -1611,7 +3785,109 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확2일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 유제",
+   "brand": "젠토시크릿",
+   "company": "아그리젠토(주)",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확2일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 유제",
+   "brand": "코어탄",
+   "company": "빅스타네이처사이언스(주)",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확2일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 유제",
+   "brand": "탄부탄",
+   "company": "(주)유일",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확2일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 유제",
+   "brand": "테부콜",
+   "company": "(주)장유산업",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확2일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 유제",
+   "brand": "푸론트",
+   "company": "(주)태준아그로텍",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확2일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 유제",
+   "brand": "호리쿠어",
+   "company": "(주)팜한농",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확2일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 유제",
+   "brand": "호리쿠어",
+   "company": "바이엘크롭사이언스(주)",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확2일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 유탁제",
@@ -1621,7 +3897,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 유탁제",
@@ -1631,7 +3911,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 유탁제",
@@ -1641,7 +3925,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 입상수화제",
@@ -1651,7 +3939,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 입상수화제",
@@ -1661,7 +3953,25 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 입상수화제",
+   "brand": "밀리언",
+   "company": "(주)한얼싸이언스",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 입상수화제",
@@ -1671,7 +3981,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 입상수화제",
@@ -1681,7 +3995,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 입상수화제",
@@ -1691,7 +4009,25 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸 입상수화제",
+   "brand": "에코왕",
+   "company": "유원에코사이언스(주)",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸 입제",
@@ -1701,7 +4037,11 @@
    "use": "살균",
    "crop": "고추(잎)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "- 3㎏/10a",
+   "timing": "정식기",
+   "times": "1회",
+   "method": "정식(파종) 전 토양처리"
   },
   {
    "product": "테부코나졸 입제",
@@ -1711,7 +4051,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "- 3㎏/10a",
+   "timing": "정식기",
+   "times": "1회",
+   "method": "정식 전 토양처리"
   },
   {
    "product": "테부코나졸 입제",
@@ -1721,7 +4065,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "- 3㎏/10a",
+   "timing": "정식기",
+   "times": "1회",
+   "method": "정식 전 토양처리"
   },
   {
    "product": "테부코나졸 입제",
@@ -1731,7 +4079,11 @@
    "use": "살균",
    "crop": "고추(잎)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "- 3㎏/10a",
+   "timing": "정식기",
+   "times": "1회",
+   "method": "정식 전 토양처리"
   },
   {
    "product": "테부코나졸 입제",
@@ -1741,7 +4093,53 @@
    "use": "살균",
    "crop": "고추(잎)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "- 3㎏/10a",
+   "timing": "정식기",
+   "times": "1회",
+   "method": "정식 전 토양처리"
+  },
+  {
+   "product": "테부코나졸 입제",
+   "brand": "탄보험",
+   "company": "인바이오(주)",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "- 3㎏/10a",
+   "timing": "정식기",
+   "times": "1회",
+   "method": "정식 전 토양처리"
+  },
+  {
+   "product": "테부코나졸 입제",
+   "brand": "토장금",
+   "company": "㈜이엑스아이디",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "- 3㎏/10a",
+   "timing": "정식기",
+   "times": "1회",
+   "method": "정식 전 토양처리"
+  },
+  {
+   "product": "테부코나졸 입제",
+   "brand": "흙지탄",
+   "company": "(주)천지인바이오텍",
+   "moa": "사1",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "- 3㎏/10a",
+   "timing": "정식기",
+   "times": "1회",
+   "method": "정식 전 토양처리"
   },
   {
    "product": "프로클로라즈망가니즈 수화제",
@@ -1751,7 +4149,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "프로클로라즈망가니즈 수화제",
@@ -1761,7 +4163,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "프로클로라즈망가니즈 수화제",
@@ -1771,7 +4177,25 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸.뷰프로페진 수화제",
+   "brand": "총명탄",
+   "company": "(주)유일",
+   "moa": "사1+16",
+   "use": "균충",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸.비펜트린 입제",
@@ -1781,7 +4205,11 @@
    "use": "균충",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "- 3㎏/10a",
+   "timing": "정식기",
+   "times": "1회",
+   "method": "정식 전 토양처리"
   },
   {
    "product": "디페노코나졸.티오파네이트메틸 수화제",
@@ -1791,7 +4219,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디페노코나졸.티오파네이트메틸 수화제",
@@ -1801,7 +4233,39 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "디페노코나졸.티오파네이트메틸 수화제",
+   "brand": "처방사",
+   "company": "인바이오(주)",
+   "moa": "사1+나1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "디페노코나졸.티오파네이트메틸 액상수화제",
+   "brand": "포커스",
+   "company": "에스비성보주식회사",
+   "moa": "사1+나1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸.티오파네이트메틸 수화제",
@@ -1811,7 +4275,25 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸.티오파네이트메틸 액상수화제",
+   "brand": "치프너",
+   "company": "(주)농협케미컬",
+   "moa": "사1+나1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디페노코나졸.플룩사피록사드 액상수화제",
@@ -1821,7 +4303,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디페노코나졸.피라클로스트로빈 액상수화제",
@@ -1831,7 +4317,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "메트코나졸.피라클로스트로빈 액상수화제",
@@ -1841,7 +4331,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "메펜트리플루코나졸.피라클로스트로빈 액상수화제",
@@ -1851,7 +4345,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "테부코나졸.트리플록시스트로빈 액상수화제",
@@ -1861,7 +4359,39 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸.트리플록시스트로빈 액상수화제",
+   "brand": "크리티컬",
+   "company": "아그리젠토(주)",
+   "moa": "사1+다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "테부코나졸.트리플록시스트로빈 액상수화제",
+   "brand": "티볼리",
+   "company": "(주)태준아그로텍",
+   "moa": "사1+다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "펜뷰코나졸.크레속심메틸 액상수화제",
@@ -1871,7 +4401,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "플루실라졸.크레속심메틸 액상수화제",
@@ -1881,7 +4415,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "플루퀸코나졸.트리플록시스트로빈 액상수화제",
@@ -1891,7 +4429,25 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "헥사코나졸.피라클로스트로빈 유탁제",
+   "brand": "헤드라인",
+   "company": "(주)팜한농",
+   "moa": "사1+다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디페노코나졸.플루아지남 수화제",
@@ -1901,7 +4457,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디페노코나졸.테부코나졸 분산성액제",
@@ -1911,7 +4471,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디페노코나졸.테부코나졸 액상수화제",
@@ -1921,7 +4485,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "프로클로라즈.테부코나졸 유제",
@@ -1931,7 +4499,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "프로클로라즈.테부코나졸 유제",
@@ -1941,7 +4513,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "프로클로라즈망가니즈.테부코나졸 수화제",
@@ -1951,7 +4527,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "프로클로라즈코퍼클로라이드.테부코나졸 액상수화제",
@@ -1961,7 +4541,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "프로피코나졸.테부코나졸 유현탁제",
@@ -1971,7 +4555,25 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "플루퀸코나졸.테트라코나졸 유현탁제",
+   "brand": "질주",
+   "company": "(주)팜한농",
+   "moa": "사1+사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "플루퀸코나졸.프로클로라즈망가니즈 수화제",
@@ -1981,7 +4583,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "헥사코나졸.테부코나졸 유제",
@@ -1991,7 +4597,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "헥사코나졸.프로클로라즈 유제",
@@ -2001,7 +4611,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디페노코나졸.디티아논 입상수화제",
@@ -2011,7 +4625,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디페노코나졸.이미녹타딘트리아세테이트 미탁제",
@@ -2021,7 +4639,25 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "바실루스서브틸리스디비비1501 수화제",
+   "brand": "테라스",
+   "company": "(주)팜한농",
+   "moa": "생2",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "500배",
+   "timing": "발생초기",
+   "times": "-",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "바실루스서브틸리스케이비시1010 수화제",
@@ -2031,7 +4667,25 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "500배",
+   "timing": "발생초기",
+   "times": "-",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "디메토모르프.피라클로스트로빈 액상수화제",
+   "brand": "캐스팅",
+   "company": "(주)동방아그로",
+   "moa": "아5+다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디메토모르프.피라클로스트로빈 입상수화제",
@@ -2041,7 +4695,95 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확7일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "디메토모르프.피라클로스트로빈 입상수화제",
+   "brand": "카브리오팀",
+   "company": "한국바스프(주)",
+   "moa": "아5+다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확7일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "디메토모르프.피라클로스트로빈 입상수화제",
+   "brand": "캐스팅",
+   "company": "(주)동방아그로",
+   "moa": "아5+다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확7일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "디메토모르프.디티아논 수화제",
+   "brand": "포룸디",
+   "company": "(주)농협케미컬",
+   "moa": "아5+카",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "500배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "디메토모르프.디티아논 수화제",
+   "brand": "포룸디",
+   "company": "한국삼공(주)",
+   "moa": "아5+카",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "500배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "디메토모르프.만코제브 수화제",
+   "brand": "포룸만",
+   "company": "(주)경농",
+   "moa": "아5+카",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "500배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발병 전 또는 장마 직전부터 경엽처리"
+  },
+  {
+   "product": "벤티아발리카브아이소프로필.클로로탈로닐 액상수화제",
+   "brand": "차무로",
+   "company": "(주)농협케미컬",
+   "moa": "아5+카",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "500배",
+   "timing": "수확2일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아시벤졸라에스메틸.디티아논 액상수화제",
@@ -2051,7 +4793,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아시벤졸라에스메틸.만코제브 수화제",
@@ -2061,7 +4807,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확7일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "아시벤졸라에스메틸.클로로탈로닐 액상수화제",
@@ -2071,7 +4821,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디티아논 수화제",
@@ -2081,7 +4835,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디티아논 수화제",
@@ -2091,7 +4849,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디티아논 수화제",
@@ -2101,7 +4863,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디티아논 수화제",
@@ -2111,7 +4877,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디티아논 수화제",
@@ -2121,7 +4891,25 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "디티아논 수화제",
+   "brand": "팜한농디치",
+   "company": "(주)팜한농",
+   "moa": "카",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디티아논 액상수화제",
@@ -2131,7 +4919,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확7일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디티아논 액상수화제",
@@ -2141,7 +4933,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확7일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디티아논 액상수화제",
@@ -2151,7 +4947,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확7일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디티아논 액상수화제",
@@ -2161,7 +4961,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확7일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디티아논 입상수화제",
@@ -2171,7 +4975,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확7일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디티아논 입상수화제",
@@ -2181,7 +4989,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확7일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "만코제브 수화제",
@@ -2191,7 +5003,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "만코제브 수화제",
@@ -2201,7 +5017,25 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "메티람 입상수화제",
+   "brand": "포리람골드",
+   "company": "한국삼공(주)",
+   "moa": "카",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "이미녹타딘트리스알베실레이트 수화제",
@@ -2211,7 +5045,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확7일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "이미녹타딘트리스알베실레이트 액상수화제",
@@ -2221,7 +5059,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "이미녹타딘트리아세테이트 액제",
@@ -2231,7 +5073,25 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "캡탄 수화제",
+   "brand": "팜한농캡탄",
+   "company": "(주)팜한농",
+   "moa": "카",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "500배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "캡탄 입상수화제",
@@ -2241,7 +5101,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "코퍼설페이트베이식 수화제",
@@ -2251,7 +5115,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "발생초기",
+   "times": "-",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "클로로탈로닐 수화제",
@@ -2261,7 +5129,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "700배",
+   "timing": "수확7일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "클로로탈로닐 수화제",
@@ -2271,7 +5143,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "600배",
+   "timing": "수확7일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "클로로탈로닐 수화제",
@@ -2281,7 +5157,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "700배",
+   "timing": "수확7일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "클로로탈로닐 수화제",
@@ -2291,7 +5171,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "600배",
+   "timing": "수확7일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "클로로탈로닐 수화제",
@@ -2301,7 +5185,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "700배",
+   "timing": "수확7일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "클로로탈로닐 수화제",
@@ -2311,7 +5199,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "700배",
+   "timing": "수확7일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "클로로탈로닐 수화제",
@@ -2321,7 +5213,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "700배",
+   "timing": "수확7일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "클로로탈로닐 수화제",
@@ -2331,7 +5227,53 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "600배",
+   "timing": "수확7일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "클로로탈로닐 수화제",
+   "brand": "타로닐",
+   "company": "(주)한얼싸이언스",
+   "moa": "카",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "600배",
+   "timing": "수확7일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "클로로탈로닐 수화제",
+   "brand": "하이타로닐",
+   "company": "(주)케이씨생명과학",
+   "moa": "카",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "700배",
+   "timing": "수확7일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "클로로탈로닐 수화제",
+   "brand": "하이타로닐",
+   "company": "(주)신농팜케미컬",
+   "moa": "카",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "600배",
+   "timing": "수확7일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "클로로탈로닐 액상수화제",
@@ -2341,7 +5283,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "클로로탈로닐 액상수화제",
@@ -2351,7 +5297,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "클로로탈로닐 액상수화제",
@@ -2361,7 +5311,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "클로로탈로닐 액상수화제",
@@ -2371,7 +5325,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "클로로탈로닐 액상수화제",
@@ -2381,7 +5339,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "클로로탈로닐 액상수화제",
@@ -2391,7 +5353,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "클로로탈로닐 액상수화제",
@@ -2401,7 +5367,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "클로로탈로닐 액상수화제",
@@ -2411,7 +5381,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "클로로탈로닐 액상수화제",
@@ -2421,7 +5395,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "클로로탈로닐 액상수화제",
@@ -2431,7 +5409,81 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "클로로탈로닐 액상수화제",
+   "brand": "초다타",
+   "company": "팜앤피플",
+   "moa": "카",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "클로로탈로닐 액상수화제",
+   "brand": "타드닐",
+   "company": "(주)위즈팜",
+   "moa": "카",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "클로로탈로닐 액상수화제",
+   "brand": "탑라인",
+   "company": "(주)한얼싸이언스",
+   "moa": "카",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "클로로탈로닐 액상수화제",
+   "brand": "필살탄",
+   "company": "지넥스(주)",
+   "moa": "카",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "클로로탈로닐 액상수화제",
+   "brand": "해법",
+   "company": "아그리젠토(주)",
+   "moa": "카",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "트리베이식코퍼설페이트 액상수화제",
@@ -2441,7 +5493,25 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "500배",
+   "timing": "발생초기",
+   "times": "-",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "트리베이식코퍼설페이트 입상수화제",
+   "brand": "큐프로픽스",
+   "company": "(주)유피엘리미티드코리아",
+   "moa": "카",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "발생초기",
+   "times": "-",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "폴펫 수화제",
@@ -2451,7 +5521,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "500배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "프로피네브 수화제",
@@ -2461,7 +5535,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "프로피네브 수화제",
@@ -2471,7 +5549,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "프로피네브 수화제",
@@ -2481,7 +5563,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "프로피네브 수화제",
@@ -2491,7 +5577,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "프로피네브 수화제",
@@ -2501,7 +5591,25 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "프로피네브 수화제",
+   "brand": "프로랭스",
+   "company": "아그리젠토(주)",
+   "moa": "카",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "만코제브.메탈락실 수화제",
@@ -2511,7 +5619,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "500배",
+   "timing": "수확15일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "만코제브.메탈락실 수화제",
@@ -2521,7 +5633,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "500배",
+   "timing": "수확15일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "만코제브.메탈락실 수화제",
@@ -2531,7 +5647,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "500배",
+   "timing": "수확15일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "만코제브.메탈락실 수화제",
@@ -2541,7 +5661,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "500배",
+   "timing": "수확15일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "클로로탈로닐.메탈락실엠 액상수화제",
@@ -2551,7 +5675,25 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "클로로탈로닐.메탈락실엠 액상수화제",
+   "brand": "폴리오골드",
+   "company": "신젠타코리아(주)",
+   "moa": "카+가1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "클로로탈로닐.옥사딕실 수화제",
@@ -2561,7 +5703,25 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "클로로탈로닐.옥사딕실 수화제",
+   "brand": "크린힛",
+   "company": "(주)경농",
+   "moa": "카+가1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디티아논.티오파네이트메틸 수화제",
@@ -2571,7 +5731,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디티아논.플룩사피록사드 액상수화제",
@@ -2581,7 +5745,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "이미녹타딘트리아세테이트.펜티오피라드 액상수화제",
@@ -2591,7 +5759,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확5일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디티아논.크레속심메틸 액상수화제",
@@ -2601,7 +5773,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디티아논.피라클로스트로빈 유현탁제",
@@ -2611,7 +5787,11 @@
    "use": "살균",
    "crop": "고추",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디티아논.피라클로스트로빈 유현탁제",
@@ -2621,7 +5801,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디티아논.피라클로스트로빈 입상수화제",
@@ -2631,7 +5815,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확7일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디티아논.피라클로스트로빈 입상수화제",
@@ -2641,7 +5829,39 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확7일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "메티람.피라클로스트로빈 입상수화제",
+   "brand": "카브리오톱",
+   "company": "한국삼공(주)",
+   "moa": "카+다3",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "캡탄.트리플록시스트로빈 입상수화제",
+   "brand": "캡틴에이",
+   "company": "(주)농협케미컬",
+   "moa": "카+다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "클로로탈로닐.크레속심메틸 액상수화제",
@@ -2651,7 +5871,25 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "클로로탈로닐.피라클로스트로빈 액상수화제",
+   "brand": "탄저왕",
+   "company": "(주)동방아그로",
+   "moa": "카+다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "프로피네브.트리플록시스트로빈 입상수화제",
@@ -2661,7 +5899,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확7일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "프로피네브.피라클로스트로빈 입상수화제",
@@ -2671,7 +5913,53 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "프로피네브.피라클로스트로빈 입상수화제",
+   "brand": "탄젠트",
+   "company": "(주)한얼싸이언스",
+   "moa": "카+다3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "프로피네브.피라클로스트로빈 입상수화제",
+   "brand": "특급탄",
+   "company": "인바이오(주)",
+   "moa": "카+다3",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "디티아논.가스가마이신 입상수화제",
+   "brand": "탄케어",
+   "company": "(주)동방아그로",
+   "moa": "카+라3",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "코퍼옥시클로라이드.가스가마이신 수화제",
@@ -2681,7 +5969,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "5회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "클로로탈로닐.가스가마이신 액상수화제",
@@ -2691,7 +5983,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "클로로탈로닐.프로파모카브하이드로클로라이드 액상수화제",
@@ -2701,7 +5997,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "500배",
+   "timing": "수확5일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "디티아논.메트코나졸 입상수화제",
@@ -2711,7 +6011,25 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1500배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "캡탄.테부코나졸 액상수화제",
+   "brand": "캐피즈",
+   "company": "아다마코리아(주)",
+   "moa": "카+사1",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "캡탄.테부코나졸 정제상수화제",
@@ -2721,7 +6039,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "500배",
+   "timing": "수확3일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "클로로탈로닐.디페노코나졸 액상수화제",
@@ -2731,7 +6053,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "클로로탈로닐.디페노코나졸 입상수화제",
@@ -2741,7 +6067,11 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "클로로탈로닐.테부코나졸 수화제",
@@ -2754,6 +6084,62 @@
    "status": "확정"
   },
   {
+   "product": "클로로탈로닐.테부코나졸 수화제",
+   "brand": "리치원",
+   "company": "(주)유피엘리미티드코리아",
+   "moa": "카+사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "클로로탈로닐.테부코나졸 액상수화제",
+   "brand": "필링업",
+   "company": "아진케미칼(주)",
+   "moa": "카+사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "클로로탈로닐.테부코나졸 액상수화제",
+   "brand": "히든탄",
+   "company": "아그리젠토(주)",
+   "moa": "카+사1",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확3일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "캡탄.폴리옥신비 수화제",
+   "brand": "팜한농포리캡탄",
+   "company": "(주)팜한농",
+   "moa": "카+아4",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "800배",
+   "timing": "수확3일전",
+   "times": "2회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
    "product": "클로로탈로닐.만디프로파미드 액상수화제",
    "brand": "래버스옵티",
    "company": "신젠타코리아(주)",
@@ -2761,7 +6147,25 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "800배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "이미녹타딘트리스알베실레이트.티람 수화제",
+   "brand": "참조네",
+   "company": "(주)동방아그로",
+   "moa": "카+카",
+   "use": "살균",
+   "crop": "고추",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "4회",
+   "method": "발병 초부터 경엽처리"
   },
   {
    "product": "코퍼옥시클로라이드.디티아논 수화제",
@@ -2771,12 +6175,30 @@
    "use": "살균",
    "crop": "고추(단고추류 포함)",
    "target": "탄저병",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "500배",
+   "timing": "수확7일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
+  },
+  {
+   "product": "클로로탈로닐.디티아논 액상수화제",
+   "brand": "탄저도사",
+   "company": "(주)한얼싸이언스",
+   "moa": "카+카",
+   "use": "살균",
+   "crop": "고추(단고추류 포함)",
+   "target": "탄저병",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확2일전",
+   "times": "3회",
+   "method": "발병 초부터 경엽처리"
   }
  ],
  "sources": {
   "ncpms": "국가농작물병해충관리시스템(NCPMS) 병해충 상세 정보",
-  "pesticides": "본 정보는 농촌진흥청의 농업기술포털 농사로(http://www.nongsaro.go.kr)에서 제공하고 있습니다. (농약등록현황)"
+  "pesticides": "본 정보는 농촌진흥청의 농업기술포털 농사로(http://www.nongsaro.go.kr)에서 제공하고 있습니다. (농약등록현황) · 농촌진흥청 농약안전정보시스템(psis.rda.go.kr) 작물별 농약 사용기준"
  },
  "note": "희석배수·사용 시기·수확 전 사용일수·사용 횟수는 반드시 제품 라벨(안전사용기준)을 확인하세요."
 }

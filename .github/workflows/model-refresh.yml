@@ -25,6 +25,8 @@ jobs:
       TZ: Asia/Seoul
       NCPMS_API_KEY: ${{ secrets.NCPMS_API_KEY }}
       DATA_GO_KR_KEY: ${{ secrets.DATA_GO_KR_KEY }}
+      NONGSARO_API_KEY: ${{ secrets.NONGSARO_API_KEY }}
+      PESTICIDE_KEY: ${{ secrets.PESTICIDE_KEY }}   # 농약안전정보시스템(PSIS) — 희석배수·사용 시기·횟수
     steps:
       - uses: actions/checkout@v4
         with:
@@ -68,13 +70,18 @@ jobs:
       - name: Trends
         if: steps.done.outputs.skip != '1'
         run: python -m pipeline.survey_trend
+      # 방제 요령·등록 농약·사용 기준(새 등록·변경 반영). 실패해도 모델 갱신은 계속
+      - name: Control info
+        if: steps.done.outputs.skip != '1'
+        continue-on-error: true
+        run: python scripts/build_control_info.py
       - name: Commit
         if: steps.done.outputs.skip != '1'
         run: |
           git config user.name "forecast-bot"
           git config user.email "forecast-bot@users.noreply.github.com"
           date +%F > data/survey/model_refresh_last.txt
-          git add models data/survey data/trend data/surveyview || true
+          git add models data/survey data/trend data/surveyview data/control || true
           if git diff --cached --quiet; then echo "변경 없음"; exit 0; fi
           git commit -m "chore(models): auto model refresh $(date +%F)"
           for i in 1 2 3; do

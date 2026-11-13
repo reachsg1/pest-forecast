@@ -4,10 +4,11 @@
 
 - 행동 요령: NCPMS 병·해충 상세(SVC05/SVC07)의 예방·약제·생물적 방제, 발생 환경, 증상 — 원문을 그대로(HTML 태그만 정리)
 - 등록 농약: 농사로 OpenAPI 농약등록현황(pesticideRegStatus) — 작물×적용병해충의 품목·상표·회사·작용기작·용도·안전사용기준 확정 여부
-  (희석배수·사용 시기·수확 전 일수는 이 API에 없음 → 농약안전정보시스템(PSIS) 키를 받으면 보완)
+- 사용 기준: 농약안전정보시스템(PSIS) OpenAPI SVC01(작물·병해충별 등록 농약) — 희석배수·사용 방법·사용 시기(수확 ○일 전)·사용 횟수.
+  같은 품목·상표·회사면 농사로 행에 붙이고, 농사로에 없는 PSIS 품목은 새 행으로 더한다(키: PESTICIDE_KEY, 없으면 건너뜀)
 - 출력: data/control/<pest_id>.json (커밋) → 배치 publish 가 apps/web/public/data/control/ 로 복사
 - 출처 표시: "본 정보는 농촌진흥청의 농업기술포털 농사로(http://www.nongsaro.go.kr)에서 제공하고 있습니다", NCPMS
-키: NCPMS_API_KEY, NONGSARO_API_KEY (.env). 호출 수: NCPMS 약 16건 + 농사로 3건.
+키: NCPMS_API_KEY, NONGSARO_API_KEY, PESTICIDE_KEY (.env). 호출 수: NCPMS 약 16건 + 농사로 3건 + PSIS 약 10건.
 """
 from __future__ import annotations
 
@@ -29,6 +30,8 @@ from pipeline.fetch import ncpms  # noqa: E402
 
 OUT = config.DATA_DIR / "control"
 NONGSARO_REG = "http://api.nongsaro.go.kr/service/pesticideRegStatus/pesticideRegStatusList"
+PSIS = "https://psis.rda.go.kr/openApi/service.do"
+ATTR_PSIS = "농촌진흥청 농약안전정보시스템(psis.rda.go.kr) 작물별 농약 사용기준"
 ATTR_NONGSARO = "본 정보는 농촌진흥청의 농업기술포털 농사로(http://www.nongsaro.go.kr)에서 제공하고 있습니다."
 
 # pest_id → NCPMS 검색(종류, 작물명, 이름 후보) · 농사로(작물 이름 패턴, 적용병해충 이름들)
@@ -111,8 +114,26 @@ def nongsaro_reg(key: str, crop_word: str) -> list[dict]:
     return [{c.tag: (c.text or "").strip() for c in it} for it in root.iter("item")]
 
 
+def psis_rows(key: str, crop: str, disease: str) -> list[dict]:
+    """PSIS SVC01: 작물명·병해충명(부분 일치)으로 등록 농약 사용기준 전부(쪽 단위로)"""
+    out: list[dict] = []
+    start = 1
+    while True:
+        q = urllib.parse.urlencode({"apiKey": key, "serviceCode": "SVC01", "serviceType": "AA001", "cropName": crop,
+                                    "diseaseWeedName": disease, "displayCount": 500, "startPoint": start})
+        req = urllib.request.Request(f"{PSIS}?{q}", headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=60) as r:
+            root = ET.fromstring(r.read())
+        items = [{c.tag: (c.text or "").strip() for c in it} for it in root.iter("item")]
+        out += items
+        total = int(root.findtext("totalCount") or 0)
+        if not items or len(out) >= total:
+            return out
+        start += len(items)
+
+
 def main() -> int:
-    nk, gk = config.ncpms_key(), env_key("NONGSARO_API_KEY")
+    nk, gk, pk = config.ncpms_key(), env_key("NONGSARO_API_KEY"), env_key("PESTICIDE_KEY")
     if not nk or not gk:
         print("NCPMS_API_KEY / NONGSARO_API_KEY 필요")
         return 1
@@ -129,6 +150,25 @@ def main() -> int:
             uniq.setdefault(k, {"product": r.get("prdlstNm", ""), "brand": r.get("brandNm", ""), "company": r.get("cmpnyNm", ""),
                                 "moa": r.get("actnNm", ""), "use": r.get("prpos", ""), "crop": r.get("cropsNm", ""),
                                 "target": r.get("applcDbyhs", ""), "status": r.get("dcsnAt", "")})
+        # PSIS 사용 기준(희석배수·시기·횟수) 붙이기
+        n_psis = 0
+        if pk:
+            prow: list[dict] = []
+            for nm in reg_names:
+                prow += [r for r in psis_rows(pk, crop, nm) if re.search(crop_re, r.get("cropName", "")) and r.get("diseaseWeedName", "") == nm]
+            for r in prow:
+                k = (r.get("pestiKorName"), r.get("pestiBrandName"), r.get("compName"))
+                std = {"dilution": r.get("dilutUnit", "").replace(" -", "").strip(), "timing": r.get("useSuittime", ""),
+                       "times": r.get("useNum", ""), "method": r.get("pestiUse", "")}
+                if k in uniq:
+                    if not uniq[k].get("timing"):
+                        uniq[k].update(std)
+                        n_psis += 1
+                else:
+                    uniq[k] = {"product": r.get("pestiKorName", ""), "brand": r.get("pestiBrandName", ""), "company": r.get("compName", ""),
+                               "moa": r.get("indictSymbl", ""), "use": r.get("useName", ""), "crop": r.get("cropName", ""),
+                               "target": r.get("diseaseWeedName", ""), "status": "확정", **std}
+                    n_psis += 1
         doc = {
             "pest_id": pid,
             "generated": date.today().isoformat(),
@@ -136,12 +176,12 @@ def main() -> int:
             "pesticides": sorted(uniq.values(), key=lambda x: (x["moa"], x["product"], x["brand"])),
             "sources": {
                 "ncpms": "국가농작물병해충관리시스템(NCPMS) 병해충 상세 정보",
-                "pesticides": ATTR_NONGSARO + " (농약등록현황)",
+                "pesticides": ATTR_NONGSARO + " (농약등록현황)" + (f" · {ATTR_PSIS}" if pk else ""),
             },
             "note": "희석배수·사용 시기·수확 전 사용일수·사용 횟수는 반드시 제품 라벨(안전사용기준)을 확인하세요.",
         }
         (OUT / f"{pid}.json").write_text(json.dumps(doc, ensure_ascii=False, indent=1), encoding="utf-8")
-        print(f"{pid}: 요령 {len(info)}건 · 등록 농약 {len(doc['pesticides'])}종")
+        print(f"{pid}: 요령 {len(info)}건 · 등록 농약 {len(doc['pesticides'])}종 · 사용기준(PSIS) {n_psis}종")
     return 0
 
 

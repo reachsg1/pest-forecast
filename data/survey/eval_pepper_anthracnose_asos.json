@@ -1,0 +1,54 @@
+{
+  "pest_id": "pepper_anthracnose",
+  "generated": "2026-11-13",
+  "train_years": "2015-2022",
+  "test_years": "2023-2026",
+  "seeds": 3,
+  "n_train": 3434,
+  "n_test": 1710,
+  "n_sigungu": 72,
+  "distance_km": {
+    "농업기상_중앙값": 0.0,
+    "ASOS_중앙값": 0.0,
+    "ASOS가_더_가까운_표본_비율": 0.067,
+    "농업기상_자기시군_비율": 0.9
+  },
+  "year_split": {
+    "기상+직전예찰": {
+      "A_기존": {
+        "auc": 0.886,
+        "within_round_auc": 0.741
+      },
+      "B_+새항목": {
+        "auc": 0.887,
+        "within_round_auc": 0.749
+      },
+      "C_+ASOS전체": {
+        "auc": 0.887,
+        "within_round_auc": 0.761
+      },
+      "D_가까운쪽+새항목": {
+        "auc": 0.887,
+        "within_round_auc": 0.753
+      }
+    },
+    "기상만": {
+      "A_기존": {
+        "auc": 0.829,
+        "within_round_auc": 0.573
+      },
+      "B_+새항목": {
+        "auc": 0.833,
+        "within_round_auc": 0.603
+      },
+      "C_+ASOS전체": {
+        "auc": 0.834,
+        "within_round_auc": 0.612
+      },
+      "D_가까운쪽+새항목": {
+        "auc": 0.833,
+        "within_round_auc": 0.602
+      }
+    }
+  }
+}

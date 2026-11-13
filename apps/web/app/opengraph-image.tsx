@@ -85,7 +85,7 @@ export default async function OgImage() {
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", width: 660, padding: "64px 0 56px 72px" }}>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <div style={{ display: "flex", fontSize: 26, color: "#a7f3d0" }}>{eyebrow}</div>
-            <div style={{ display: "flex", flexDirection: "column", marginTop: 26, fontSize: title[0].length > 14 ? 54 : 64, lineHeight: 1.18, letterSpacing: -1.5 }}>
+            <div style={{ display: "flex", flexDirection: "column", marginTop: 26, fontSize: Math.max(title[0].length, title[1].length) > 12 ? 48 : 64, lineHeight: 1.18, letterSpacing: -1.5 }}>
               <span>{title[0]}</span>
               <span style={{ color: "#fcd34d" }}>{title[1]}</span>
             </div>

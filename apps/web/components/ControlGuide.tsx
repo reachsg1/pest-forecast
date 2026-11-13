@@ -6,7 +6,7 @@ import { gradeMeta } from "@/lib/grades";
 import type { Grade } from "@/lib/types";
 
 type Ncpms = { name: string; ncpms_key: string; environment: string; symptoms: string; prevention: string; chemical: string; biological: string };
-type Pesticide = { product: string; brand: string; company: string; moa: string; use: string; crop: string; target: string; status: string };
+type Pesticide = { product: string; brand: string; company: string; moa: string; use: string; crop: string; target: string; status: string; dilution?: string; timing?: string; times?: string; method?: string };
 export type ControlDoc = { pest_id: string; ncpms: Ncpms[]; pesticides: Pesticide[]; sources: { ncpms: string; pesticides: string }; note: string };
 
 const cache = new Map<string, Promise<ControlDoc | null>>();
@@ -52,7 +52,7 @@ export function ActionBox({ pestId, grade, pestName }: { pestId: string; grade: 
           등록 약제 예(작용기작이 다른 것끼리):{" "}
           {groups
             .slice(0, 3)
-            .map(([moa, ps]) => `${ps[0].product}(${moa})`)
+            .map(([moa, ps]) => `${ps[0].product}(${moa}${ps[0].dilution ? `, ${ps[0].dilution}` : ""})`)
             .join(" · ")}{" "}
           외 {doc!.pesticides.length}종
         </p>
@@ -157,8 +157,10 @@ export default function ControlGuide({ pestId, pestName, grade }: { pestId: stri
                     <tr>
                       <th>품목(성분·제형)</th>
                       <th>상표</th>
-                      <th className="hidden sm:table-cell">회사</th>
-                      <th>기준</th>
+                      <th>희석</th>
+                      <th>사용 시기</th>
+                      <th className="hidden sm:table-cell">횟수</th>
+                      <th className="hidden md:table-cell">회사</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -166,8 +168,13 @@ export default function ControlGuide({ pestId, pestName, grade }: { pestId: stri
                       <tr key={`${p.product}-${p.brand}-${p.company}`}>
                         <td className="font-medium text-slate-800">{p.product}</td>
                         <td>{p.brand}</td>
-                        <td className="hidden text-slate-500 sm:table-cell">{p.company}</td>
-                        <td className={p.status === "확정" ? "text-slate-500" : "text-amber-700"}>{p.status}</td>
+                        <td className="num whitespace-nowrap">{p.dilution || "–"}</td>
+                        <td className="whitespace-nowrap" title={p.method || undefined}>
+                          {p.timing ? p.timing.replace(/(\d+)일\s*전/, " $1일 전").replace(/^수확\s*/, "수확 ") : "–"}
+                          {p.status !== "확정" && <span className="ml-1 text-[11px] text-amber-700">({p.status || "미확정"})</span>}
+                        </td>
+                        <td className="num hidden whitespace-nowrap sm:table-cell">{p.times || "–"}</td>
+                        <td className="hidden text-slate-500 md:table-cell">{p.company}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -177,7 +184,7 @@ export default function ControlGuide({ pestId, pestName, grade }: { pestId: stri
           ))}
         </div>
         <p className="text-[11px] leading-relaxed text-slate-400">
-          출처: {doc.sources.ncpms} · {doc.sources.pesticides} 희석배수·사용 시기·수확 전 사용일수는 농약안전정보시스템(psis.rda.go.kr)과 제품 라벨을 확인하세요.
+          출처: {doc.sources.ncpms} · {doc.sources.pesticides}. &lsquo;사용 시기&rsquo;는 수확 며칠 전까지 쓸 수 있는지, &lsquo;횟수&rsquo;는 한 작기에 쓸 수 있는 최대 횟수예요. 살포 전 제품 라벨을 꼭 확인하세요.
         </p>
       </section>
     </div>

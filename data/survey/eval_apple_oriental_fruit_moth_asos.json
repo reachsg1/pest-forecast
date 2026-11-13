@@ -1,0 +1,54 @@
+{
+  "pest_id": "apple_oriental_fruit_moth",
+  "generated": "2026-11-13",
+  "train_years": "2015-2022",
+  "test_years": "2023-2026",
+  "seeds": 3,
+  "n_train": 630,
+  "n_test": 580,
+  "n_sigungu": 25,
+  "distance_km": {
+    "농업기상_중앙값": 0.0,
+    "ASOS_중앙값": 0.0,
+    "ASOS가_더_가까운_표본_비율": 0.049,
+    "농업기상_자기시군_비율": 0.951
+  },
+  "year_split": {
+    "기상+직전예찰": {
+      "A_기존": {
+        "auc": 0.87,
+        "within_round_auc": 0.849
+      },
+      "B_+새항목": {
+        "auc": 0.869,
+        "within_round_auc": 0.854
+      },
+      "C_+ASOS전체": {
+        "auc": 0.87,
+        "within_round_auc": 0.871
+      },
+      "D_가까운쪽+새항목": {
+        "auc": 0.868,
+        "within_round_auc": 0.856
+      }
+    },
+    "기상만": {
+      "A_기존": {
+        "auc": 0.728,
+        "within_round_auc": 0.629
+      },
+      "B_+새항목": {
+        "auc": 0.739,
+        "within_round_auc": 0.632
+      },
+      "C_+ASOS전체": {
+        "auc": 0.745,
+        "within_round_auc": 0.661
+      },
+      "D_가까운쪽+새항목": {
+        "auc": 0.735,
+        "within_round_auc": 0.627
+      }
+    }
+  }
+}

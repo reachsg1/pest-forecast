@@ -1,6 +1,6 @@
 {
  "pest_id": "rice_planthoppers",
- "generated": "2026-11-12",
+ "generated": "2026-11-13",
  "ncpms": [
   {
    "name": "벼멸구",
@@ -30,7 +30,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확30일전",
+   "times": "2회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "뷰프로페진.크로마페노자이드 액상수화제",
@@ -40,7 +44,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확14일전",
+   "times": "2회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "뷰프로페진.테부페노자이드 수화제",
@@ -50,7 +58,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확7일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "뷰프로페진.테부페노자이드 수화제",
@@ -60,7 +72,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확7일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "뷰프로페진.아이소프로카브 수화제",
@@ -70,7 +86,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "뷰프로페진.페노뷰카브 분제",
@@ -80,7 +100,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "- 4㎏/10a",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "뷰프로페진.페노뷰카브 분제",
@@ -90,7 +114,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "- 4㎏/10a",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "뷰프로페진.페노뷰카브 수화제",
@@ -100,7 +128,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확30일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "뷰프로페진.페노뷰카브 수화제",
@@ -110,7 +142,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확30일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "뷰프로페진.페노뷰카브 수화제",
@@ -120,7 +156,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확30일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "뷰프로페진.페노뷰카브 수화제",
@@ -130,7 +170,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확30일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "뷰프로페진.플루벤디아마이드 액상수화제",
@@ -140,7 +184,25 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "8배 0.8ℓ/10a",
+   "timing": "수확30일전",
+   "times": "2회",
+   "method": "발생 초부터 경엽처리(무인항공)"
+  },
+  {
+   "product": "뷰프로페진.에토펜프록스 수화제",
+   "brand": "프로탄",
+   "company": "(주)경농",
+   "moa": "16+3a",
+   "use": "살충",
+   "crop": "벼",
+   "target": "벼멸구",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "뷰프로페진.클로티아니딘 액상수화제",
@@ -150,7 +212,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "120배 3ℓ/10a",
+   "timing": "수확40일전",
+   "times": "2회",
+   "method": "발생 초부터 경엽처리(ULV)"
   },
   {
    "product": "뷰프로페진.티아클로프리드 액상수화제",
@@ -160,7 +226,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확14일전",
+   "times": "2회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "뷰프로페진.티아클로프리드 액상수화제",
@@ -170,7 +240,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확14일전",
+   "times": "2회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "뷰프로페진.설폭사플로르 액상수화제",
@@ -180,7 +254,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "크로마페노자이드.클로티아니딘 유제",
@@ -190,7 +268,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "8배 0.8ℓ/10a",
+   "timing": "수확21일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리(무인항공)"
   },
   {
    "product": "카보설판 액상수화제",
@@ -200,7 +282,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확21일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "카보설판 액상수화제",
@@ -210,7 +296,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확21일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "카보설판 액상수화제",
@@ -220,7 +310,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확21일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "카보설판 액상수화제",
@@ -230,7 +324,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확21일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "페노뷰카브 분제",
@@ -240,7 +338,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "흰등멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "- 4㎏/10a",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "페노뷰카브 분제",
@@ -250,7 +352,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "흰등멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "- 4㎏/10a",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "페노뷰카브 유제",
@@ -260,7 +366,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "흰등멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확21일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "페노뷰카브 유제",
@@ -270,7 +380,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확21일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "페노뷰카브 유제",
@@ -280,7 +394,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "흰등멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확21일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "페노뷰카브 유제",
@@ -290,7 +408,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확21일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "페노뷰카브 유제",
@@ -300,7 +422,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "흰등멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확21일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "페노뷰카브 유제",
@@ -310,7 +436,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "흰등멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확21일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "아세페이트 수화제",
@@ -320,7 +450,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "흰등멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확15일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "아세페이트 수화제",
@@ -330,7 +464,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "흰등멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확15일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "아세페이트 수화제",
@@ -340,7 +478,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "흰등멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확15일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "아세페이트 수화제",
@@ -350,7 +492,25 @@
    "use": "살충",
    "crop": "벼",
    "target": "흰등멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확15일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
+  },
+  {
+   "product": "아세페이트 수화제",
+   "brand": "희새탄",
+   "company": "(주)동방아그로",
+   "moa": "1b",
+   "use": "살충",
+   "crop": "벼",
+   "target": "흰등멸구",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확15일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "펜토에이트 유제",
@@ -360,7 +520,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "흰등멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확21일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "펜토에이트 유제",
@@ -370,7 +534,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "흰등멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확21일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "아세페이트.이미다클로프리드 수화제",
@@ -380,7 +548,25 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "3000배",
+   "timing": "수확21일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
+  },
+  {
+   "product": "인독사카브.피메트로진 액상수화제",
+   "brand": "스카이포스",
+   "company": "아그리젠토(주)",
+   "moa": "22a+9b",
+   "use": "살충",
+   "crop": "벼",
+   "target": "벼멸구",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확21일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "사이안트라닐리프롤 액상수화제",
@@ -390,7 +576,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "150배 300㎖/상자",
+   "timing": "이앙기",
+   "times": "1회",
+   "method": "이앙 1일 전 관주처리(육묘상)"
   },
   {
    "product": "사이안트라닐리프롤.에토펜프록스 유현탁제",
@@ -400,7 +590,25 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "- 50㎖/10a",
+   "timing": "수확7일전",
+   "times": "2회",
+   "method": "발생 초부터 경엽처리(무인항공)"
+  },
+  {
+   "product": "클로란트라닐리프롤.에토펜프록스 유현탁제",
+   "brand": "프레톡스",
+   "company": "(주)농협케미컬",
+   "moa": "28+3a",
+   "use": "살충",
+   "crop": "벼",
+   "target": "벼멸구",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확14일전",
+   "times": "2회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "클로란트라닐리프롤.클로티아니딘 액상수화제",
@@ -410,7 +618,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "클로란트라닐리프롤.클로티아니딘 입제",
@@ -420,7 +632,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "- 3㎏/10a",
+   "timing": "수확14일전",
+   "times": "2회",
+   "method": "발생 초부터 수면처리"
   },
   {
    "product": "클로란트라닐리프롤.티아메톡삼 액상수화제",
@@ -430,7 +646,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "10000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "클로란트라닐리프롤.티아클로프리드 액상수화제",
@@ -440,7 +660,25 @@
    "use": "살충",
    "crop": "벼",
    "target": "흰등멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
+  },
+  {
+   "product": "사이클라닐리프롤.설폭사플로르 액상수화제",
+   "brand": "헬리캅",
+   "company": "(주)팜한농",
+   "moa": "28+4c",
+   "use": "살충",
+   "crop": "벼",
+   "target": "벼멸구",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확14일전",
+   "times": "2회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "클로란트라닐리프롤.설폭사플로르 액상수화제",
@@ -450,7 +688,25 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "40배 3ℓ/10a",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리(ULV)"
+  },
+  {
+   "product": "클로란트라닐리프롤.트리플루메조피림 액상수화제",
+   "brand": "펙사론",
+   "company": "(주)농협케미컬",
+   "moa": "28+4e",
+   "use": "살충",
+   "crop": "벼",
+   "target": "벼멸구",
+   "status": "확정",
+   "dilution": "4000배",
+   "timing": "수확21일전",
+   "times": "2회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "사이안트라닐리프롤.피메트로진 입상수화제",
@@ -460,7 +716,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "75배 300㎖/상자",
+   "timing": "이앙기",
+   "times": "1회",
+   "method": "이앙 1일 전 관주처리(육묘상)"
   },
   {
    "product": "플로니카미드 유상수화제",
@@ -470,7 +730,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "- 20㎖/10a",
+   "timing": "수확21일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리(무인항공)"
   },
   {
    "product": "플로니카미드 입상수화제",
@@ -480,7 +744,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "25000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "플로니카미드.설폭사플로르 입상수화제",
@@ -490,7 +758,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "4000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "브로플라닐라이드.에토펜프록스 유현탁제",
@@ -500,7 +772,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "흰등멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2500배",
+   "timing": "수확14일전",
+   "times": "2회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "브로플라닐라이드.티아클로프리드 액상수화제",
@@ -510,7 +786,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확14일전",
+   "times": "2회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "에토펜프록스 유제",
@@ -520,7 +800,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "16배 0.8ℓ/10a",
+   "timing": "수확50일전",
+   "times": "1회",
+   "method": "발생 초부터 경엽처리(무인항공)"
   },
   {
    "product": "에토펜프록스 유탁제",
@@ -530,7 +814,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "8배 0.8ℓ/10a",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리(무인항공)"
   },
   {
    "product": "에토펜프록스 유탁제",
@@ -540,7 +828,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "30배 3ℓ/10a",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리(ULV)"
   },
   {
    "product": "에토펜프록스 유탁제",
@@ -550,7 +842,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "30배 3ℓ/10a",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리(ULV)"
   },
   {
    "product": "에토펜프록스 캡슐현탁제",
@@ -560,7 +856,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "60배 3ℓ/10a",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리(ULV)"
   },
   {
    "product": "에토펜프록스.메톡시페노자이드 유현탁제",
@@ -570,7 +870,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "흰등멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "8배 0.8ℓ/10a",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리(무인항공)"
   },
   {
    "product": "에토펜프록스.테부페노자이드 유제",
@@ -580,7 +884,25 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
+  },
+  {
+   "product": "에토펜프록스.페노뷰카브 유제",
+   "brand": "필충탄",
+   "company": "에스비성보주식회사",
+   "moa": "3a+1a",
+   "use": "살충",
+   "crop": "벼",
+   "target": "벼멸구",
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확21일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "에토펜프록스.인독사카브 수화제",
@@ -590,7 +912,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확21일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "에토펜프록스.인독사카브 유탁제",
@@ -600,7 +926,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확21일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "에토펜프록스.메타플루미존 유현탁제",
@@ -610,7 +940,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확21일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "에토펜프록스.테트라닐리프롤 유현탁제",
@@ -620,7 +954,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "60배 3ℓ/10a",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리(ULV)"
   },
   {
    "product": "에토펜프록스.피메트로진 유현탁제",
@@ -630,7 +968,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "에토펜프록스.피메트로진 유현탁제",
@@ -640,7 +982,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "디노테퓨란 수화제",
@@ -650,7 +996,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "디노테퓨란 액제",
@@ -660,7 +1010,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "30배 3ℓ/10a",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리(ULV)"
   },
   {
    "product": "디노테퓨란 입상수용제",
@@ -670,7 +1024,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "5000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "아세타미프리드 수화제",
@@ -680,7 +1038,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "5000배",
+   "timing": "수확7일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "아세타미프리드 액제",
@@ -690,7 +1052,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확7일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "이미다클로프리드 수화제",
@@ -700,7 +1066,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "5000배",
+   "timing": "수확45일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "이미다클로프리드 수화제",
@@ -714,13 +1084,31 @@
   },
   {
    "product": "이미다클로프리드 수화제",
+   "brand": "옵티머스",
+   "company": "인바이오(주)",
+   "moa": "4a",
+   "use": "살충",
+   "crop": "벼",
+   "target": "벼멸구",
+   "status": "확정",
+   "dilution": "5000배",
+   "timing": "수확45일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
+  },
+  {
+   "product": "이미다클로프리드 수화제",
    "brand": "젠토래피드킬",
    "company": "아그리젠토(주)",
    "moa": "4a",
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "5000배",
+   "timing": "수확45일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "이미다클로프리드 수화제",
@@ -730,7 +1118,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "5000배",
+   "timing": "수확45일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "이미다클로프리드 수화제",
@@ -740,7 +1132,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "5000배",
+   "timing": "수확45일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "이미다클로프리드 수화제",
@@ -750,7 +1146,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "5000배",
+   "timing": "수확45일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "이미다클로프리드 수화제",
@@ -760,7 +1160,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "5000배",
+   "timing": "수확45일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "이미다클로프리드 수화제",
@@ -770,7 +1174,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "5000배",
+   "timing": "수확45일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "이미다클로프리드 수화제",
@@ -780,7 +1188,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "5000배",
+   "timing": "수확45일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "이미다클로프리드 수화제",
@@ -790,7 +1202,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "5000배",
+   "timing": "수확45일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "이미다클로프리드 수화제",
@@ -800,7 +1216,25 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "5000배",
+   "timing": "수확45일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
+  },
+  {
+   "product": "이미다클로프리드 수화제",
+   "brand": "호리도",
+   "company": "선문그린사이언스(주)",
+   "moa": "4a",
+   "use": "살충",
+   "crop": "벼",
+   "target": "벼멸구",
+   "status": "확정",
+   "dilution": "5000배",
+   "timing": "수확45일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "이미다클로프리드 액상수화제",
@@ -810,7 +1244,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "5000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "이미다클로프리드 액제",
@@ -820,7 +1258,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확15일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "이미다클로프리드 액제",
@@ -830,7 +1272,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확15일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "이미다클로프리드 액제",
@@ -840,7 +1286,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확15일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "이미다클로프리드 액제",
@@ -850,7 +1300,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확15일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "이미다클로프리드 액제",
@@ -860,7 +1314,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확15일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "이미다클로프리드 액제",
@@ -870,7 +1328,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확15일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "이미다클로프리드 액제",
@@ -880,7 +1342,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확15일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "이미다클로프리드 입상수용제",
@@ -890,7 +1356,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "12000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "클로티아니딘 수화제",
@@ -900,7 +1370,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "8000배",
+   "timing": "수확10일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "클로티아니딘 액상수화제",
@@ -910,7 +1384,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "90배 3ℓ/10a",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리(ULV)"
   },
   {
    "product": "클로티아니딘 액제",
@@ -920,7 +1398,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "10000배",
+   "timing": "수확20일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "클로티아니딘 입상수용제",
@@ -930,7 +1412,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "5000배",
+   "timing": "수확21일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "티아메톡삼 입상수화제",
@@ -940,7 +1426,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "10000배",
+   "timing": "수확15일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "아세타미프리드.노발루론 유제",
@@ -950,7 +1440,39 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "- 50㎖/10a",
+   "timing": "수확21일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리(무인항공)"
+  },
+  {
+   "product": "아세타미프리드.테부페노자이드 액상수화제",
+   "brand": "행진",
+   "company": "(주)한얼싸이언스",
+   "moa": "4a+18",
+   "use": "살충",
+   "crop": "벼",
+   "target": "벼멸구",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확21일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
+  },
+  {
+   "product": "아세타미프리드.테부페노자이드 액상수화제",
+   "brand": "행진",
+   "company": "(주)하나바이오",
+   "moa": "4a+18",
+   "use": "살충",
+   "crop": "벼",
+   "target": "벼멸구",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확21일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "이미다클로프리드.메톡시페노자이드 수화제",
@@ -960,7 +1482,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확30일전",
+   "times": "2회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "이미다클로프리드.테부페노자이드 수화제",
@@ -970,7 +1496,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확45일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "이미다클로프리드.테부페노자이드 수화제",
@@ -980,7 +1510,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확45일전",
+   "times": "3회",
+   "method": "발생 초부터(예찰 정보에 따라) 경엽처리"
   },
   {
    "product": "클로티아니딘.메톡시페노자이드 액상수화제",
@@ -990,7 +1524,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "4000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "클로티아니딘.테부페노자이드 액상수화제",
@@ -1000,7 +1538,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확21일전",
+   "times": "2회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "아세타미프리드.인독사카브 액상수화제",
@@ -1010,7 +1552,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "아세타미프리드.플루벤디아마이드 입상수화제",
@@ -1020,7 +1566,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "4000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "클로티아니딘.플루벤디아마이드 액상수화제",
@@ -1030,7 +1580,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "16배 0.8ℓ/10a",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리(무인항공)"
   },
   {
    "product": "디노테퓨란.에토펜프록스 미탁제",
@@ -1040,7 +1594,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "8배 0.8ℓ/10a",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리(무인항공)"
   },
   {
    "product": "디노테퓨란.에토펜프록스 수화제",
@@ -1050,7 +1608,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확30일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "아세타미프리드.에토펜프록스 수화제",
@@ -1060,7 +1622,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확7일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "아세타미프리드.에토펜프록스 수화제",
@@ -1070,7 +1636,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확7일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "아세타미프리드.피리프록시펜 분산성액제",
@@ -1080,7 +1650,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "- 20㎖/10a",
+   "timing": "수확21일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리(무인항공)"
   },
   {
    "product": "설폭사플로르 액상수화제",
@@ -1090,7 +1664,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "5000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "설폭사플로르 입상수화제",
@@ -1100,7 +1678,25 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "5000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
+  },
+  {
+   "product": "플루피리민 액상수화제",
+   "brand": "프로밧사",
+   "company": "(주)경농",
+   "moa": "4f",
+   "use": "살충",
+   "crop": "벼",
+   "target": "벼멸구",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확14일전",
+   "times": "2회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "피메트로진 수화제",
@@ -1110,7 +1706,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "4000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "피메트로진 수화제",
@@ -1120,7 +1720,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "4000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "피메트로진 수화제",
@@ -1130,7 +1734,11 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "4000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "피메트로진 입상수화제",
@@ -1140,7 +1748,25 @@
    "use": "살충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "5000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
+  },
+  {
+   "product": "피메트로진 입상수화제",
+   "brand": "플래넘",
+   "company": "신젠타코리아(주)",
+   "moa": "9b",
+   "use": "살충",
+   "crop": "벼",
+   "target": "벼멸구",
+   "status": "확정",
+   "dilution": "5000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "아족시스트로빈.클로티아니딘 입제",
@@ -1150,7 +1776,11 @@
    "use": "균충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "- 50g/상자",
+   "timing": "이앙기",
+   "times": "1회",
+   "method": "이앙 당일 육묘상처리"
   },
   {
    "product": "아족시스트로빈.발리다마이신에이.에토펜프록스 유현탁제",
@@ -1160,7 +1790,11 @@
    "use": "균충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확21일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
   },
   {
    "product": "티아디닐.플루벤디아마이드.티아클로프리드 액상수화제",
@@ -1170,12 +1804,30 @@
    "use": "균충",
    "crop": "벼",
    "target": "벼멸구",
-   "status": "확정"
+   "status": "확정",
+   "dilution": "1000배",
+   "timing": "수확21일전",
+   "times": "2회",
+   "method": "발생 초부터 경엽처리"
+  },
+  {
+   "product": "디클로벤티아족스.티플루자마이드.클로티아니딘 입제",
+   "brand": "풀코스골드",
+   "company": "(주)팜한농",
+   "moa": "차8+다2+4a",
+   "use": "균충",
+   "crop": "벼",
+   "target": "벼멸구",
+   "status": "확정",
+   "dilution": "- 50g/상자",
+   "timing": "파종(이앙)기",
+   "times": "1회",
+   "method": "파종 시 육묘상처리"
   }
  ],
  "sources": {
   "ncpms": "국가농작물병해충관리시스템(NCPMS) 병해충 상세 정보",
-  "pesticides": "본 정보는 농촌진흥청의 농업기술포털 농사로(http://www.nongsaro.go.kr)에서 제공하고 있습니다. (농약등록현황)"
+  "pesticides": "본 정보는 농촌진흥청의 농업기술포털 농사로(http://www.nongsaro.go.kr)에서 제공하고 있습니다. (농약등록현황) · 농촌진흥청 농약안전정보시스템(psis.rda.go.kr) 작물별 농약 사용기준"
  },
  "note": "희석배수·사용 시기·수확 전 사용일수·사용 횟수는 반드시 제품 라벨(안전사용기준)을 확인하세요."
 }
