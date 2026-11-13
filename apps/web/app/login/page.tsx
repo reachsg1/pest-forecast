@@ -93,7 +93,7 @@ export default async function LoginPage({
 
   return (
     <div
-      className={`mx-auto grid items-center gap-8 py-4 sm:py-8 ${admin ? "max-w-sm" : "max-w-5xl lg:grid-cols-[1.2fr_1fr] lg:gap-12"}`}
+      className={`mx-auto grid content-center items-center gap-8 py-4 sm:py-8 lg:min-h-[calc(100svh-9.5rem)] ${admin ? "max-w-sm" : "max-w-6xl lg:grid-cols-[1.45fr_1fr] lg:gap-16"}`}
     >
       {!admin && (
         <section aria-label="서비스 소개" className="hero-dark">
