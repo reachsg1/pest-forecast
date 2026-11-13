@@ -81,7 +81,7 @@ export default function HeroMap(props: HeroMapProps) {
   useEffect(() => {
     if (!playing || !frames || frames.length < 2) return;
     const last = i === frames.length - 1;
-    const t = setTimeout(() => setI((x) => (x + 1) % frames.length), last ? 2600 : 850);
+    const t = setTimeout(() => setI((x) => (x + 1) % frames.length), last ? 4500 : 1800); // 장면당 1.8초, 마지막 장면은 4.5초 머문 뒤 처음부터
     return () => clearTimeout(t);
   }, [playing, frames, i]);
 
@@ -123,7 +123,7 @@ export default function HeroMap(props: HeroMapProps) {
         <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full drop-shadow-[0_10px_30px_rgba(0,0,0,0.35)]" role="img" aria-hidden="true">
           {paths.length === 0 && <rect x="0" y="0" width={W} height={H} rx="24" fill="rgba(255,255,255,0.04)" />}
           {paths.map((p) => (
-            <path key={p.key} d={p.d} fill={color(p.key)} stroke="rgba(255,255,255,0.18)" strokeWidth={0.35} style={{ transition: "fill 650ms ease" }} />
+            <path key={p.key} d={p.d} fill={color(p.key)} stroke="rgba(255,255,255,0.18)" strokeWidth={0.35} style={{ transition: "fill 1100ms ease" }} />
           ))}
           {tags.map((t, k) => (
             <g key={t.key}>
