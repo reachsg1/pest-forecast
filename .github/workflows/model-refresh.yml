@@ -5,7 +5,8 @@ name: model-refresh
 
 on:
   schedule:
-    - cron: "30 22 * * 0"
+    - cron: "30 22 * * 0"   # 월 07:30 KST
+    - cron: "30 4 * * 1"    # 월 13:30 KST 예비(이번 주 이미 돌았으면 건너뜀)
   workflow_dispatch:
 
 permissions:
@@ -28,35 +29,51 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
+      # 예비 실행: 오늘 이미 갱신했으면 건너뛴다(data/survey/model_refresh_last.txt)
+      - name: Already done today?
+        id: done
+        if: github.event_name == 'schedule'
+        run: |
+          today=$(date +%F)
+          last=$(cat data/survey/model_refresh_last.txt 2>/dev/null || true)
+          if [ "$last" = "$today" ]; then echo "오늘 갱신 완료 → 건너뜀"; echo "skip=1" >> "$GITHUB_OUTPUT"; fi
       - uses: actions/setup-python@v5
+        if: steps.done.outputs.skip != '1'
         with:
           python-version: "3.12"
           cache: pip
       - name: Install
+        if: steps.done.outputs.skip != '1'
         run: pip install -r requirements.txt
       # 학습용 과거 기상(전국 관측소 월 단위, 처음 1회 약 80건 호출 후 캐시)
       - name: Restore weather history cache
+        if: steps.done.outputs.skip != '1'
         uses: actions/cache@v4
         with:
           path: data/cache/agriweather/_all
           key: weather-hist-${{ github.run_id }}
           restore-keys: weather-hist-
       - name: Fetch weather history
+        if: steps.done.outputs.skip != '1'
         run: python scripts/fetch_weather_all.py --years 2015-2025 --months 4-10
       - name: Auto models
+        if: steps.done.outputs.skip != '1'
         id: auto
         run: |
           python scripts/auto_models.py | tee auto.log
           if grep -q "^CHANGED" auto.log; then echo "changed=1" >> "$GITHUB_OUTPUT"; fi
       - name: Tests
-        if: steps.auto.outputs.changed == '1'
+        if: steps.done.outputs.skip != '1' && steps.auto.outputs.changed == '1'
         run: python -m pytest pipeline/tests -q
       - name: Trends
+        if: steps.done.outputs.skip != '1'
         run: python -m pipeline.survey_trend
       - name: Commit
+        if: steps.done.outputs.skip != '1'
         run: |
           git config user.name "forecast-bot"
           git config user.email "forecast-bot@users.noreply.github.com"
+          date +%F > data/survey/model_refresh_last.txt
           git add models data/survey data/trend data/surveyview || true
           if git diff --cached --quiet; then echo "변경 없음"; exit 0; fi
           git commit -m "chore(models): auto model refresh $(date +%F)"

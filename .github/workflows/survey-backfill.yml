@@ -1,11 +1,15 @@
 # 매일 06:30 KST(= 21:30 UTC 전날) NCPMS 예찰을 하루 호출 상한 안에서 이어 받고(모든 작물, 2015~2025),
 # 병해충별 예찰 CSV·연도별 발생 추이를 갱신해 커밋한다. 응답 캐시는 actions/cache로 다음 실행에 넘긴다.
 # NCPMS 개발계정은 일 1,000건 — 05:00 예측 배치가 쓰는 몇십 건을 빼고 700건까지만 쓴다.
+# GitHub 예약 실행이 밀리거나 빠지는 날을 대비해 10:30·14:30 KST에 예비 실행을 둔다.
+# 하루 한 번만 받도록 data/survey/backfill_last.txt(마지막으로 받은 날)를 보고, 오늘 이미 받았으면 바로 끝낸다.
 name: survey-backfill
 
 on:
   schedule:
-    - cron: "30 21 * * *"
+    - cron: "30 21 * * *"   # 06:30 KST
+    - cron: "30 1 * * *"    # 10:30 KST 예비
+    - cron: "30 5 * * *"    # 14:30 KST 예비
   workflow_dispatch:
     inputs:
       max_calls:
@@ -14,6 +18,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: survey-backfill
@@ -30,26 +35,41 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
+      # 예약 실행만: 오늘 이미 받았으면 건너뛴다(하루 호출 상한 보호). 수동 실행은 항상 돈다.
+      - name: Already done today?
+        id: done
+        if: github.event_name == 'schedule'
+        run: |
+          today=$(date +%F)
+          last=$(cat data/survey/backfill_last.txt 2>/dev/null || true)
+          if [ "$last" = "$today" ]; then echo "오늘($today) 백필 완료 → 건너뜀"; echo "skip=1" >> "$GITHUB_OUTPUT"; fi
       - uses: actions/setup-python@v5
+        if: steps.done.outputs.skip != '1'
         with:
           python-version: "3.12"
           cache: pip
       - name: Install
+        if: steps.done.outputs.skip != '1'
         run: pip install -r requirements.txt
       - name: Restore survey cache
+        if: steps.done.outputs.skip != '1'
         uses: actions/cache@v4
         with:
           path: data/cache/ncpms/survey
           key: ncpms-survey-${{ github.run_id }}
           restore-keys: ncpms-survey-
       - name: Backfill
+        if: steps.done.outputs.skip != '1'
         run: python scripts/backfill_survey.py --skip-known --max-calls ${{ inputs.max_calls || '700' }}
       - name: Trends
+        if: steps.done.outputs.skip != '1'
         run: python -m pipeline.survey_trend
       - name: Commit
+        if: steps.done.outputs.skip != '1'
         run: |
           git config user.name "forecast-bot"
           git config user.email "forecast-bot@users.noreply.github.com"
+          date +%F > data/survey/backfill_last.txt
           git add data/survey data/trend data/surveyview || true
           if git diff --cached --quiet; then echo "변경 없음"; exit 0; fi
           git commit -m "chore(data): survey backfill $(date +%F)"
@@ -58,3 +78,16 @@ jobs:
             echo "push 재시도 $i"; sleep 5
           done
           exit 1
+      - name: Open issue on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `예찰 백필 실패 ${new Date().toISOString().slice(0,10)}`;
+            const { data: issues } = await github.rest.issues.listForRepo({ owner: context.repo.owner, repo: context.repo.repo, state: 'open', labels: 'batch-failure' });
+            if (issues.some(i => i.title === title)) return;
+            await github.rest.issues.create({
+              owner: context.repo.owner, repo: context.repo.repo, title,
+              labels: ['batch-failure'],
+              body: `실행 로그: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}\n\n오늘 예비 실행 시각에 다시 시도합니다. NCPMS 키·일일 호출 상한을 확인하세요.`
+            });

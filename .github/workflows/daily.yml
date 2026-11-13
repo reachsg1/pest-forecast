@@ -1,10 +1,15 @@
 # 매일 새벽 05:00 KST(= 20:00 UTC 전날)에 예측을 계산해 정적 JSON을 커밋한다.
 # 커밋이 main에 올라가면 Vercel이 자동으로 재배포한다.
+# GitHub 예약 실행은 몇 시간 밀리거나 빠지기도 해서 08:00·11:00·14:00 KST에 예비 실행을 둔다.
+# 예비 실행은 오늘 결과(summary.json issued_date = 오늘)가 이미 있으면 바로 끝낸다(호출 낭비 없음).
 name: daily-forecast
 
 on:
   schedule:
-    - cron: "0 20 * * *"
+    - cron: "0 20 * * *"   # 05:00 KST
+    - cron: "0 23 * * *"   # 08:00 KST 예비
+    - cron: "0 2 * * *"    # 11:00 KST 예비
+    - cron: "0 5 * * *"    # 14:00 KST 예비
   workflow_dispatch:
     inputs:
       demo:
@@ -39,15 +44,27 @@ jobs:
         with:
           fetch-depth: 1
 
+      # 예약 실행만: 오늘 결과가 이미 있으면 이후 단계를 건너뛴다(수동 실행은 항상 돈다)
+      - name: Already done today?
+        id: done
+        if: github.event_name == 'schedule'
+        run: |
+          today=$(date +%F)
+          issued=$(python3 -c "import json;print(json.load(open('apps/web/public/data/summary.json',encoding='utf-8')).get('issued_date',''))" 2>/dev/null || true)
+          if [ "$issued" = "$today" ]; then echo "오늘($today) 결과 있음 → 건너뜀"; echo "skip=1" >> "$GITHUB_OUTPUT"; fi
+
       - uses: actions/setup-python@v5
+        if: steps.done.outputs.skip != '1'
         with:
           python-version: "3.12"
           cache: pip
 
       - name: Install
+        if: steps.done.outputs.skip != '1'
         run: pip install -r requirements.txt
 
       - name: Restore weather cache
+        if: steps.done.outputs.skip != '1'
         uses: actions/cache@v4
         with:
           path: data/cache
@@ -57,7 +74,7 @@ jobs:
       # 키가 없으면 데모로 몰래 바꾸지 않고 실패시킨다(실데이터 지도를 데모로 덮어쓰는 사고 방지).
       # 데모가 필요하면 수동 실행에서 demo를 체크한다.
       - name: Check secrets (live only)
-        if: ${{ !inputs.demo }}
+        if: ${{ steps.done.outputs.skip != '1' && !inputs.demo }}
         run: |
           missing=""
           [ -z "$DATA_GO_KR_KEY" ] && missing="$missing DATA_GO_KR_KEY"
@@ -68,10 +85,11 @@ jobs:
           fi
 
       - name: Fetch spots (live only)
-        if: ${{ !inputs.demo }}
+        if: ${{ steps.done.outputs.skip != '1' && !inputs.demo }}
         run: python -m pipeline.cli spots
 
       - name: Run forecast
+        if: steps.done.outputs.skip != '1'
         id: run
         run: |
           ARGS=""
@@ -80,6 +98,7 @@ jobs:
           python -m pipeline.cli run $ARGS
 
       - name: Commit results
+        if: steps.done.outputs.skip != '1'
         run: |
           git config user.name "forecast-bot"
           git config user.email "forecast-bot@users.noreply.github.com"
