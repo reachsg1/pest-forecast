@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { AUTH_COOKIE, authConfig, readSession, safeNext } from "@/lib/auth";
-import { featurePath, px, py } from "@/lib/mapColor";
-import { todayMap } from "@/lib/todayMap";
 
 export const metadata: Metadata = { title: "로그인", robots: { index: false } };
 export const dynamic = "force-dynamic";
@@ -88,26 +86,10 @@ export default async function LoginPage({
   );
   const kakaoNo =
     admin && session?.sub?.startsWith("k") ? session.sub.slice(1) : null;
-  const map = admin ? null : await todayMap("rgba(255,255,255,0.06)");
-  // 맛보기: 중부~남부 내륙을 확대(가장자리는 흐리게) — 전체 지도는 로그인 뒤에
-  const vb = [px(126.15), py(37.35), px(129.45) - px(126.15), py(35.25) - py(37.35)].map((v) => v.toFixed(1)).join(" ");
   const href = (p: string) =>
     `/api/auth/${p}?next=${encodeURIComponent(nextPath)}`;
   const btn =
     "flex w-full items-center justify-center gap-2.5 rounded-xl px-4 py-2.5 text-sm font-semibold shadow-sm transition";
-
-  const FEATURES = [
-    [
-      "시군별 위험도 지도",
-      "고추·사과·벼 병해충 위험을 정상·예보·주의보·경보 4단계로",
-    ],
-    ["앞으로 7일 전망", "기상청 단기·중기예보로 며칠 뒤 위험까지 미리"],
-    [
-      "내 농장과 지금 할 일",
-      "등록 약제·희석배수·수확 전 사용 시기까지 한 번에",
-    ],
-    ["실제 예찰로 검증", "국가 예찰(NCPMS) 자료와 비교한 정확도 AUC 0.9 안팎"],
-  ];
 
   return (
     <div
@@ -124,52 +106,14 @@ export default async function LoginPage({
               <br />
               미리 알고 대비하세요
             </h2>
-            {/* 오늘 지도 맛보기(링크 미리보기 그림과 같은 자료, 지도 부분만 확대) */}
-            {map?.geo && map.colors.size > 0 && (
-              <figure className="relative mt-5 overflow-hidden rounded-2xl border border-white/10 bg-slate-950/40 shadow-lift">
-                <svg
-                  viewBox={vb}
-                  className="block aspect-[16/10] w-full"
-                  preserveAspectRatio="xMidYMid slice"
-                  role="img"
-                  aria-label={`${map.caption} 지도 일부`}
-                  style={{ maskImage: "radial-gradient(120% 95% at 50% 45%, #000 55%, transparent 100%)", WebkitMaskImage: "radial-gradient(120% 95% at 50% 45%, #000 55%, transparent 100%)" }}
-                >
-                  {map.geo.features.map((f) => (
-                    <path
-                      key={f.properties.key}
-                      d={featurePath(f.geometry, 1)}
-                      fill={map.colors.get(f.properties.key) ?? "rgba(255,255,255,0.06)"}
-                      stroke="rgba(255,255,255,0.28)"
-                      strokeWidth={0.35}
-                    />
-                  ))}
-                </svg>
-                <figcaption className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 bg-gradient-to-t from-slate-950/80 to-transparent px-4 pb-3 pt-10">
-                  <span className="min-w-0">
-                    <span className="block text-[11px] font-medium text-emerald-200">{map.mode === "live" ? "오늘의 위험 지도" : "지난 시즌 실제 발생"}</span>
-                    <span className="block truncate text-sm font-semibold">{map.caption}</span>
-                  </span>
-                  <span className="glass-dark hidden shrink-0 rounded-full px-2.5 py-1 text-[11px] text-white/80 sm:inline">로그인하면 전국·내 지역까지</span>
-                </figcaption>
-              </figure>
-            )}
-            <ul className="mt-5 grid gap-x-5 gap-y-3 sm:grid-cols-2">
-              {FEATURES.map(([t, d]) => (
-                <li key={t} className="flex gap-2.5">
-                  <span
-                    aria-hidden="true"
-                    className="mt-1 h-2 w-2 shrink-0 rounded-full bg-emerald-300"
-                  />
-                  <span>
-                    <span className="block text-sm font-semibold">{t}</span>
-                    <span className="block text-xs leading-relaxed text-white/60">
-                      {d}
-                    </span>
-                  </span>
-                </li>
-              ))}
-            </ul>
+            {/* 오늘 결과 미리보기(링크 미리보기 그림과 같음, 로그인 없이 보임) */}
+            <img
+              src="/opengraph-image"
+              alt="오늘의 병해충 위험 지도 미리보기"
+              width={1200}
+              height={630}
+              className="mt-6 w-full rounded-2xl border border-white/10 shadow-lift"
+            />
           </div>
         </section>
       )}
