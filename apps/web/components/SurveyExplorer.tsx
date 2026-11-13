@@ -25,6 +25,10 @@ const FILL = [
 /** NCPMS 예찰 탐색: 병해충·연도·조사일을 골라 시군별 실제 조사값을 지도·표로 본다 */
 export default function SurveyExplorer({ pests, initial }: { pests: ExplorerPest[]; initial?: string }) {
   const [pestId, setPestId] = useState(initial ?? pests[0]?.pest_id ?? "");
+  // 위 '시즌 돌아보기' 카드에서 병해충을 고르면(?pest=) 따라 바꾼다
+  useEffect(() => {
+    if (initial) setPestId(initial);
+  }, [initial]);
   const [view, setView] = useState<View | null | undefined>(undefined);
   const [year, setYear] = useState<number | null>(null);
   const [date, setDate] = useState("");

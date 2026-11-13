@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { ActionBox } from "@/components/ControlGuide";
 import RiskBadge from "@/components/RiskBadge";
+import { NextSeasonCard } from "@/components/SeasonRecap";
 import { Icon, PageHeader } from "@/components/ui";
 import { getPests, getSummary } from "@/lib/data";
 import { GRADES } from "@/lib/grades";
@@ -33,10 +34,14 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
     .map((p) => ({ p, g: sum.get(p.pest_id)?.max_grade ?? null }))
     .filter((x) => x.g && x.g !== "정상")
     .sort((a, b) => rank(b.g) - rank(a.g));
+  const growing = summary?.pests.some((p) => (p.n_applicable ?? 0) > 0) ?? false;
 
   return (
     <div className="space-y-5">
       <PageHeader eyebrow="작물별 방제 시기" title="방제 일정" desc="병해충별로 발생·방제를 챙길 시기와, 오늘 위험이 높은 병해충의 할 일을 함께 봅니다." />
+
+      {/* 재배 시기가 아니면 다음 시즌 일정을 맨 위에 */}
+      {!growing && <NextSeasonCard pests={pests} today={issued} />}
 
       <nav aria-label="작물 선택" className="no-scrollbar -mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
         <ul className="flex gap-2">
@@ -120,6 +125,8 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
           막대는 병해충별 위험도 계산 시기(문헌·NCPMS 근거의 발생 시기)예요. 이 시기에 예보 이상이 나오면 방제 정보를 확인하세요. 실제 재배 기간 밖은 지도에서 &lsquo;해당 없음&rsquo;으로 빠져요.
         </p>
       </section>
+
+      {growing && <NextSeasonCard pests={pests} today={issued} />}
     </div>
   );
 }

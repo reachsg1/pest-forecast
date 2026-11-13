@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { promises as fs } from "fs";
 import path from "path";
+import { SeasonRecapSection } from "@/components/SeasonRecap";
 import SurveyExplorer from "@/components/SurveyExplorer";
 import { PageHeader } from "@/components/ui";
 import { getPests } from "@/lib/data";
@@ -17,7 +18,11 @@ export default async function SurveyPage({ searchParams }: { searchParams: Promi
   return (
     <div className="space-y-5">
       <PageHeader eyebrow="NCPMS 예찰" title="과거 발생 현황" desc="국가 예찰(NCPMS)에서 조사한 시군별 실제 발생을 날짜별로 지도와 표로 봅니다." />
-      {list.length ? <SurveyExplorer pests={list} initial={list.some((p) => p.pest_id === pest) ? pest : undefined} /> : <p className="card p-5 text-sm text-slate-500">아직 공개할 예찰 자료가 없어요.</p>}
+      <SeasonRecapSection pests={pests.filter((p) => have.has(p.pest_id))} />
+      <section id="explorer" aria-label="날짜별 시군 조사값" className="scroll-mt-20 space-y-3">
+        <h2 className="section-title text-lg">날짜별 시군 조사값</h2>
+        {list.length ? <SurveyExplorer pests={list} initial={list.some((p) => p.pest_id === pest) ? pest : undefined} /> : <p className="card p-5 text-sm text-slate-500">아직 공개할 예찰 자료가 없어요.</p>}
+      </section>
     </div>
   );
 }

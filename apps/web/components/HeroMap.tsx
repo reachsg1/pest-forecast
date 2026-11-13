@@ -118,7 +118,7 @@ export default function HeroMap(props: HeroMapProps) {
   const nPos = frame ? Array.from(frame.values.values()).filter((v) => v != null && v > (props.mode === "live" ? 49.999 : 0)).length : 0;
 
   return (
-    <figure className="relative mx-auto w-full max-w-[460px]" aria-label={props.caption}>
+    <figure className="relative mx-auto w-full max-w-[460px] lg:max-w-[min(420px,calc((100vh-330px)*0.82))]" aria-label={props.caption}>
       <div className="relative">
         <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full drop-shadow-[0_10px_30px_rgba(0,0,0,0.35)]" role="img" aria-hidden="true">
           {paths.length === 0 && <rect x="0" y="0" width={W} height={H} rx="24" fill="rgba(255,255,255,0.04)" />}
