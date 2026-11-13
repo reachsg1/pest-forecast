@@ -6,6 +6,8 @@
 """
 from __future__ import annotations
 
+import re
+
 import json
 import time
 from dataclasses import dataclass
@@ -14,6 +16,11 @@ from typing import Any, Callable, Optional
 
 from .. import config
 from . import ncpms
+
+
+def normalize_item(name: str) -> str:
+    """2026년부터 일부 작물 항목명 앞에 작물명이 붙는다("노지고추 - 탄저병(피해과율)") → 예전 이름("탄저병(피해과율)")으로 맞춘다."""
+    return re.sub(r"^[^()]*?\s+-\s+", "", name or "")
 
 CACHE = config.CACHE_DIR / "ncpms" / "survey"
 ROUNDS_TTL_SEC = 20 * 3600
@@ -82,7 +89,7 @@ def collect(key: str, spec: SurveySpec, years: list[int], budget: Budget, *, tod
                 sg = _cached(CACHE / ik / f"sgg_{sc}.json", budget, lambda: ncpms.survey_by_sigungu(key, ik, sc), keep_empty=False)
                 d = rd.get("inputStdrDatetm", "")
                 for r in sg:
-                    item = r.get("dbyhsNm", "")
+                    item = normalize_item(r.get("dbyhsNm", ""))
                     if spec.item not in item:
                         continue
                     out.append({

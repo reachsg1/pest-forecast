@@ -11,6 +11,9 @@ import { ROLE_HEADER, SUB_HEADER } from "@/lib/auth";
 export const metadata: Metadata = {
   title: { default: "병해충 발생 예측", template: "%s · 병해충 발생 예측" },
   description: "농업기상 관측과 예보를 바탕으로 작물별 병해충 발생 위험도를 매일 예측해 공개하는 서비스",
+  // 링크 미리보기(카카오톡 등) 그림 주소를 절대 경로로 만든다. 그림은 app/opengraph-image.tsx
+  metadataBase: new URL(process.env.SITE_URL ?? (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000")),
+  openGraph: { type: "website", locale: "ko_KR", siteName: "병해충 발생 예측", title: "병해충 발생 예측", description: "오늘 우리 지역 병해충 위험도와 7일 전망" },
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

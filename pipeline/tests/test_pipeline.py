@@ -143,3 +143,11 @@ def test_default_variant_falls_back_when_not_loaded():
         m.is_default = m.is_base
     _apply_default_variant(without_ens)
     assert [m.id for m in without_ens if m.is_default] == ["pepper_anthracnose"]
+
+
+def test_survey_item_name_normalized_for_2026_prefix():
+    from pipeline.fetch.survey import normalize_item
+
+    assert normalize_item("노지고추 - 탄저병(피해과율)") == "탄저병(피해과율)"
+    assert normalize_item("탄저병(피해과율)") == "탄저병(피해과율)"
+    assert normalize_item("복숭아순나방붙이(트랩마리수)") == "복숭아순나방붙이(트랩마리수)"

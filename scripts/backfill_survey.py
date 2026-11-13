@@ -1,6 +1,8 @@
 """NCPMS 예찰(모든 작물) 연도별 백필 — 하루 호출 상한 안에서 캐시를 채우고, 병해충별 CSV·연도별 추이를 갱신한다.
 
-    python scripts/backfill_survey.py [--max-calls 700] [--years 2015-2025]
+    python scripts/backfill_survey.py [--max-calls 700] [--years 2015-2026] [--crops 사과,고추(노지)]
+
+- 기본 연도: 2015 ~ 마지막으로 끝난 예찰 시즌(11월부터는 올해, 그 전에는 지난해 — 진행 중인 시즌은 회차가 덜 차서 넣지 않는다).
 
 - 우선순위(PRIORITY) 순서로 작물 × 연도를 돌며 회차·시도·시군 응답을 data/cache/ncpms/survey/ 에 캐시(영구).
   이미 받은 회차는 호출하지 않는다. 상한에 닿으면 멈추고 다음 날 이어 받는다(GitHub Actions survey-backfill.yml이 매일 실행).
@@ -60,11 +62,18 @@ def known_crop_years() -> set[tuple[str, int]]:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--max-calls", type=int, default=700)
-    ap.add_argument("--years", default="2015-2025")
+    ap.add_argument("--years", default=None, help="기본: 2015~마지막으로 끝난 시즌")
+    ap.add_argument("--crops", default=None, help="쉼표로 구분한 작물군(기본: PRIORITY 전체)")
     ap.add_argument("--skip-known", action="store_true",
                     help="커밋된 병해충 CSV에 이미 있는 작물×연도는 건너뜀(캐시가 비어 있는 GitHub Actions용)")
     args = ap.parse_args(argv)
-    y0, y1 = (int(x) for x in args.years.split("-"))
+    if args.years:
+        y0, y1 = (int(x) for x in args.years.split("-"))
+    else:
+        from datetime import date
+
+        t = date.today()
+        y0, y1 = 2015, (t.year if t.month >= 11 else t.year - 1)
     years = list(range(y1, y0 - 1, -1))  # 최근 연도부터
     key = config.ncpms_key()
     if not key:
@@ -74,7 +83,8 @@ def main(argv: list[str] | None = None) -> int:
     budget = Budget(args.max_calls)
     known = known_crop_years() if args.skip_known else set()
     done, stopped = [], None
-    for crop in PRIORITY:
+    order = [c.strip() for c in args.crops.split(",")] if args.crops else PRIORITY
+    for crop in order:
         spec = specs.get(crop)
         if spec is None:
             continue
@@ -118,7 +128,7 @@ def main(argv: list[str] | None = None) -> int:
             w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
             w.writeheader()
             w.writerows(rows)
-        yrs = sorted({r["year"] for r in rows})
+        yrs = sorted({int(r["year"]) for r in rows})
         print(f"  {pest}: {len(rows)}행 ({yrs[0]}~{yrs[-1]}, {len(yrs)}개 연도)")
     return 0
 
