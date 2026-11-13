@@ -61,7 +61,7 @@ export default async function HomePage() {
     <div className="lg:-mt-3">
       {/* ── 히어로 ─────────────────────────────────────────── */}
       <section aria-labelledby="today" className="hero-dark">
-        <div className="relative grid gap-5 px-5 pb-5 pt-6 sm:px-10 sm:pb-6 sm:pt-8 lg:grid-cols-[1.05fr_1fr] lg:grid-rows-[auto_1fr] lg:gap-x-8 lg:gap-y-4 lg:pt-7">
+        <div className="relative grid gap-5 px-5 py-6 sm:px-10 sm:py-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:grid-rows-[auto_1fr] lg:gap-x-10 lg:gap-y-4 lg:py-6">
           <div className="min-w-0 lg:col-start-1 lg:row-start-1">
             <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-medium text-emerald-100 backdrop-blur">
               <span className="relative flex h-2 w-2">
@@ -119,14 +119,12 @@ export default async function HomePage() {
             ) : lead ? (
               <>
                 <p className="mt-4 text-sm font-medium text-emerald-200">{lead.year} 시즌 돌아보기</p>
-                <h1 id="today" className="mt-1.5 text-[1.7rem] font-bold leading-tight tracking-tight sm:text-[2.2rem] sm:leading-[1.18]">
+                <h1 id="today" className="mt-1.5 text-balance text-[1.7rem] font-bold leading-tight tracking-tight sm:text-[2.2rem] sm:leading-[1.2]">
                   올해 {pestFullName(lead.crop_ko, lead.name_ko)},
                   <br />
-                  조사한 시군 <span className="num text-amber-300">{pct(lead.sggOcc)}</span>에서
-                  <br />
-                  발생했어요
+                  조사한 시군 <span className="num text-amber-300">{pct(lead.sggOcc)}</span>에서 발생했어요
                 </h1>
-                <p className="mt-3 text-sm leading-relaxed text-white/75 sm:text-base">
+                <p className="mt-2.5 text-sm leading-relaxed text-white/75 sm:text-base">
                   {lead.normal != null && (
                     <>
                       평년({lead.normalYears}) {pct(lead.normal)}
@@ -162,47 +160,50 @@ export default async function HomePage() {
               </Link>
               <ShareButton text={shareText} />
             </div>
+
+            {/* 등급 읽는 법 + 예찰로 검증한 정확도(왼쪽 열 아래를 채움) */}
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3.5">
+                <p className="text-xs font-semibold text-white/70">등급 읽는 법 · 위험지수 0~100</p>
+                <ul className="mt-2.5 grid grid-cols-2 gap-x-3 gap-y-2.5">
+                  {GRADES.map((g) => (
+                    <li key={g.name} className="min-w-0">
+                      <div className="flex items-baseline gap-1.5 text-sm font-semibold">
+                        <span aria-hidden="true" style={{ color: g.color }}>
+                          {g.icon}
+                        </span>
+                        {g.name}
+                        <span className="num text-[11px] font-normal text-white/45">
+                          {g.min}~{g.max}
+                        </span>
+                      </div>
+                      <div className="truncate text-[11px] text-white/55">{g.action}</div>
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-2.5 text-[11px] leading-snug text-white/45">&lsquo;해당 없음&rsquo; = 재배하지 않는 지역·기간(등급 아님)</p>
+              </div>
+              {acc.length > 0 && (
+                <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3.5">
+                  <p className="text-xs font-semibold text-white/70">예찰로 검증한 정확도(AUC)</p>
+                  <ul className="mt-2.5 space-y-1.5">
+                    {acc.map((a) => (
+                      <li key={a.pest_id} className="grid grid-cols-[1fr_auto] items-center gap-x-2 text-[13px]">
+                        <span className="truncate text-white/70">{a.name}</span>
+                        <b className="num">{a.auc.toFixed(2)}</b>
+                        <span className="col-span-2 h-1 overflow-hidden rounded-full bg-white/10" aria-hidden="true">
+                          <span className="block h-full rounded-full bg-emerald-300/80" style={{ width: `${Math.max(0, (a.auc - 0.5) / 0.5) * 100}%` }} />
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="mt-2.5 text-[11px] leading-snug text-white/45">1에 가까울수록 정확, 0.5는 찍기 수준. {acc[0].testYears} 예찰(학습에 안 쓴 해)과 비교.</p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* 아래 띠: 등급 읽는 법 + 예찰로 검증한 정확도 */}
-        <div className="relative grid gap-4 border-t border-white/10 px-5 py-3.5 sm:px-10 lg:grid-cols-[1.05fr_1fr] lg:gap-x-8">
-          <div>
-            <p className="text-xs font-semibold text-white/70">등급 읽는 법 · 위험지수 0~100</p>
-            <ul className="mt-2 grid grid-cols-2 gap-x-3 gap-y-2 sm:grid-cols-4">
-              {GRADES.map((g) => (
-                <li key={g.name} className="min-w-0">
-                  <div className="flex items-center gap-1.5 text-sm font-semibold">
-                    <span aria-hidden="true" style={{ color: g.color }}>
-                      {g.icon}
-                    </span>
-                    {g.name}
-                    <span className="num text-[11px] font-normal text-white/50">
-                      {g.min}~{g.max}
-                    </span>
-                  </div>
-                  <div className="truncate text-[11px] text-white/55">{g.action}</div>
-                </li>
-              ))}
-            </ul>
-            <p className="mt-2 text-[11px] text-white/45">&lsquo;해당 없음&rsquo;은 재배하지 않는 지역이거나 재배 기간이 아닌 날이에요(등급 아님).</p>
-          </div>
-          {acc.length > 0 && (
-            <div>
-              <p className="text-xs font-semibold text-white/70">실제 예찰로 검증한 예측 정확도(AUC)</p>
-              <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
-                {acc.map((a) => (
-                  <li key={a.pest_id} className="text-sm">
-                    <span className="text-white/60">{a.name}</span> <b className="num">{a.auc.toFixed(2)}</b>
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-2 text-[11px] leading-relaxed text-white/45">
-                1에 가까울수록 정확하고 0.5는 찍기 수준이에요. {acc[0].testYears} NCPMS 시군 예찰(학습에 쓰지 않은 해)과 비교했어요.
-              </p>
-            </div>
-          )}
-        </div>
       </section>
 
     </div>

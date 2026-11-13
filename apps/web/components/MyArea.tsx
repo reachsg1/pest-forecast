@@ -108,7 +108,7 @@ export default function MyArea({ pests }: { pests: PestLite[] }) {
       </div>
 
       {!title && (
-        <div className="mt-3 flex flex-wrap items-center gap-2">
+        <div className="mt-2.5 flex flex-wrap items-center gap-2">
           <button type="button" onClick={locate} className="btn-light px-3 py-1.5 text-sm">
             내 위치로 보기
           </button>
