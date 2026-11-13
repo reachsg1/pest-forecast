@@ -91,17 +91,19 @@ export default async function LoginPage({
   const btn =
     "flex w-full items-center justify-center gap-2.5 rounded-xl px-4 py-2.5 text-sm font-semibold shadow-sm transition";
 
+  // 헤더(h-16) 아래 화면을 통째로 쓴다 — 데스크톱은 좌우 반반(왼쪽 소개, 오른쪽 로그인), 모바일은 위 소개(짧게) + 아래 로그인이 한 화면
   return (
-    <div
-      className={`mx-auto grid content-center items-center gap-8 py-4 sm:py-8 lg:min-h-[calc(100svh-9.5rem)] ${admin ? "max-w-sm" : "max-w-6xl lg:grid-cols-[1.45fr_1fr] lg:gap-16"}`}
-    >
+    <div className="fixed inset-x-0 bottom-0 top-16 z-30 overflow-y-auto bg-canvas">
+      {/* 뒤쪽 본문·푸터는 가려지므로 바깥 스크롤을 막는다(이 화면 안에서만 스크롤) */}
+      <style>{"html,body{overflow:hidden}"}</style>
+      <div className={`grid min-h-full ${admin ? "place-items-center p-5" : "lg:grid-cols-[1.15fr_1fr]"}`}>
       {!admin && (
-        <section aria-label="서비스 소개" className="hero-dark">
-          <div className="relative p-6 sm:p-8">
-            <p className="text-xs font-medium text-emerald-200">
+        <section aria-label="서비스 소개" className="hero-dark flex items-center rounded-none shadow-none">
+          <div className="relative mx-auto w-full max-w-2xl px-5 pb-5 pt-4 2xl:max-w-3xl sm:px-8 sm:py-8 lg:px-12 lg:py-10">
+            <p className="text-[11px] font-medium text-emerald-200 sm:text-xs">
               농업기상 관측 206곳 · 매일 새벽 5시 갱신
             </p>
-            <h2 className="mt-2 text-2xl font-bold leading-tight tracking-tight sm:text-3xl">
+            <h2 className="mt-1.5 text-xl font-bold leading-tight tracking-tight sm:text-3xl lg:text-4xl">
               우리 지역 병해충,
               <br />
               미리 알고 대비하세요
@@ -112,15 +114,15 @@ export default async function LoginPage({
               alt="오늘의 병해충 위험 지도 미리보기"
               width={1200}
               height={630}
-              className="mt-6 w-full rounded-2xl border border-white/10 shadow-lift"
+              className="mt-4 w-full rounded-xl border border-white/10 shadow-lift sm:mt-6 sm:rounded-2xl lg:mt-8"
             />
           </div>
         </section>
       )}
-      <div className="mx-auto flex w-full max-w-sm flex-col items-center">
+      <div className={`mx-auto flex w-full max-w-sm flex-col items-center ${admin ? "" : "px-5 pb-6 pt-5 sm:py-10 lg:justify-center lg:py-10"}`}>
         <span
           aria-hidden="true"
-          className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-card"
+          className={`${admin ? "grid" : "hidden lg:grid"} h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-card`}
         >
           <svg
             viewBox="0 0 24 24"
@@ -135,16 +137,16 @@ export default async function LoginPage({
             <path d="M8 11V8a4 4 0 1 1 8 0v3" />
           </svg>
         </span>
-        <h1 className="mt-5 text-2xl font-bold tracking-tight">
+        <h1 className={`${admin ? "mt-5" : "lg:mt-5"} text-xl font-bold tracking-tight sm:text-2xl`}>
           {admin ? "관리자 확인" : "로그인"}
         </h1>
-        <p className="mt-2 text-center text-sm leading-relaxed text-slate-500">
+        <p className="mt-1.5 text-center text-sm leading-relaxed text-slate-500 sm:mt-2">
           {admin
             ? "이 메뉴는 관리자만 볼 수 있어요."
             : "회원가입 없이 카카오·구글 계정으로 바로 들어올 수 있어요."}
         </p>
 
-        <div className="card mt-6 w-full space-y-3 p-5">
+        <div className="card mt-4 w-full space-y-3 p-4 sm:mt-6 sm:p-5">
           {error && ERRORS[error] && (
             <p
               id="login-error"
@@ -225,7 +227,7 @@ export default async function LoginPage({
             </p>
           )}
         </div>
-        <p className="mt-4 text-center text-xs leading-relaxed text-slate-400">
+        <p className="mt-3 text-center text-[11px] leading-relaxed text-slate-400 sm:mt-4 sm:text-xs">
           {social &&
             "로그인 정보(이메일·회원번호)는 이용 확인에만 쓰고 따로 저장하지 않아요. "}
           이 기기에서 30일 동안 다시 묻지 않아요.{" "}
@@ -236,6 +238,7 @@ export default async function LoginPage({
             개인정보 처리 안내
           </a>
         </p>
+      </div>
       </div>
     </div>
   );
