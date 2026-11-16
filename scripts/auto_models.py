@@ -53,13 +53,11 @@ def run(args: list[str]) -> str:
 def survey_stats(pest: str) -> tuple[set[int], int]:
     p = config.DATA_DIR / "survey" / f"ncpms_{pest}_sigungu.csv"
     item = ITEMS[pest][0]
-    years, n = set(), 0
+    from pipeline.survey_items import combine
+
     with p.open(encoding="utf-8") as f:
-        for r in csv.DictReader(f):
-            if r.get("item") == item and r.get("value") not in ("", None):
-                years.add(int(r["year"]))
-                n += 1
-    return years, n
+        rows = combine(csv.DictReader(f), item)  # '|' 여러 항목 합치기 포함
+    return {int(r["year"]) for r in rows}, len(rows)
 
 
 AUTO_ITEMS = config.DATA_DIR / "survey" / "items_auto.json"

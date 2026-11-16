@@ -39,7 +39,7 @@ export default function Footer({ generatedAt, issuedDate, isAdmin = false }: { g
               <>
                 <li>
                   <Link href="/data" className="hover:text-slate-900">
-                    Open API · 데이터 다운로드
+                    데이터 명세 · API
                   </Link>
                 </li>
                 <li>

@@ -111,27 +111,27 @@ def load_weather_by_sigungu(years: list[int], extra_regions: list[str] | None = 
     return out
 
 
-def load_survey(pest: str) -> list[dict]:
+def load_survey(pest: str, item: str | None = None) -> list[dict]:
     """예찰 CSV → 표본 행. 조사 항목은 pipeline/survey_trend.ITEMS 의 정확한 이름만 쓴다
-    (예: 사과 '복숭아순나방(피해과율)' — 같은 CSV의 피해신초율·트랩 마리수·'복숭아순나방붙이'는 제외)."""
+    (예: 사과 '복숭아순나방(피해과율)' — 같은 CSV의 피해신초율·트랩 마리수·'복숭아순나방붙이'는 제외).
+    여러 항목 합치기·비율 0~100 자르기는 pipeline/survey_items.combine. item을 주면 그 항목(직전 예찰 입력 비교용)."""
+    from .survey_items import combine
     from .survey_trend import ITEMS
 
-    item = ITEMS.get(pest, (None, ""))[0]
+    item = item or ITEMS.get(pest, (None, ""))[0]
     p = config.DATA_DIR / "survey" / f"ncpms_{pest}_sigungu.csv"
     with p.open(encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
-    out = []
-    for r in rows:
-        name = r["sigungu"]
-        if not name or (item and r.get("item") != item):
-            continue
-        try:
-            v = float(r["value"])
-        except ValueError:
-            continue
-        out.append({**r, "key": regions.key_of(r["sido"], name), "value": v,
-                    "date": datetime.strptime(r["survey_date"], "%Y-%m-%d").date()})
-    return out
+    picked = combine(rows, item) if item else [{**r, "value": v} for r in rows if r["sigungu"] and (v := _f(r["value"])) is not None]
+    return [{**r, "key": regions.key_of(r["sido"], r["sigungu"]),
+             "date": datetime.strptime(r["survey_date"], "%Y-%m-%d").date()} for r in picked]
+
+
+def _f(v):
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return None
 
 
 def half_month(d: date) -> str:
@@ -161,7 +161,7 @@ def brier(y: list[int], p: list[float]) -> float:
 
 
 def build_samples(pest: str, train_years: list[int], test_years: list[int], feat_names: list[str],
-                  max_km: float = 0.0) -> tuple[list[dict], dict]:
+                  max_km: float = 0.0, prev_item: str | None = None) -> tuple[list[dict], dict]:
     """예찰 1건 = 표본 1개. 피처(조사일 전날까지 기상 + 직전 예찰값), 정답(조사값>0), 기본 모델 점수.
     여러 알고리즘(pipeline/survey_ml.py)이 같은 표본을 쓰도록 분리했다."""
     survey = load_survey(pest)
@@ -229,10 +229,21 @@ def build_samples(pest: str, train_years: list[int], test_years: list[int], feat
     by_sy: dict[tuple, list[dict]] = defaultdict(list)
     for smp in samples:
         by_sy[(smp["sigungu"], smp["year"])].append(smp)
+    # prev_item: 직전 회차 입력을 다른 항목으로(예: 정답은 발생면적율, 입력은 피해율) — 같은 시군·같은 해, 조사일 전 최신 값
+    alt: dict[tuple, list] = defaultdict(list)
+    if prev_item:
+        for r in load_survey(pest, prev_item):
+            alt[(r["key"], r["date"].year)].append((r["date"], r["value"]))
+        for v in alt.values():
+            v.sort()
     for lst in by_sy.values():
         lst.sort(key=lambda z: z["date"])
         for i, smp in enumerate(lst):
-            smp["prev"] = lst[i - 1]["value"] if i > 0 else 0.0
+            if prev_item:
+                before = [v for d0, v in alt.get((smp["sigungu"], smp["year"]), []) if d0 < smp["date"]]
+                smp["prev"] = before[-1] if before else 0.0
+            else:
+                smp["prev"] = lst[i - 1]["value"] if i > 0 else 0.0
             smp["feats"]["prev_survey_log"] = math.log1p(smp["prev"])
             smp["x"] = [smp["feats"].get(k, float("nan")) for k in feat_names]
 
@@ -251,6 +262,7 @@ def main(argv: list[str] | None = None) -> int:
                     help="variant 폴더(예: models/pepper/anthracnose/variants/survey_logit) — model.yaml params와 eval.json을 이 결과로 갱신")
     ap.add_argument("--with-history", action="store_true",
                     help="직전 회차 예찰값(log1p)을 피처로 추가(운영하려면 예찰 실시간 연동 필요)")
+    ap.add_argument("--prev-item", default=None, help="직전 회차 입력에 쓸 다른 예찰 항목(survey_ml 과 같음)")
     args = ap.parse_args(argv)
     feat_names = FEATURES + (["prev_survey_log"] if args.with_history else [])
     train_years, test_years = _years(args.train), _years(args.test)
@@ -260,7 +272,7 @@ def main(argv: list[str] | None = None) -> int:
     from sklearn.linear_model import LogisticRegression
     from sklearn.preprocessing import StandardScaler
 
-    samples, skipped = build_samples(args.pest, train_years, test_years, feat_names, args.max_km)
+    samples, skipped = build_samples(args.pest, train_years, test_years, feat_names, args.max_km, prev_item=args.prev_item)
     tr = [s for s in samples if s["year"] in train_years]
     te = [s for s in samples if s["year"] in test_years]
     if len(tr) < 50 or len(te) < 20:

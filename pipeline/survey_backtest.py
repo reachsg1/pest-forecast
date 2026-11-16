@@ -70,7 +70,12 @@ def main(argv: list[str] | None = None) -> int:
 
     rf_p, xgb_p = params("survey_rf"), params("survey_xgb")
     feats = list(rf_p.get("features") or FEATS_HIST)  # 배포 모델과 같은 피처(지형 sgg_·ASOS a_ 포함)
-    samples, _ = build_samples(args.pest, train_years, test_years, feats)
+    # 직전 회차 입력 항목: 배포 모델의 params.survey.item 이 정답 항목(ITEMS)과 다르면 그 항목(예: 정답 발생면적율, 입력 피해율)
+    from .survey_trend import ITEMS
+
+    spec_item = str((rf_p.get("survey") or {}).get("item") or "")
+    prev_item = spec_item if spec_item and "(" in spec_item and spec_item != ITEMS.get(args.pest, ("",))[0] else None
+    samples, _ = build_samples(args.pest, train_years, test_years, feats, prev_item=prev_item)
     from . import asos
 
     if asos.uses_asos(feats):

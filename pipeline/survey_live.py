@@ -90,6 +90,9 @@ def build(models: list[LoadedModel], spots: list[dict], issued: date, mode: str,
         except Exception as e:  # noqa: BLE001
             log.exception("예찰 수집 실패 %s", lm.id)
             warnings.append(f"{lm.id}: 예찰 수집 오류({type(e).__name__}) — 예찰값 없이(0으로) 계산")
+        from .survey_items import combine
+
+        rows = combine(rows, spec.item)  # 여러 항목 합치기(최댓값)·비율 0~100
         surveyed = by_sigungu(rows, shift_to_year=issued.year if mode != "live" else None)
         # 기준일 이후 회차는 쓰지 않는다(재현 실행 대비)
         surveyed = {k: [h for h in v if h["date"] <= issued] for k, v in surveyed.items()}

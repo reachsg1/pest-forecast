@@ -103,6 +103,8 @@ def main(argv: list[str] | None = None) -> int:
                     help="RF·XGBoost에 정적 피처 추가(terrain = 시군 재배지 지형 sgg_*, pipeline/terrain.py)")
     ap.add_argument("--importance-only", action="store_true",
                     help="학습 없이 배포된 RF·XGBoost 학습 파일에서 변수 중요도만 eval.json에 다시 쓴다")
+    ap.add_argument("--prev-item", default=None,
+                    help="직전 회차 입력(prev_survey_log)에 쓸 다른 예찰 항목(예: 잎도열병(피해율)). 기본은 정답과 같은 항목")
     ap.add_argument("--asos", action="store_true",
                     help="RF·XGBoost에 기상청 ASOS 새 항목(a_*: 일조·일사·강수 지속시간·바람 등, pipeline/asos.py) 추가")
     args = ap.parse_args(argv)
@@ -124,7 +126,7 @@ def main(argv: list[str] | None = None) -> int:
         from . import asos
 
         feats = feats + asos.NEW
-    samples, skipped = build_samples(args.pest, train_years, test_years, feats)
+    samples, skipped = build_samples(args.pest, train_years, test_years, feats, prev_item=args.prev_item)
     if args.asos:
         n = asos.attach(samples)
         for s in samples:
@@ -206,7 +208,7 @@ def main(argv: list[str] | None = None) -> int:
     result = {
         "pest_id": args.pest, "generated": date.today().isoformat(),
         "target": "시군구 예찰 조사값 > 0 (발생)", "train_years": args.train, "test_years": args.test,
-        "threshold": THRESHOLD, "features": feats, "static": args.static, "asos": args.asos, "n_sigungu": len({s["sigungu"] for s in samples}),
+        "threshold": THRESHOLD, "features": feats, "static": args.static, "asos": args.asos, "prev_item": args.prev_item, "n_sigungu": len({s["sigungu"] for s in samples}),
         "skipped": skipped,
         "hyperparams": {"rf": rf_best, "xgb": xgb_best,
                         "rf_cv_logloss": {str(g["min_samples_leaf"]): round(v, 4) for v, g in rf_scores},

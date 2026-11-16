@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from datetime import date
 from typing import Any, Callable, Optional
 
-from .. import config
+from .. import config, survey_items
 from . import ncpms
 
 
@@ -32,7 +32,7 @@ class SurveySpec:
 
     kncr: str              # 작물 코드(예: VC011205 고추)
     examin: str            # 조사 구분 코드(예: 01320 노지고추)
-    item: str              # 조사 항목명에 포함될 글자(예: 탄저병)
+    item: str              # 조사 항목(정확한 이름, '|'로 여러 항목 합치기, 괄호 없으면 포함 글자) — pipeline/survey_items
     predictn: str = "00209"  # 예찰 구분(00204 논벼, 00209 그 외)
 
     @classmethod
@@ -90,7 +90,7 @@ def collect(key: str, spec: SurveySpec, years: list[int], budget: Budget, *, tod
                 d = rd.get("inputStdrDatetm", "")
                 for r in sg:
                     item = normalize_item(r.get("dbyhsNm", ""))
-                    if spec.item not in item:
+                    if not survey_items.match(item, spec.item):
                         continue
                     out.append({
                         "year": year, "round": rd.get("examinTmrd"),

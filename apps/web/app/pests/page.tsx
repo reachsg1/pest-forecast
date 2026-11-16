@@ -1,14 +1,38 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { ActionBox } from "@/components/ControlGuide";
 import RiskBadge from "@/components/RiskBadge";
+import { NextSeasonCard } from "@/components/SeasonRecap";
 import { GradeBar, Icon, PageHeader } from "@/components/ui";
 import { getPests, getSummary } from "@/lib/data";
 import { GRADES, TYPE_LABEL, gradeMeta } from "@/lib/grades";
 import type { Grade } from "@/lib/types";
 
-export const metadata: Metadata = { title: "병해충 정보" };
+export const metadata: Metadata = { title: "병해충·방제" };
 
 const rank = (g: Grade | null | undefined) => (g ? GRADES.findIndex((x) => x.name === g) : -1);
+const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
+const inSeason = (m: number, s: number, e: number) => (s <= e ? m >= s && m <= e : m >= s || m <= e);
+
+/** 12개월 시기 막대(옛 '방제 일정' 달력을 목록 줄 안으로). 이번 달은 진한 테두리 */
+function MonthStrip({ start, end, now }: { start: number; end: number; now: number }) {
+  return (
+    <div className="mt-1.5 flex items-center gap-2" aria-label={`발생·방제 시기 ${start}~${end}월`}>
+      <ol className="grid w-40 grid-cols-12 gap-0.5 sm:w-48" aria-hidden="true">
+        {MONTHS.map((m) => (
+          <li
+            key={m}
+            title={`${m}월`}
+            className={`h-2 rounded-sm ${inSeason(m, start, end) ? "bg-brand-500/70" : "bg-slate-100"} ${m === now ? "ring-1 ring-slate-700 ring-offset-1" : ""}`}
+          />
+        ))}
+      </ol>
+      <span className="num text-[11px] text-slate-400">
+        {start}~{end}월
+      </span>
+    </div>
+  );
+}
 
 /**
  * 작물을 먼저 고르고 그 작물의 병해충만 본다(작물이 늘어나도 한 줄 선택 + 짧은 목록으로 스크롤을 줄임).
@@ -30,10 +54,20 @@ export default async function PestsPage({ searchParams }: { searchParams: Promis
   const list = sel
     ? sel.list.slice().sort((a, b) => rank(sum.get(b.pest_id)?.max_grade) - rank(sum.get(a.pest_id)?.max_grade) || a.name_ko.localeCompare(b.name_ko, "ko"))
     : [];
+  const issued = summary?.issued_date ?? new Date().toISOString().slice(0, 10);
+  const nowM = Number(issued.slice(5, 7));
+  const growing = summary?.pests.some((p) => (p.n_applicable ?? 0) > 0) ?? false;
+  // 지금 챙길 병해충: 선택 작물 중 오늘 전국 최고 등급이 예보 이상
+  const alerts = list
+    .map((p) => ({ p, g: sum.get(p.pest_id)?.max_grade ?? null }))
+    .filter((x) => x.g && x.g !== "정상" && (sum.get(x.p.pest_id)?.n_applicable ?? 0) > 0);
 
   return (
     <div className="space-y-5">
-      <PageHeader eyebrow={`작물 ${crops.length}종 · 병해충 ${pests.length}종`} title="병해충 정보" desc="작물을 고르면 그 작물의 병해충과 오늘 전국 위험도를 볼 수 있어요." />
+      <PageHeader eyebrow={`작물 ${crops.length}종 · 병해충 ${pests.length}종`} title="병해충·방제" desc="작물을 고르면 그 작물의 병해충, 발생·방제 시기, 오늘 전국 위험도와 지금 할 일을 볼 수 있어요." />
+
+      {/* 재배 시기가 아니면 다음 시즌 일정을 맨 위에 */}
+      {!growing && <NextSeasonCard pests={pests} today={issued} />}
 
       {/* 작물 선택: 한 줄, 많아지면 옆으로 넘김 */}
       <nav aria-label="작물 선택" className="no-scrollbar -mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
@@ -69,6 +103,19 @@ export default async function PestsPage({ searchParams }: { searchParams: Promis
         </ul>
       </nav>
 
+      {alerts.length > 0 && (
+        <section aria-labelledby="todo" className="space-y-3">
+          <h2 id="todo" className="section-title">
+            지금 챙길 병해충 <span className="text-xs font-normal text-slate-400">· 오늘 전국 최고 등급 예보 이상</span>
+          </h2>
+          <div className="grid gap-3 md:grid-cols-2">
+            {alerts.map(({ p, g }) => (
+              <ActionBox key={p.pest_id} pestId={p.pest_id} grade={g as Grade} pestName={p.name_ko} />
+            ))}
+          </div>
+        </section>
+      )}
+
       {sel && (
         <section aria-labelledby="crop-pests" className="card overflow-hidden">
           <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-slate-100 px-5 py-3">
@@ -92,11 +139,9 @@ export default async function PestsPage({ searchParams }: { searchParams: Promis
                         <span className="truncate text-xs italic text-slate-400">{p.name_sci}</span>
                       </div>
                       <div className="mt-0.5 flex flex-wrap items-center gap-x-2 text-xs text-slate-400">
-                        <span>{TYPE_LABEL[p.type]}</span>
+                        <span>{p.kind === "insect" ? "해충" : "병"}</span>
                         <span aria-hidden="true">·</span>
-                        <span>
-                          {p.season.start_month}~{p.season.end_month}월
-                        </span>
+                        <span>{TYPE_LABEL[p.type]}</span>
                         {na && (
                           <>
                             <span aria-hidden="true">·</span>
@@ -104,6 +149,7 @@ export default async function PestsPage({ searchParams }: { searchParams: Promis
                           </>
                         )}
                       </div>
+                      <MonthStrip start={p.season.start_month} end={p.season.end_month} now={nowM} />
                     </div>
                     {s && !na && (
                       <div className="hidden w-48 shrink-0 md:block">
@@ -117,8 +163,14 @@ export default async function PestsPage({ searchParams }: { searchParams: Promis
               );
             })}
           </ul>
+          <p className="flex items-start gap-1.5 border-t border-slate-100 px-5 py-3 text-xs leading-relaxed text-slate-500">
+            <Icon name="info" className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+            막대는 병해충별 발생·방제 시기(위험도 계산 시기, 문헌·NCPMS 근거)이고 테두리 칸이 이번 달이에요. 병해충을 누르면 방제 요령·등록 약제를 볼 수 있어요.
+          </p>
         </section>
       )}
+
+      {growing && <NextSeasonCard pests={pests} today={issued} />}
     </div>
   );
 }

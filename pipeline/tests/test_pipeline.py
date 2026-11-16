@@ -177,3 +177,20 @@ def test_asos_features_and_daily_extra_reach_ml_model():
     hi = {last: {k: 0.0 for k in asos.NEW} | {"a_rndur_season": 400.0, "a_humid_days_14d": 14.0}}
     pts = m.model.predict(wx, [], daily_extra=hi)
     assert "asos_missing" not in pts[-1].inputs and pts[-2].inputs.get("asos_missing") is True
+
+
+def test_survey_items_combine_and_match():
+    """예찰 항목: 정확한 이름·'|' 합치기(최댓값)·괄호 없는 예전 형식·빈 지정(전부)·비율 0~100 자르기."""
+    from pipeline.survey_items import combine, match
+
+    assert match("잎도열병(발생면적율)", "잎도열병(발생면적율)") and not match("잎도열병(피해율)", "잎도열병(발생면적율)")
+    assert match("탄저병(피해과율)", "탄저병") and match("아무거나", "")
+    spec = "벼멸구(발생면적율)|흰등멸구(발생면적율)"
+    rows = [
+        {"sido": "전남", "sigungu": "해남군", "survey_date": "2025-07-10", "item": "벼멸구(발생면적율)", "value": "0"},
+        {"sido": "전남", "sigungu": "해남군", "survey_date": "2025-07-10", "item": "흰등멸구(발생면적율)", "value": "3.5"},
+        {"sido": "전남", "sigungu": "해남군", "survey_date": "2025-07-10", "item": "애멸구(발생면적율)", "value": "50"},
+        {"sido": "경남", "sigungu": "김해시", "survey_date": "2025-07-10", "item": "벼멸구(발생면적율)", "value": "285"},
+    ]
+    out = {r["sigungu"]: r["value"] for r in combine(rows, spec)}
+    assert out == {"해남군": 3.5, "김해시": 100.0}

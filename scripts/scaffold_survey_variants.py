@@ -51,9 +51,14 @@ def main(argv: list[str] | None = None) -> int:
             "id": f"{args.pest}__{v}", "pest_id": args.pest, "name_ko": base.card.name_ko, "name_sci": base.card.name_sci,
             "crop": base.card.crop, "kind": base.card.kind, "season": dict(base.card.season), "status": "draft", "version": "0.1.0",
         })
+        crop_ko = {"pepper": "노지고추", "apple": "사과", "rice": "논벼"}.get(base.card.crop, base.card.crop)
+        # 항목 지정이 정확한 이름('잎도열병(발생면적율)', '|' 합치기 포함)이면 그대로, 아니면 '<항목>(<단위>)'
+        item_full = args.item if "(" in args.item else f"{args.item}({args.unit})"
+        item_txt = " 또는 ".join(item_full.split("|"))
         for k in ("description", "logic"):
             if isinstance(card.get(k), str):
-                card[k] = card[k].replace(old_name, base.card.name_ko).replace("탄저병", args.item).replace("피해과율", args.unit)
+                card[k] = (card[k].replace(f"노지고추 {old_name}", f"{crop_ko} {base.card.name_ko}").replace(old_name, base.card.name_ko)
+                           .replace("탄저병", args.item.split("(")[0]).replace("피해과율", args.unit))
         card["inputs"] = [i.replace("피해과율", args.unit) for i in card.get("inputs", [])]
         spec = (card.get("params") or {}).get("survey")
         if v == "survey_ens":
@@ -65,8 +70,7 @@ def main(argv: list[str] | None = None) -> int:
                     if getattr(args, k):
                         spec[k] = getattr(args, k)
             card["params"] = {"survey": spec} if spec else {}
-        crop_ko = {"pepper": "노지고추", "apple": "사과", "rice": "논벼"}.get(base.card.crop, base.card.crop)
-        card["references"] = [r.replace("'탄저병(피해과율)'", f"'{args.item}({args.unit})'").replace("노지고추 '탄저병", f"{crop_ko} '{args.item}")
+        card["references"] = [r.replace("노지고추 '탄저병(피해과율)'", f"{crop_ko} '{item_txt}'").replace("'탄저병(피해과율)'", f"'{item_txt}'")
                               .replace("pepper_anthracnose", args.pest) for r in card.get("references", [])]
         (dst / "model.yaml").write_text(yaml.safe_dump(card, allow_unicode=True, sort_keys=False), encoding="utf-8")
         print("만듦:", dst)

@@ -7,8 +7,7 @@ import { useEffect, useState } from "react";
 const NAV = [
   { href: "/map", label: "위험도 지도" },
   { href: "/farm", label: "내 농장 위험도" },
-  { href: "/pests", label: "병해충 정보" },
-  { href: "/calendar", label: "방제 일정" },
+  { href: "/pests", label: "병해충·방제" },
   { href: "/survey", label: "과거 발생 현황" },
   { href: "/replay", label: "예측과 실제" },
 ];

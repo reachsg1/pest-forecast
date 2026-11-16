@@ -1,0 +1,265 @@
+{
+  "model_id": "rice_planthoppers__survey_xgb",
+  "version": "0.1.0",
+  "evaluated_at": "2026-11-16",
+  "status": "survey_evaluated",
+  "uses_survey": true,
+  "algorithm": "XGBoost",
+  "method": "연도 분리 검증: 학습 2015-2022, 시험 2023-2025. 정답 = 시군구 예찰값 > 0. 정확도·정밀도·재현율은 위험지수 50(주의보) 이상을 '발생'으로 볼 때.",
+  "n_sigungu": 137,
+  "skipped": {
+    "좌표 없음": 449
+  },
+  "test": {
+    "n": 3240,
+    "positive_rate": 0.095,
+    "auc": {
+      "survey_logit": 0.907,
+      "climatology": 0.718,
+      "default_rule": 0.748,
+      "persistence": 0.764
+    },
+    "within_round_auc": {
+      "survey_logit": 0.868,
+      "climatology": 0.5,
+      "default_rule": 0.558,
+      "persistence": 0.703
+    },
+    "brier": {
+      "survey_logit": 0.0546,
+      "climatology": 0.0838
+    },
+    "classification": {
+      "survey_logit": {
+        "accuracy": 0.931,
+        "precision": 0.681,
+        "recall": 0.526,
+        "f1": 0.593
+      },
+      "default_rule": {
+        "accuracy": 0.886,
+        "precision": 0.262,
+        "recall": 0.11,
+        "f1": 0.155
+      },
+      "climatology": {
+        "accuracy": 0.905,
+        "precision": null,
+        "recall": 0.0,
+        "f1": null
+      }
+    }
+  },
+  "test_by_year": {
+    "2023": {
+      "n": 1072,
+      "positive_rate": 0.087,
+      "auc": {
+        "survey_logit": 0.926,
+        "climatology": 0.735,
+        "default_rule": 0.749,
+        "persistence": 0.742
+      },
+      "within_round_auc": {
+        "survey_logit": 0.898,
+        "climatology": 0.5,
+        "default_rule": 0.568,
+        "persistence": 0.681
+      },
+      "brier": {
+        "survey_logit": 0.0526,
+        "climatology": 0.0779
+      },
+      "classification": {
+        "survey_logit": {
+          "accuracy": 0.93,
+          "precision": 0.615,
+          "recall": 0.516,
+          "f1": 0.561
+        },
+        "default_rule": {
+          "accuracy": 0.911,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": null
+        },
+        "climatology": {
+          "accuracy": 0.913,
+          "precision": null,
+          "recall": 0.0,
+          "f1": null
+        }
+      }
+    },
+    "2024": {
+      "n": 1080,
+      "positive_rate": 0.116,
+      "auc": {
+        "survey_logit": 0.888,
+        "climatology": 0.731,
+        "default_rule": 0.789,
+        "persistence": 0.755
+      },
+      "within_round_auc": {
+        "survey_logit": 0.804,
+        "climatology": 0.5,
+        "default_rule": 0.572,
+        "persistence": 0.676
+      },
+      "brier": {
+        "survey_logit": 0.0648,
+        "climatology": 0.0952
+      },
+      "classification": {
+        "survey_logit": {
+          "accuracy": 0.918,
+          "precision": 0.709,
+          "recall": 0.488,
+          "f1": 0.578
+        },
+        "default_rule": {
+          "accuracy": 0.847,
+          "precision": 0.3,
+          "recall": 0.24,
+          "f1": 0.267
+        },
+        "climatology": {
+          "accuracy": 0.884,
+          "precision": null,
+          "recall": 0.0,
+          "f1": null
+        }
+      }
+    },
+    "2025": {
+      "n": 1088,
+      "positive_rate": 0.083,
+      "auc": {
+        "survey_logit": 0.912,
+        "climatology": 0.683,
+        "default_rule": 0.691,
+        "persistence": 0.801
+      },
+      "within_round_auc": {
+        "survey_logit": 0.907,
+        "climatology": 0.5,
+        "default_rule": 0.535,
+        "persistence": 0.749
+      },
+      "brier": {
+        "survey_logit": 0.0464,
+        "climatology": 0.0783
+      },
+      "classification": {
+        "survey_logit": {
+          "accuracy": 0.947,
+          "precision": 0.716,
+          "recall": 0.589,
+          "f1": 0.646
+        },
+        "default_rule": {
+          "accuracy": 0.899,
+          "precision": 0.143,
+          "recall": 0.044,
+          "f1": 0.068
+        },
+        "climatology": {
+          "accuracy": 0.917,
+          "precision": null,
+          "recall": 0.0,
+          "f1": null
+        }
+      }
+    }
+  },
+  "note": "AUC 1.0=완벽, 0.5=무작위. '같은 회차 변별력'은 같은 조사일의 시군끼리 비교한 AUC로, 계절(시기) 효과를 뺀 성능입니다.",
+  "hyperparams": {
+    "n_estimators": 200,
+    "max_depth": 4,
+    "learning_rate": 0.05,
+    "subsample": 0.8,
+    "colsample_bytree": 0.8,
+    "min_child_weight": 5
+  },
+  "importance": {
+    "basis": "gain(XGBoost)",
+    "values": [
+      {
+        "feature": "prev_survey_log",
+        "share": 0.5028
+      },
+      {
+        "feature": "doy",
+        "share": 0.0867
+      },
+      {
+        "feature": "sgg_dist_sea_km_gentle",
+        "share": 0.0607
+      },
+      {
+        "feature": "sgg_steep_share",
+        "share": 0.0327
+      },
+      {
+        "feature": "sgg_elev_gentle",
+        "share": 0.0326
+      },
+      {
+        "feature": "sgg_tpi_4k_gentle",
+        "share": 0.0312
+      },
+      {
+        "feature": "sgg_relief_5k_mean",
+        "share": 0.026
+      },
+      {
+        "feature": "tmin_7d",
+        "share": 0.0248
+      },
+      {
+        "feature": "sgg_gentle_share",
+        "share": 0.0246
+      },
+      {
+        "feature": "rain_days_season",
+        "share": 0.0226
+      },
+      {
+        "feature": "sgg_northness_mean",
+        "share": 0.0225
+      },
+      {
+        "feature": "tavg_14d",
+        "share": 0.0219
+      },
+      {
+        "feature": "sgg_tpi_1k_gentle",
+        "share": 0.0218
+      },
+      {
+        "feature": "wet_warm_days_season",
+        "share": 0.0204
+      },
+      {
+        "feature": "rain_days_14d",
+        "share": 0.0143
+      },
+      {
+        "feature": "rh_14d",
+        "share": 0.0141
+      },
+      {
+        "feature": "rain_14d",
+        "share": 0.0136
+      },
+      {
+        "feature": "lwd_14d",
+        "share": 0.0135
+      },
+      {
+        "feature": "lwd_30d",
+        "share": 0.0132
+      }
+    ]
+  }
+}
