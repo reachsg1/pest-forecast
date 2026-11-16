@@ -70,6 +70,23 @@ jobs:
       - name: Trends
         if: steps.done.outputs.skip != '1'
         run: python -m pipeline.survey_trend
+      # '예측과 실제' 메뉴 자료: 학습 모델이 있는 병해충마다 과거 예찰 회차를 되돌려 예측 vs 실제(새로 모인 예찰 반영)
+      # 고추 역병·담배나방은 ASOS 피처를 쓰므로 과거 ASOS 일자료 캐시를 먼저 채운다(처음 1회 약 1,100건, 이후 올해분만)
+      - name: Restore ASOS cache
+        if: steps.done.outputs.skip != '1'
+        uses: actions/cache@v4
+        with:
+          path: data/cache/asos
+          key: asos-hist-${{ github.run_id }}
+          restore-keys: asos-hist-
+      - name: Fetch ASOS history
+        if: steps.done.outputs.skip != '1'
+        continue-on-error: true
+        run: python scripts/fetch_asos.py --max-calls 1500
+      - name: Backtest (예측과 실제)
+        if: steps.done.outputs.skip != '1'
+        continue-on-error: true
+        run: python -m pipeline.survey_backtest --all
       # 방제 요령·등록 농약·사용 기준(새 등록·변경 반영). 실패해도 모델 갱신은 계속
       - name: Control info
         if: steps.done.outputs.skip != '1'
@@ -81,7 +98,7 @@ jobs:
           git config user.name "forecast-bot"
           git config user.email "forecast-bot@users.noreply.github.com"
           date +%F > data/survey/model_refresh_last.txt
-          git add models data/survey data/trend data/surveyview data/control || true
+          git add models data/survey data/trend data/surveyview data/control data/backtest || true
           if git diff --cached --quiet; then echo "변경 없음"; exit 0; fi
           git commit -m "chore(models): auto model refresh $(date +%F)"
           for i in 1 2 3; do

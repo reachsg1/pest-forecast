@@ -20,7 +20,7 @@ const VERDICT_LABEL: Record<MapRow["verdict"], string> = { hit: "맞힘(발생)"
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c] as string);
 
 /** 과거 비교 지도: 시군 대표 지점에 그날 예측(색)과 실제 발생(굵은 테두리) 또는 판정(색)을 표시한다. */
-export default function BacktestMap({ rows, mode, unit = "피해과율" }: { rows: MapRow[]; mode: ColorMode; unit?: string }) {
+export default function BacktestMap({ rows, mode, unit = "조사값" }: { rows: MapRow[]; mode: ColorMode; unit?: string }) {
   const ref = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MLMap | null>(null);
   const [ready, setReady] = useState(false);

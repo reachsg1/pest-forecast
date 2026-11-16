@@ -10,6 +10,7 @@ const NAV = [
   { href: "/pests", label: "병해충 정보" },
   { href: "/calendar", label: "방제 일정" },
   { href: "/survey", label: "과거 발생 현황" },
+  { href: "/replay", label: "예측과 실제" },
 ];
 // 관리자 코드로 들어온 경우만 보인다(미들웨어가 경로도 막음)
 const ADMIN_NAV = [

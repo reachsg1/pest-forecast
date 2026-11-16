@@ -42,10 +42,19 @@ def _centroids() -> dict[str, tuple[float, float]]:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--pest", required=True)
+    ap.add_argument("--pest", help="병해충 id (--all 이면 생략)")
+    ap.add_argument("--all", action="store_true", help="학습 모델(variants/survey_rf)이 있는 병해충 전부")
     ap.add_argument("--train", default="2015-2022")
-    ap.add_argument("--test", default="2023-2025")
+    ap.add_argument("--test", default=f"2023-{date.today().year}", help="학습에 안 쓴 해(올해 예찰까지 포함)")
     args = ap.parse_args(argv)
+    if args.all:
+        pests = sorted({m.card.pest_id for m in discover() if m.id.endswith("__survey_rf")})
+        for p in pests:
+            print("과거 비교:", p)
+            main(["--pest", p, "--train", args.train, "--test", args.test])
+        return 0
+    if not args.pest:
+        ap.error("--pest 또는 --all")
 
     import joblib
     import numpy as np

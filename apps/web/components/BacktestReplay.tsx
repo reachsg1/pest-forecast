@@ -147,7 +147,7 @@ export default function BacktestReplay({ pestId }: { pestId: string }) {
           </p>
           <p className="mt-1 text-xs leading-relaxed text-slate-500">
             NCPMS 시군 예찰로 학습·검증한 모델이 있는 병해충만 되돌려 볼 수
-            있습니다(현재 고추 탄저병).
+            있습니다(메뉴 &lsquo;예측과 실제&rsquo;에서 전체 목록).
           </p>
         </div>
       </div>
@@ -185,9 +185,9 @@ export default function BacktestReplay({ pestId }: { pestId: string }) {
       <div>
         <h3 className="section-title">과거 날짜로 되돌려 보기</h3>
         <p className="mt-1 text-xs leading-relaxed text-slate-500">
-          지난 예찰 조사일에 모델이 냈을 위험지수를 그날 실제 조사한 피해과율과
+          지난 예찰 조사일에 모델이 냈을 위험지수를 그날 실제 예찰 조사값과
           시군별로 비교합니다. 위험지수 {thr} 이상(주의보)을 &lsquo;발생
-          예상&rsquo;, 피해과율 0% 초과를 &lsquo;실제 발생&rsquo;으로 봅니다.
+          예상&rsquo;, 조사값 0 초과를 &lsquo;실제 발생&rsquo;으로 봅니다.
         </p>
       </div>
 
@@ -354,7 +354,7 @@ export default function BacktestReplay({ pestId }: { pestId: string }) {
               <tr>
                 <th>시군</th>
                 <th>예측(그날)</th>
-                <th className="text-right">실제 피해과율</th>
+                <th className="text-right">실제 조사값</th>
                 <th className="hidden text-right sm:table-cell">직전 예찰</th>
                 <th>판정</th>
               </tr>
