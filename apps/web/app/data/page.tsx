@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import ModelFeatures from "@/components/ModelFeatures";
 import { PageHeader } from "@/components/ui";
-import { getPests, getStatus } from "@/lib/data";
+import { getAllPests, getStatus } from "@/lib/data";
 
 export const metadata: Metadata = { title: "데이터 명세" };
 
@@ -25,7 +25,7 @@ const FILES = [
 ];
 
 export default async function DataPage() {
-  const [status, pests] = await Promise.all([getStatus(), getPests()]);
+  const [status, pests] = await Promise.all([getStatus(), getAllPests()]);
   const pid = pests[0]?.pest_id ?? "apple_anthracnose";
   return (
     <div className="max-w-5xl space-y-8">

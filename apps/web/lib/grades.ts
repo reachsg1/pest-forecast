@@ -56,6 +56,11 @@ export function fmtIndex(v: number | null | undefined): string {
 export const CROP_LABEL: Record<string, string> = { rice: "벼", apple: "사과", pepper: "고추", pear: "배", peach: "복숭아" };
 export const TYPE_LABEL: Record<string, string> = { A: "감염 조건 모델", B: "발육 단계(적산온도) 모델", C: "통계 모델(로지스틱)", D: "기계학습 모델(결정나무 계열)", E: "앙상블(여러 모델 평균)" };
 
+/** 모델 유형 이름. 앙상블은 구성 모델이 드러나게 모델 이름(예: 앙상블(로지스틱 회귀·Random Forest·XGBoost 평균))을 쓴다 */
+export function typeLabel(m: { type: string; label?: string }): string {
+  return m.type === "E" && m.label ? m.label : (TYPE_LABEL[m.type] ?? m.type);
+}
+
 /** 모델 성능 요약(예찰 학습형): 지도 선택·지점 안내에 쓴다 */
 export function perfText(perf: { auc: number; accuracy: number | null } | null | undefined): string {
   if (!perf) return "검증 전";

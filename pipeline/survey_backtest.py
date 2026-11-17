@@ -99,7 +99,11 @@ def main(argv: list[str] | None = None) -> int:
         if p:
             sc[name] = [_stat_prob(p, s["feats"]) for s in samples]
     members = [k for k in ("survey_hist", "survey_rf", "survey_xgb") if k in sc]
-    sc["survey_ens"] = [sum(v) / len(v) for v in zip(*(sc[k] for k in members))]
+    ens_p = params("survey_ens") or {}
+    cal_t = float((ens_p.get("calibration") or {}).get("threshold") or 0) or None
+    from .run_models import calibrate
+
+    sc["survey_ens"] = [calibrate(sum(v) / len(v), cal_t) if cal_t else sum(v) / len(v) for v in zip(*(sc[k] for k in members))]
     sc["default"] = [((s["default"] or 0.0) / 100.0) for s in samples]
 
     loaded = {m.id: m for m in discover() if m.card.pest_id == args.pest}

@@ -85,6 +85,8 @@ export interface PestCard {
   owner: string;
   status: string;
   eval: EvalSummary;
+  // 일반 화면 노출 여부(예찰 검증 기준, pipeline/service.py)
+  service?: { listed: boolean; reason: string; auc: number | null; recall: number | null; min_auc?: number; min_recall?: number };
   control?: { name: string; environment: string; symptoms: string; control: string; image: string };
   label?: string;
   demo_only?: boolean;
@@ -203,6 +205,7 @@ export interface SpotFile {
 }
 
 export interface SummaryPest {
+  listed?: boolean; // 서비스 노출(예찰 검증 기준 통과)
   pest_id: string;
   name_ko: string;
   crop: string;

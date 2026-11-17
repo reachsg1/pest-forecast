@@ -1,7 +1,7 @@
 {
   "model_id": "rice_leaf_blast__survey_xgb",
   "version": "0.1.0",
-  "evaluated_at": "2026-11-16",
+  "evaluated_at": "2026-11-17",
   "status": "survey_evaluated",
   "uses_survey": true,
   "algorithm": "XGBoost",

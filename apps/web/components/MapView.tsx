@@ -9,7 +9,7 @@ import RiskBadge from "./RiskBadge";
 import AddressSearch, { type GeoHit } from "./AddressSearch";
 import SpotPanel from "./SpotPanel";
 import { Icon } from "./ui";
-import { GRADES, NA, TYPE_LABEL, fmtIndex, gradeOf, gradeRank, perfText } from "@/lib/grades";
+import { GRADES, NA, typeLabel, fmtIndex, gradeOf, gradeRank, perfText } from "@/lib/grades";
 import type { Grade, ModelLite, NaReason, RiskFile, RiskSpotEntry, Spot } from "@/lib/types";
 import { fmtDate } from "@/lib/format";
 import { BASEMAP_LAYERS, MAP_STYLE, type Basemap } from "@/lib/mapStyle";
@@ -344,7 +344,7 @@ export default function MapView({ pests, spots, horizon, issuedDate }: { pests: 
                     {model && (
                       <p className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[11px] text-white/60">
                         <span className="rounded bg-white/15 px-1 text-[10px] font-semibold text-white/80">{model.type}</span>
-                        {TYPE_LABEL[model.type] ?? model.type}
+                        {typeLabel(model)}
                         <span className="text-white/30">·</span>
                         <span className={model.perf ? "text-emerald-200" : "text-amber-200"}>{perfText(model.perf)}</span>
                       </p>

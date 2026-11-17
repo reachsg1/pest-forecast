@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
+import { ROLE_HEADER } from "@/lib/auth";
 import type { Metadata } from "next";
 import PestTabs from "@/components/PestTabs";
 import RiskBadge from "@/components/RiskBadge";
@@ -21,7 +23,9 @@ export default async function PestDetailPage({ params, searchParams }: { params:
   const { id } = await params;
   const { spot, tab } = await searchParams;
   const [pest, risk, pests] = await Promise.all([getPest(id), getRisk(id), getPests()]);
-  if (!pest) notFound();
+  // 서비스 제외 병해충(예찰 검증 기준 미달)은 관리자만 상세를 본다
+  const role = (await headers()).get(ROLE_HEADER) ?? "";
+  if (!pest || (pest.service?.listed === false && role !== "admin")) notFound();
   const entries = risk?.spots ?? [];
   // '해당 없음' 지점은 등급 비교·집계에서 뺀다
   const applicable = entries.filter((e) => e.grade_today != null);

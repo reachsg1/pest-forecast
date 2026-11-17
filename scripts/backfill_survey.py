@@ -112,7 +112,7 @@ def main(argv: list[str] | None = None) -> int:
         rows = []
         for y in range(y0, y1 + 1):
             try:
-                rows += collect(key, spec, [y], nocall)
+                rows += collect(key, spec, [y], nocall, offline=True)
             except BudgetExceeded:
                 pass  # 아직 안 받은 회차는 건너뜀
         out = config.DATA_DIR / "survey" / f"ncpms_{pest}_sigungu.csv"

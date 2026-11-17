@@ -5,7 +5,7 @@ import RiskBadge from "@/components/RiskBadge";
 import { NextSeasonCard } from "@/components/SeasonRecap";
 import { GradeBar, Icon, PageHeader } from "@/components/ui";
 import { getPests, getSummary } from "@/lib/data";
-import { GRADES, TYPE_LABEL, gradeMeta } from "@/lib/grades";
+import { GRADES, typeLabel, gradeMeta } from "@/lib/grades";
 import type { Grade } from "@/lib/types";
 
 export const metadata: Metadata = { title: "병해충·방제" };
@@ -141,7 +141,7 @@ export default async function PestsPage({ searchParams }: { searchParams: Promis
                       <div className="mt-0.5 flex flex-wrap items-center gap-x-2 text-xs text-slate-400">
                         <span>{p.kind === "insect" ? "해충" : "병"}</span>
                         <span aria-hidden="true">·</span>
-                        <span>{TYPE_LABEL[p.type]}</span>
+                        <span>{typeLabel(p)}</span>
                         {na && (
                           <>
                             <span aria-hidden="true">·</span>

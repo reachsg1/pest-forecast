@@ -29,6 +29,7 @@ if str(ROOT) not in sys.path:
 import yaml  # noqa: E402
 
 from pipeline import config  # noqa: E402
+from pipeline.run_models import calibrate  # noqa: E402  # 앙상블 보정(배치와 같은 계산)
 from pipeline.survey_train import FEATURES, WINDOW_DAYS, _years, auc, brier, build_samples, half_month  # noqa: E402,F401
 
 FEATS_HIST = FEATURES + ["prev_survey_log"]
@@ -78,6 +79,20 @@ def within_round_auc(rows: list[dict], scores: list[float]) -> float:
     return round(tot / wsum, 3) if wsum else float("nan")
 
 
+def pick_threshold(y, p) -> float:
+    """F1(놓침과 헛경보의 균형)이 가장 큰 확률 기준점(0.05~0.60, 0.01 간격)."""
+    best, bt = -1.0, 0.5
+    for i in range(5, 61):
+        t = i / 100
+        tp = sum(1 for a, b in zip(y, p) if a and b >= t)
+        fp = sum(1 for a, b in zip(y, p) if not a and b >= t)
+        fn = sum(1 for a, b in zip(y, p) if a and b < t)
+        f1 = 2 * tp / (2 * tp + fp + fn) if tp else 0.0
+        if f1 > best:
+            best, bt = f1, t
+    return bt
+
+
 def year_cv(make, X, y, years) -> float:
     """학습 연도 안에서 한 해씩 빼고 검증한 평균 log loss(낮을수록 좋음)."""
     import numpy as np
@@ -105,6 +120,8 @@ def main(argv: list[str] | None = None) -> int:
                     help="학습 없이 배포된 RF·XGBoost 학습 파일에서 변수 중요도만 eval.json에 다시 쓴다")
     ap.add_argument("--prev-item", default=None,
                     help="직전 회차 입력(prev_survey_log)에 쓸 다른 예찰 항목(예: 잎도열병(피해율)). 기본은 정답과 같은 항목")
+    ap.add_argument("--calibrate", action="store_true",
+                    help="앙상블 위험지수 보정: 학습 연도에서 한 해씩 빼고 예측(out-of-fold)해 F1 최대 기준점을 위험지수 50에 맞춘다(발생률이 낮아 50을 거의 못 넘을 때)")
     ap.add_argument("--asos", action="store_true",
                     help="RF·XGBoost에 기상청 ASOS 새 항목(a_*: 일조·일사·강수 지속시간·바람 등, pipeline/asos.py) 추가")
     args = ap.parse_args(argv)
@@ -167,6 +184,21 @@ def main(argv: list[str] | None = None) -> int:
 
     hist_params, logit_params = params_of("survey_hist"), params_of("survey_logit")
 
+    # --- 앙상블 보정(학습 연도만 사용, 시험 연도는 보지 않음) ---------------------
+    cal_t = None
+    if args.calibrate:
+        oof = np.zeros(len(tr))
+        for yr in sorted(set(yrs)):
+            m = yrs == yr
+            r_ = RandomForestClassifier(random_state=0, n_jobs=-1, **rf_best).fit(Xtr[~m], ytr[~m]).predict_proba(Xtr[m])[:, 1]
+            x_ = XGBClassifier(random_state=0, eval_metric="logloss", n_jobs=4, **xgb_best).fit(Xtr[~m], ytr[~m]).predict_proba(Xtr[m])[:, 1]
+            parts_ = [r_, x_]
+            if hist_params:  # 로지스틱은 배포된 계수(학습 연도 전체로 맞춘 값) 그대로 — 약간 낙관적
+                parts_.append(np.array([_stat_prob(hist_params, s["feats"]) for s, k in zip(tr, m) if k]))
+            oof[m] = np.mean(parts_, axis=0)
+        cal_t = pick_threshold(ytr.tolist(), oof.tolist())
+        print(f"앙상블 보정 기준점(학습 연도 OOF, F1 최대): 확률 {cal_t:.2f} → 위험지수 50")
+
     def scores(rows) -> dict[str, list[float]]:
         X = mat(rows)
         out = {
@@ -178,7 +210,7 @@ def main(argv: list[str] | None = None) -> int:
         if logit_params:
             out["survey_logit"] = [_stat_prob(logit_params, r["feats"]) for r in rows]
         members = [k for k in ("survey_hist", "survey_rf", "survey_xgb") if k in out]
-        out["survey_ens"] = [mean(v) for v in zip(*(out[k] for k in members))]
+        out["survey_ens"] = [calibrate(mean(v), cal_t) if cal_t else mean(v) for v in zip(*(out[k] for k in members))]
         return out
 
     clim = {hm: mean([s["y"] for s in tr if s["hm"] == hm]) for hm in {s["hm"] for s in tr}}
@@ -208,7 +240,8 @@ def main(argv: list[str] | None = None) -> int:
     result = {
         "pest_id": args.pest, "generated": date.today().isoformat(),
         "target": "시군구 예찰 조사값 > 0 (발생)", "train_years": args.train, "test_years": args.test,
-        "threshold": THRESHOLD, "features": feats, "static": args.static, "asos": args.asos, "prev_item": args.prev_item, "n_sigungu": len({s["sigungu"] for s in samples}),
+        "threshold": THRESHOLD, "features": feats, "static": args.static, "asos": args.asos, "prev_item": args.prev_item,
+        "calibration": {"threshold": cal_t, "method": "학습 연도 한 해씩 빼고 예측(OOF) → F1 최대 확률을 위험지수 50으로"} if cal_t else None, "n_sigungu": len({s["sigungu"] for s in samples}),
         "skipped": skipped,
         "hyperparams": {"rf": rf_best, "xgb": xgb_best,
                         "rf_cv_logloss": {str(g["min_samples_leaf"]): round(v, 4) for v, g in rf_scores},
@@ -300,6 +333,17 @@ def export(vdir: Path, result: dict, rf, xgb, fill: list[float], joblib, feats: 
         }
         if key in ("survey_rf", "survey_xgb"):
             ev["hyperparams"] = hp["rf" if key == "survey_rf" else "xgb"]
+        if key == "survey_ens":
+            cal = result.get("calibration")
+            params = dict(card.get("params") or {})
+            if cal:
+                params["calibration"] = {"threshold": cal["threshold"], "method": cal["method"]}
+                ev["calibration"] = cal
+                ev["method"] += f" 앙상블 확률 {cal['threshold']:.2f}을 위험지수 50으로 보정(학습 연도만으로 고름)."
+            else:
+                params.pop("calibration", None)
+            card["params"] = params
+            (folder / "model.yaml").write_text(yaml.safe_dump(card, allow_unicode=True, sort_keys=False), encoding="utf-8")
         (folder / "eval.json").write_text(json.dumps(ev, ensure_ascii=False, indent=2), encoding="utf-8")
         print("내보냄:", folder)
     write_importance(vdir)

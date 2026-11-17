@@ -99,6 +99,13 @@ def run_all(
     return rows
 
 
+def calibrate(p: float, t: float) -> float:
+    """확률 p → 보정 확률. t가 0.5가 되도록 구간별 직선(순서 보존)."""
+    if not t or t <= 0 or t >= 1:
+        return p
+    return 0.5 * p / t if p < t else 0.5 + 0.5 * (p - t) / (1 - t)
+
+
 def combine_ensembles(rows: list[dict], models: list[LoadedModel]) -> list[dict]:
     """유형 E(앙상블): 구성 모델의 같은 지점·같은 날 위험지수(raw_index) 평균. 재배 여부·시기 판정은 구성 모델과 같다.
     구성 모델 중 하나라도 이번 실행에 없으면 그 앙상블은 건너뛴다."""
@@ -108,6 +115,7 @@ def combine_ensembles(rows: list[dict], models: list[LoadedModel]) -> list[dict]
         if lm.card.type != "E":
             continue
         members = list(lm.card.params.get("members", []))
+        cal_t = float((lm.card.params.get("calibration") or {}).get("threshold") or 0) or None
         if not members or any(m not in ran for m in members):
             log.warning("앙상블 %s: 구성 모델(%s) 중 실행되지 않은 것이 있어 건너뜀", lm.id, members)
             continue
@@ -120,6 +128,8 @@ def combine_ensembles(rows: list[dict], models: list[LoadedModel]) -> list[dict]
                 continue
             first = mr[members[0]]
             raw = sum(mr[m]["raw_index"] for m in members) / len(members)
+            if cal_t:  # 보정: 학습 연도에서 고른 확률 기준점을 위험지수 50으로(pipeline/survey_ml.calibrate 와 같은 계산)
+                raw = 100.0 * calibrate(raw / 100.0, cal_t)
             applicable = first["na_reason"] is None
             idx = clamp(raw)
             out.append({

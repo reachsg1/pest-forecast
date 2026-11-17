@@ -2,8 +2,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import RiskBadge from "@/components/RiskBadge";
 import { Icon, PageHeader } from "@/components/ui";
-import { getPests, getStatus } from "@/lib/data";
-import { CROP_LABEL, GRADES, TYPE_LABEL, pestFullName } from "@/lib/grades";
+import { getAllPests, getStatus } from "@/lib/data";
+import { CROP_LABEL, GRADES, typeLabel, pestFullName } from "@/lib/grades";
 import { fmtDateTime } from "@/lib/format";
 
 export const metadata: Metadata = { title: "모델 검증" };
@@ -11,7 +11,7 @@ export const metadata: Metadata = { title: "모델 검증" };
 const MEANING: Record<string, string> = { 정상: "발생 조건 미충족", 예보: "발생 조건 형성 중", 주의보: "감염·발생 가능성 높음", 경보: "발생 조건 충족, 확산 우려" };
 
 export default async function AboutPage() {
-  const [status, pests] = await Promise.all([getStatus(), getPests()]);
+  const [status, pests] = await Promise.all([getStatus(), getAllPests()]);
   return (
     <div className="max-w-4xl space-y-8">
       <PageHeader
@@ -89,8 +89,10 @@ export default async function AboutPage() {
       <section className="card overflow-hidden">
         <div className="flex items-baseline justify-between px-5 pt-5 sm:px-6">
           <h2 className="section-title">모델 검증 현황</h2>
-          <span className="text-xs text-slate-400">예찰조사(2015~2025) 적재 후 연도별 지표 공개</span>
         </div>
+        <p className="mt-1 px-5 text-xs leading-relaxed text-slate-500 sm:px-6">
+          일반 화면에는 기본 모델이 학습에 쓰지 않은 해의 예찰로 AUC 0.75 이상, 실제 발생의 40% 이상을 미리 알린 병해충만 보여요. 제외된 병해충도 매일 계산하며, 예찰이 쌓여 기준을 넘으면 다음 배치부터 자동으로 서비스에 나와요.
+        </p>
         <div className="mt-3 overflow-x-auto">
           <table className="table-clean">
             <thead>
@@ -99,7 +101,7 @@ export default async function AboutPage() {
                 <th>유형</th>
                 <th>버전</th>
                 <th>상태</th>
-                <th>검증</th>
+                <th className="pr-5 sm:pr-6">서비스</th>
               </tr>
             </thead>
             <tbody>
@@ -110,16 +112,22 @@ export default async function AboutPage() {
                       {pestFullName(p.crop_ko, p.name_ko)}
                     </Link>
                   </td>
-                  <td className="text-slate-500">{TYPE_LABEL[p.type]}</td>
+                  <td className="text-slate-500">{typeLabel(p)}</td>
                   <td className="num text-slate-500">v{p.version}</td>
                   <td>
                     <span className="chip">{p.status === "draft" ? "초안" : p.status}</span>
                   </td>
-                  <td>
-                    {p.eval.status === "evaluated" ? (
-                      <span className="chip bg-emerald-50 text-emerald-700">검증됨</span>
+                  <td className="pr-5 sm:pr-6">
+                    {p.service?.listed !== false ? (
+                      <span className="chip bg-emerald-50 text-emerald-700">서비스 중</span>
                     ) : (
-                      <span className="chip bg-amber-50 text-amber-700">미검증</span>
+                      <span className="chip bg-amber-50 text-amber-700">제외</span>
+                    )}
+                    {p.service && (
+                      <span className="mt-1 block text-[11px] leading-snug text-slate-500">
+                        {p.service.auc != null && <>AUC {p.service.auc} · 미리 알림 {p.service.recall != null ? `${Math.round(p.service.recall * 100)}%` : "–"} · </>}
+                        {p.service.reason}
+                      </span>
                     )}
                   </td>
                 </tr>

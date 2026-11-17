@@ -22,7 +22,7 @@ from typing import Any
 from models._base import GRADES, DailyWeather
 from models._base.registry import LoadedModel
 
-from . import config, terrain
+from . import config, service, terrain
 
 log = logging.getLogger(__name__)
 
@@ -106,6 +106,7 @@ def publish(
 
     # --- pests.json (병해충 1건 = 기본 모델 카드 + 모델 목록) ---------------------
     pests_out = []
+    service_of: dict[str, dict] = {}
     for pid, lst in pest_models.items():
         lm = lst[0]
         card = lm.card.to_dict()
@@ -116,6 +117,8 @@ def publish(
                 card[k] = getattr(bc, k)
         card["crop_ko"] = CROP_NAMES.get(lm.card.crop, lm.card.crop)
         card["eval"] = lm.eval_summary()
+        card["service"] = service.decide(card["eval"], pid, issued)  # 일반 화면 노출 여부(pipeline/service.py)
+        service_of[pid] = card["service"]
         card["default_model"] = lm.id
         card["models"] = [
             {**m.card.to_dict(), "model_id": m.id, "label": m.label, "is_default": m is lm, "eval": m.eval_summary()}
@@ -202,6 +205,7 @@ def publish(
                 "max_grade": max((e["grade_today"] for e in applicable), key=lambda g: [x[0] for x in GRADES].index(g), default=None),
                 "top_spots": [{"spot_code": e["spot_code"], "name": e["name"], "index": e["index_today"], "grade": e["grade_today"]} for e in applicable[:5]],
                 "trend_7d": _national_trend(entries, 7),
+                "listed": service_of.get(pid, {}).get("listed", True),
             }
         )
 

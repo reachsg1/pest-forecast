@@ -1,11 +1,11 @@
 {
   "model_id": "rice_leaf_blast__survey_ens",
   "version": "0.1.0",
-  "evaluated_at": "2026-11-16",
+  "evaluated_at": "2026-11-17",
   "status": "survey_evaluated",
   "uses_survey": true,
   "algorithm": "앙상블(로지스틱·RF·XGBoost 평균)",
-  "method": "연도 분리 검증: 학습 2015-2022, 시험 2023-2025. 정답 = 시군구 예찰값 > 0. 정확도·정밀도·재현율은 위험지수 50(주의보) 이상을 '발생'으로 볼 때.",
+  "method": "연도 분리 검증: 학습 2015-2022, 시험 2023-2025. 정답 = 시군구 예찰값 > 0. 정확도·정밀도·재현율은 위험지수 50(주의보) 이상을 '발생'으로 볼 때. 앙상블 확률 0.24을 위험지수 50으로 보정(학습 연도만으로 고름).",
   "n_sigungu": 137,
   "skipped": {
     "좌표 없음": 449
@@ -26,15 +26,15 @@
       "persistence": 0.715
     },
     "brier": {
-      "survey_logit": 0.0858,
+      "survey_logit": 0.0851,
       "climatology": 0.1134
     },
     "classification": {
       "survey_logit": {
-        "accuracy": 0.874,
-        "precision": 0.816,
-        "recall": 0.153,
-        "f1": 0.258
+        "accuracy": 0.892,
+        "precision": 0.628,
+        "recall": 0.598,
+        "f1": 0.613
       },
       "default_rule": {
         "accuracy": 0.548,
@@ -67,15 +67,15 @@
         "persistence": 0.717
       },
       "brier": {
-        "survey_logit": 0.0907,
+        "survey_logit": 0.093,
         "climatology": 0.1208
       },
       "classification": {
         "survey_logit": {
-          "accuracy": 0.87,
-          "precision": 0.872,
-          "recall": 0.202,
-          "f1": 0.329
+          "accuracy": 0.871,
+          "precision": 0.582,
+          "recall": 0.637,
+          "f1": 0.608
         },
         "default_rule": {
           "accuracy": 0.501,
@@ -107,15 +107,15 @@
         "persistence": 0.758
       },
       "brier": {
-        "survey_logit": 0.0852,
+        "survey_logit": 0.0832,
         "climatology": 0.116
       },
       "classification": {
         "survey_logit": {
-          "accuracy": 0.869,
-          "precision": 0.786,
-          "recall": 0.14,
-          "f1": 0.238
+          "accuracy": 0.896,
+          "precision": 0.651,
+          "recall": 0.618,
+          "f1": 0.634
         },
         "default_rule": {
           "accuracy": 0.606,
@@ -147,15 +147,15 @@
         "persistence": 0.681
       },
       "brier": {
-        "survey_logit": 0.0815,
+        "survey_logit": 0.0793,
         "climatology": 0.1035
       },
       "classification": {
         "survey_logit": {
-          "accuracy": 0.882,
-          "precision": 0.75,
-          "recall": 0.109,
-          "f1": 0.19
+          "accuracy": 0.908,
+          "precision": 0.676,
+          "recall": 0.529,
+          "f1": 0.593
         },
         "default_rule": {
           "accuracy": 0.537,
@@ -172,5 +172,9 @@
       }
     }
   },
-  "note": "AUC 1.0=완벽, 0.5=무작위. '같은 회차 변별력'은 같은 조사일의 시군끼리 비교한 AUC로, 계절(시기) 효과를 뺀 성능입니다."
+  "note": "AUC 1.0=완벽, 0.5=무작위. '같은 회차 변별력'은 같은 조사일의 시군끼리 비교한 AUC로, 계절(시기) 효과를 뺀 성능입니다.",
+  "calibration": {
+    "threshold": 0.24,
+    "method": "학습 연도 한 해씩 빼고 예측(OOF) → F1 최대 확률을 위험지수 50으로"
+  }
 }

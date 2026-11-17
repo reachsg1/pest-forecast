@@ -70,7 +70,8 @@ def _cached(path, budget: Budget, fn: Callable[[], Any], *, ttl: Optional[float]
     return data
 
 
-def collect(key: str, spec: SurveySpec, years: list[int], budget: Budget, *, today: Optional[date] = None) -> list[dict]:
+def collect(key: str, spec: SurveySpec, years: list[int], budget: Budget, *, today: Optional[date] = None,
+            offline: bool = False) -> list[dict]:
     """연도별 회차를 돌며 시군구 조사값 행을 모은다.
 
     행: year, round, survey_date(YYYY-MM-DD), sido_code, sido, sigungu_code, sigungu, item, value(문자열)
@@ -86,7 +87,12 @@ def collect(key: str, spec: SurveySpec, years: list[int], budget: Budget, *, tod
             ik = rd["insectKey"]
             sido_rows = _cached(CACHE / ik / "sido.json", budget, lambda: ncpms.survey_by_sido(key, ik), keep_empty=False)
             for sc, sn in sorted({(r["sidoCode"], r["sidoNm"]) for r in sido_rows if r.get("sidoCode")}):
-                sg = _cached(CACHE / ik / f"sgg_{sc}.json", budget, lambda: ncpms.survey_by_sigungu(key, ik, sc), keep_empty=False)
+                try:
+                    sg = _cached(CACHE / ik / f"sgg_{sc}.json", budget, lambda: ncpms.survey_by_sigungu(key, ik, sc), keep_empty=False)
+                except BudgetExceeded:
+                    if not offline:
+                        raise
+                    continue  # 캐시만 쓰는 추출: 빈 응답(캐시 안 됨)인 시도는 건너뛰고 나머지는 살린다
                 d = rd.get("inputStdrDatetm", "")
                 for r in sg:
                     item = normalize_item(r.get("dbyhsNm", ""))

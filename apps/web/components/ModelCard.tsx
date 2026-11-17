@@ -1,4 +1,4 @@
-import { TYPE_LABEL } from "@/lib/grades";
+import { typeLabel } from "@/lib/grades";
 import type { PestCard } from "@/lib/types";
 
 function Params({ value }: { value: unknown }) {
@@ -51,7 +51,7 @@ function Params({ value }: { value: unknown }) {
 
 export default function ModelCard({ pest }: { pest: PestCard }) {
   const rows: [string, React.ReactNode][] = [
-    ["모델 유형", `${pest.type} · ${TYPE_LABEL[pest.type] ?? pest.type}`],
+    ["모델 유형", `${pest.type} · ${typeLabel(pest)}`],
     ["버전·상태", `v${pest.version} · ${pest.status === "draft" ? "초안(담당자 검토 전)" : pest.status}${pest.owner ? ` · 담당 ${pest.owner}` : ""}`],
     ["적용 시기", `${pest.season.start_month}월 ~ ${pest.season.end_month}월 · 예측 전망 ${pest.horizon_days}일`],
     [

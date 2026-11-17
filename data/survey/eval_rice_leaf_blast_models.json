@@ -1,6 +1,6 @@
 {
   "pest_id": "rice_leaf_blast",
-  "generated": "2026-11-16",
+  "generated": "2026-11-17",
   "target": "시군구 예찰 조사값 > 0 (발생)",
   "train_years": "2015-2022",
   "test_years": "2023-2025",
@@ -29,6 +29,10 @@
   "static": "terrain",
   "asos": false,
   "prev_item": null,
+  "calibration": {
+    "threshold": 0.24,
+    "method": "학습 연도 한 해씩 빼고 예측(OOF) → F1 최대 확률을 위험지수 50으로"
+  },
   "n_sigungu": 137,
   "skipped": {
     "좌표 없음": 449
@@ -113,16 +117,16 @@
       "survey_ens": {
         "auc": 0.89,
         "within_round_auc": 0.79,
-        "brier": 0.0858,
-        "accuracy": 0.874,
-        "precision": 0.816,
-        "recall": 0.153,
-        "f1": 0.258,
+        "brier": 0.0851,
+        "accuracy": 0.892,
+        "precision": 0.628,
+        "recall": 0.598,
+        "f1": 0.613,
         "confusion": {
-          "tp": 71,
-          "fp": 16,
-          "fn": 392,
-          "tn": 2761
+          "tp": 277,
+          "fp": 164,
+          "fn": 186,
+          "tn": 2613
         }
       }
     },
@@ -215,16 +219,16 @@
         "survey_ens": {
           "auc": 0.89,
           "within_round_auc": 0.807,
-          "brier": 0.0907,
-          "accuracy": 0.87,
-          "precision": 0.872,
-          "recall": 0.202,
-          "f1": 0.329,
+          "brier": 0.093,
+          "accuracy": 0.871,
+          "precision": 0.582,
+          "recall": 0.637,
+          "f1": 0.608,
           "confusion": {
-            "tp": 34,
-            "fp": 5,
-            "fn": 134,
-            "tn": 899
+            "tp": 107,
+            "fp": 77,
+            "fn": 61,
+            "tn": 827
           }
         }
       },
@@ -316,16 +320,16 @@
         "survey_ens": {
           "auc": 0.899,
           "within_round_auc": 0.819,
-          "brier": 0.0852,
-          "accuracy": 0.869,
-          "precision": 0.786,
-          "recall": 0.14,
-          "f1": 0.238,
+          "brier": 0.0832,
+          "accuracy": 0.896,
+          "precision": 0.651,
+          "recall": 0.618,
+          "f1": 0.634,
           "confusion": {
-            "tp": 22,
-            "fp": 6,
-            "fn": 135,
-            "tn": 917
+            "tp": 97,
+            "fp": 52,
+            "fn": 60,
+            "tn": 871
           }
         }
       },
@@ -417,16 +421,16 @@
         "survey_ens": {
           "auc": 0.882,
           "within_round_auc": 0.756,
-          "brier": 0.0815,
-          "accuracy": 0.882,
-          "precision": 0.75,
-          "recall": 0.109,
-          "f1": 0.19,
+          "brier": 0.0793,
+          "accuracy": 0.908,
+          "precision": 0.676,
+          "recall": 0.529,
+          "f1": 0.593,
           "confusion": {
-            "tp": 15,
-            "fp": 5,
-            "fn": 123,
-            "tn": 945
+            "tp": 73,
+            "fp": 35,
+            "fn": 65,
+            "tn": 915
           }
         }
       },
@@ -519,16 +523,16 @@
       "survey_ens": {
         "auc": 0.948,
         "within_round_auc": 0.951,
-        "brier": 0.0573,
-        "accuracy": 0.921,
-        "precision": 0.891,
-        "recall": 0.317,
-        "f1": 0.468,
+        "brier": 0.0625,
+        "accuracy": 0.92,
+        "precision": 0.615,
+        "recall": 0.703,
+        "f1": 0.656,
         "confusion": {
-          "tp": 293,
-          "fp": 36,
-          "fn": 630,
-          "tn": 7509
+          "tp": 649,
+          "fp": 406,
+          "fn": 274,
+          "tn": 7139
         }
       }
     },
