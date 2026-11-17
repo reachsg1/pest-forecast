@@ -22,7 +22,7 @@ ITEMS: dict[str, tuple[str, str]] = {
     "pepper_phytophthora": ("역병(피해주율)", "피해주율(%)"),
     "pepper_oriental_tobacco_budworm": ("담배나방(피해과율)", "피해과율(%)"),
     "apple_anthracnose": ("탄저병(피해과율)", "피해과율(%)"),
-    "apple_oriental_fruit_moth": ("복숭아순나방(피해과율)", "피해과율(%)"),
+    "apple_oriental_fruit_moth": ("복숭아순나방(피해신초율)", "피해신초율(%)"),
     # 벼(논벼 예찰): 발생면적율 = 시군 논 면적 중 발생 면적 비율. 피해율(정도 가중)·감수율(피해율×고정계수)은 같은 조사에서 파생
     # 근거·비교: docs/rice-survey-items.md. 벼멸구류는 날아오는 두 종(벼멸구·흰등멸구) 중 하나라도 발생 = 발생(애멸구 제외)
     "rice_leaf_blast": ("잎도열병(발생면적율)", "발생면적율(%)"),

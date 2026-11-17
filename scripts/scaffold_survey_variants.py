@@ -57,7 +57,7 @@ def main(argv: list[str] | None = None) -> int:
         item_txt = " 또는 ".join(item_full.split("|"))
         for k in ("description", "logic"):
             if isinstance(card.get(k), str):
-                card[k] = (card[k].replace(f"노지고추 {old_name}", f"{crop_ko} {base.card.name_ko}").replace(old_name, base.card.name_ko)
+                card[k] = (card[k].replace(f"노지고추 {old_name}", f"{crop_ko} {base.card.name_ko}").replace("노지고추 탄저병", f"{crop_ko} {base.card.name_ko}").replace(old_name, base.card.name_ko)
                            .replace("탄저병", args.item.split("(")[0]).replace("피해과율", args.unit))
         card["inputs"] = [i.replace("피해과율", args.unit) for i in card.get("inputs", [])]
         spec = (card.get("params") or {}).get("survey")
