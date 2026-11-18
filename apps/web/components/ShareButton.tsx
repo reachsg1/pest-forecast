@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 /** 공유: 휴대폰은 기본 공유 창(카카오톡 등), PC는 링크 복사. 미리보기 그림은 opengraph-image가 만든다. */
-export default function ShareButton({ text, className = "btn-secondary" }: { text: string; className?: string }) {
+export default function ShareButton({ text, className = "btn-glass" }: { text: string; className?: string }) {
   const [done, setDone] = useState(false);
   const share = async () => {
     const url = window.location.origin;

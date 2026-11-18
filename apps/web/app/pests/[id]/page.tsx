@@ -47,41 +47,41 @@ export default async function PestDetailPage({ params, searchParams }: { params:
         <span>/</span>
         <span className="text-slate-600">{pest.name_ko}</span>
       </nav>
-      <header className="card">
-        <div className="flex flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-8 sm:py-5">
+      <header className="hero-dark">
+        <div className="relative flex flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-8 sm:py-5">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-1.5">
               {[pest.crop_ko, pest.kind === "insect" ? "해충" : "병", `유형 ${pest.type}`].map((t) => (
-                <span key={t} className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[11px] font-medium text-slate-600">
+                <span key={t} className="rounded-full border border-white/15 bg-white/10 px-2 py-0.5 text-[11px] font-medium text-emerald-100">
                   {t}
                 </span>
               ))}
             </div>
-            <h1 className="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">{pestFullName(pest.crop_ko, pest.name_ko)}</h1>
-            <p className="mt-1 text-xs text-slate-500 sm:text-sm">
+            <h1 className="mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">{pestFullName(pest.crop_ko, pest.name_ko)}</h1>
+            <p className="mt-1 text-xs text-white/60 sm:text-sm">
               <span className="italic">{pest.name_sci}</span>
-              <span className="mx-1.5 text-slate-300">·</span>
-              <a className="font-medium text-brand-700 hover:text-brand-900" href={ncpmsUrl} target="_blank" rel="noreferrer">
+              <span className="mx-1.5 text-white/30">·</span>
+              <a className="font-medium text-emerald-300 hover:text-emerald-200" href={ncpmsUrl} target="_blank" rel="noreferrer">
                 NCPMS 도감 ↗
               </a>
             </p>
           </div>
           <div className="flex shrink-0 gap-3">
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2.5">
-              <div className="text-[11px] text-slate-500">오늘 전국 최고 등급</div>
+            <div className="glass-tile px-4 py-2.5">
+              <div className="text-[11px] text-white/55">오늘 전국 최고 등급</div>
               <div className="mt-1">
                 <RiskBadge grade={maxGrade} />
               </div>
             </div>
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2.5">
-              <div className="text-[11px] text-slate-500">주의보 이상</div>
-              <div className="num mt-0.5 text-2xl font-bold tracking-tight text-slate-900">
+            <div className="glass-tile px-4 py-2.5">
+              <div className="text-[11px] text-white/55">주의보 이상</div>
+              <div className="num mt-0.5 text-2xl font-bold tracking-tight text-white">
                 {alertN}
-                <span className="text-sm font-medium text-slate-400"> / {applicable.length}곳</span>
+                <span className="text-sm font-medium text-white/50"> / {applicable.length}곳</span>
               </div>
             </div>
           </div>
-          <p className="num w-full text-xs text-slate-400">
+          <p className="num w-full text-xs text-white/40">
             기준일 {fmtDate(risk?.issued_date)}
             {entries.length > applicable.length && ` · 해당 없음 ${entries.length - applicable.length}곳 제외`}
           </p>

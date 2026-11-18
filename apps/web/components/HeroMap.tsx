@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { GRADES } from "@/lib/grades";
-import { MAP_H as H, MAP_W as W, featurePath, idxColor, mix, obsColor, p90, px, py } from "@/lib/mapColor";
+import { EMPTY, MAP_H as H, MAP_W as W, ZERO, featurePath, idxColor, obsColor, p90, px, py } from "@/lib/mapColor";
 import { fmtMD } from "@/lib/format";
 import { assignSpots, sggValues, type SggGeo } from "@/lib/sgg";
 import type { RiskFile } from "@/lib/types";
@@ -14,14 +14,6 @@ import type { RiskFile } from "@/lib/types";
  * 움직임을 줄이도록 설정한 사용자에게는 마지막 장면만 보여 준다.
  */
 export type HeroMapProps = { mode: "live"; pestId: string; caption: string } | { mode: "season"; pestId: string; year: number; caption: string; unit: string };
-
-/** 지도 색 체계(홈 세이지 단색 + 주황 강조). 녹색 원색은 등급 '예보'·주 버튼과 겹치므로 쓰지 않는다.
- *  육지 바탕(조사 안 함·해당 없음) = 아주 옅은 세이지(EMPTY), 발생 없음 = 회세이지(ZERO), 발생 = 노랑→주황→빨강(등급색 계열).
- *  시군 경계 = 흰 선(옅은 면 위에서 또렷), 해안선 = 짙은 세이지 굵은 선(시군 아래에 한 번 더 그려 바깥 테두리만 남김) */
-const EMPTY = "#eef3ee";
-const ZERO = "#c9d5cc";
-const COAST = "#8d9e91";
-const BORDER = "#ffffff";
 
 type Frame = { label: string; values: Map<string, number | null>; sub?: string };
 
@@ -108,9 +100,7 @@ export default function HeroMap(props: HeroMapProps) {
   const frame = frames?.[Math.min(i, (frames?.length ?? 1) - 1)];
   const color = (k: string) => {
     const v = frame?.values.get(k);
-    // 재배 시기 '정상'(0~24)은 위성지도용 짙은 회색 대신 밝은 회색으로 — 흰 카드 위에서 위험한 곳만 눈에 띄게
-    if (props.mode === "live") return v != null && v < 25 ? mix("#e2e7ee", GRADES[0].color, v / 24) : idxColor(v, EMPTY);
-    return obsColor(v, vmax, EMPTY, ZERO);
+    return props.mode === "live" ? idxColor(v) : obsColor(v, vmax);
   };
 
   // 이 장면에서 가장 높은 시군 3곳 이름표
@@ -129,20 +119,15 @@ export default function HeroMap(props: HeroMapProps) {
 
   return (
     <figure className="relative mx-auto w-full max-w-[460px] lg:max-w-[min(560px,calc((100vh-250px)*0.86))]" aria-label={props.caption}>
-      <div className="relative pt-14">
-        <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full drop-shadow-[0_2px_4px_rgba(31,61,42,0.10)]" role="img" aria-hidden="true">
-          {/* 해안선: 굵은 선을 먼저 그리고 그 위를 시군 면이 덮어 바깥 테두리만 남긴다 */}
-          <g fill="none" stroke={COAST} strokeWidth={1.5} strokeLinejoin="round">
-            {paths.map((p) => (
-              <path key={p.key} d={p.d} />
-            ))}
-          </g>
+      <div className="relative">
+        <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full drop-shadow-[0_10px_30px_rgba(0,0,0,0.35)]" role="img" aria-hidden="true">
+          {paths.length === 0 && <rect x="0" y="0" width={W} height={H} rx="24" fill="rgba(255,255,255,0.04)" />}
           {paths.map((p) => (
-            <path key={p.key} d={p.d} fill={color(p.key)} stroke={BORDER} strokeWidth={0.5} strokeLinejoin="round" style={{ transition: "fill 1100ms ease" }} />
+            <path key={p.key} d={p.d} fill={color(p.key)} stroke="rgba(255,255,255,0.18)" strokeWidth={0.35} style={{ transition: "fill 1100ms ease" }} />
           ))}
           {tags.map((t, k) => (
             <g key={t.key}>
-              <circle cx={px(t.lon)} cy={py(t.lat)} r={11} fill="#0f172a" stroke="#fff" strokeWidth={1.5} />
+              <circle cx={px(t.lon)} cy={py(t.lat)} r={11} fill="rgba(2,6,23,0.8)" stroke="#fff" strokeWidth={1.5} />
               <text x={px(t.lon)} y={py(t.lat) + 4} textAnchor="middle" fontSize={12} fontWeight={700} fill="#fff">
                 {k + 1}
               </text>
@@ -151,22 +136,22 @@ export default function HeroMap(props: HeroMapProps) {
         </svg>
         {/* 가장 높은 시군 순위(지도 번호와 같음) */}
         {tags.length > 0 && (
-          <ol className="absolute bottom-2 right-0 space-y-1 rounded-xl border border-[#e3e9e4] bg-white/95 px-3 py-2 text-[11px] text-slate-700 shadow-sm backdrop-blur">
+          <ol className="absolute bottom-[4%] right-0 space-y-1 rounded-xl border border-white/10 bg-slate-950/60 px-3 py-2 text-[11px] backdrop-blur">
             {tags.map((t, k) => (
               <li key={t.key} className="flex items-center gap-2">
-                <span className="num grid h-4 w-4 place-items-center rounded-full bg-slate-900 text-[10px] font-bold text-white">{k + 1}</span>
-                <span className="font-semibold text-slate-900">{t.key.split(" ").slice(1).join(" ")}</span>
-                <span className="num ml-auto pl-2 text-slate-500">{props.mode === "live" ? Math.round(t.v as number) : `${t.v}%`}</span>
+                <span className="num grid h-4 w-4 place-items-center rounded-full bg-white text-[10px] font-bold text-slate-900">{k + 1}</span>
+                <span className="font-semibold">{t.key.split(" ").slice(1).join(" ")}</span>
+                <span className="num ml-auto pl-2 text-white/70">{props.mode === "live" ? Math.round(t.v as number) : `${t.v}%`}</span>
               </li>
             ))}
           </ol>
         )}
         {/* 장면 표시 */}
-        <div className="absolute left-0 top-0 text-left">
-          <div className="num text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">{frame?.label ?? "…"}</div>
-          {frame?.sub && <div className="num text-xs text-slate-500">{frame.sub}</div>}
+        <div className="absolute left-0 top-1 text-left">
+          <div className="num text-2xl font-bold tracking-tight sm:text-3xl">{frame?.label ?? "…"}</div>
+          {frame?.sub && <div className="num text-xs text-white/60">{frame.sub}</div>}
           {frame && (
-            <div className="num mt-1 text-xs text-slate-600">
+            <div className="num mt-1 text-xs text-white/70">
               {props.mode === "live" ? `주의보 이상 ${nPos}개 시군` : `조사 ${nObs}개 시군 중 발생 ${nPos}곳`}
             </div>
           )}
@@ -179,7 +164,7 @@ export default function HeroMap(props: HeroMapProps) {
           <button
             type="button"
             onClick={() => setPlaying((v) => !v)}
-            className="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-[#dfe7e1] bg-white text-[#3f5446] shadow-sm hover:bg-[#f3f7f3]"
+            className="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-white/20 bg-white/10 text-white hover:bg-white/20"
             aria-label={playing ? "일시 정지" : "재생"}
           >
             {playing ? (
@@ -202,7 +187,7 @@ export default function HeroMap(props: HeroMapProps) {
                   setPlaying(false);
                   setI(k);
                 }}
-                className={`h-1.5 flex-1 rounded-full transition ${k <= i ? "bg-[#5d7263]" : "bg-[#e3eae4]"}`}
+                className={`h-1.5 flex-1 rounded-full transition ${k <= i ? "bg-white/80" : "bg-white/20"}`}
                 aria-label={`${f.label} 보기`}
               />
             ))}
@@ -211,7 +196,7 @@ export default function HeroMap(props: HeroMapProps) {
       )}
 
       {/* 범례 */}
-      <figcaption className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-500">
+      <figcaption className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-white/60">
         {props.mode === "live" ? (
           <>
             {GRADES.map((g) => (
@@ -220,7 +205,7 @@ export default function HeroMap(props: HeroMapProps) {
               </span>
             ))}
             <span className="inline-flex items-center gap-1">
-              <i className="h-2 w-2 rounded-sm border border-slate-300" style={{ background: EMPTY }} /> 해당 없음
+              <i className="h-2 w-2 rounded-sm" style={{ background: EMPTY }} /> 해당 없음
             </span>
           </>
         ) : (
@@ -232,11 +217,11 @@ export default function HeroMap(props: HeroMapProps) {
               <i className="h-2 w-8 rounded-sm" style={{ background: `linear-gradient(to right, #f3cf7a, ${GRADES[2].color}, ${GRADES[3].color})` }} /> 발생(낮음→높음, {props.unit})
             </span>
             <span className="inline-flex items-center gap-1">
-              <i className="h-2 w-2 rounded-sm border border-slate-300" style={{ background: EMPTY }} /> 조사 안 함
+              <i className="h-2 w-2 rounded-sm border border-white/20" style={{ background: EMPTY }} /> 조사 안 함
             </span>
           </>
         )}
-        <span className="w-full text-slate-400">{props.caption}</span>
+        <span className="w-full text-white/45">{props.caption}</span>
       </figcaption>
     </figure>
   );
