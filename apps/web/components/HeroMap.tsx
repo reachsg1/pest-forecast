@@ -19,7 +19,7 @@ export type HeroMapProps = { mode: "live"; pestId: string; caption: string } | {
  *  바다 = 옅은 하늘빛 면(SEA), 육지 바탕(조사 안 함·해당 없음) = 따뜻한 흰색(EMPTY) → 국토 윤곽이 바다와 대비로 또렷하게.
  *  해안선 = 짙은 청회색 굵은 선(COAST, 시군 아래에 한 번 더 그려 바깥 테두리만 남김), 시군 경계 = 옅은 청회색 가는 선(BORDER).
  *  발생 없음 = 차분한 회청색(ZERO), 발생 = 노랑→빨강(등급색 계열) */
-const SEA = "linear-gradient(165deg, #edf3f9 0%, #e1eaf3 100%)";
+const SEA = "linear-gradient(165deg, #eef5f8 0%, #e1ecf1 100%)"; // 파스텔 녹색 히어로와 어울리게 청록 기운의 옅은 바다
 const EMPTY = "#fcfcfa";
 const ZERO = "#ccd5df";
 const COAST = "#7d8fa3";

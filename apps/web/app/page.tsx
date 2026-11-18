@@ -60,8 +60,8 @@ export default async function HomePage() {
   return (
     <div className="lg:-mt-3">
       {/* ── 히어로 ─────────────────────────────────────────── */}
-      <section aria-labelledby="today" className="break-keep">
-        <div className="grid gap-5 py-2 sm:py-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:grid-rows-[auto_1fr] lg:gap-x-10 lg:gap-y-4 lg:py-6">
+      <section aria-labelledby="today" className="hero-soft break-keep">
+        <div className="relative grid gap-5 px-4 py-5 sm:px-8 sm:py-7 lg:px-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:grid-rows-[auto_1fr] lg:gap-x-10 lg:gap-y-4 lg:py-6">
           <div className="min-w-0 lg:col-start-1 lg:row-start-1">
             <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600 shadow-sm">
               <span className="relative flex h-2 w-2">
@@ -167,7 +167,7 @@ export default async function HomePage() {
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               <div className="card p-3.5">
                 <p className="text-xs font-semibold text-slate-700">등급 읽는 법 · 위험지수 0~100</p>
-                <ul className="mt-2.5 grid grid-cols-2 gap-x-3 gap-y-2.5">
+                <ul className="mt-2.5 grid grid-cols-2 gap-x-5 gap-y-2.5">
                   {GRADES.map((g) => (
                     <li key={g.name} className="min-w-0">
                       <div className="flex items-baseline gap-1.5 whitespace-nowrap text-sm font-semibold text-slate-900">
