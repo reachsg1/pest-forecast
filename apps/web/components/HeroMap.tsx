@@ -17,7 +17,7 @@ export type HeroMapProps = { mode: "live"; pestId: string; caption: string } | {
 
 /** 밝은 배경용 색. 녹색은 등급 '예보'·서비스 강조색과 겹치므로 쓰지 않는다:
  *  조사 안 함·해당 없음 = 아주 옅은 회색(물러남), 발생 없음 = 차분한 회청색, 발생 = 노랑→빨강(등급색 계열) */
-const EMPTY = "#eef2f6";
+const EMPTY = "#edf1f5";
 const ZERO = "#cfd8e3";
 
 type Frame = { label: string; values: Map<string, number | null>; sub?: string };
@@ -130,7 +130,7 @@ export default function HeroMap(props: HeroMapProps) {
         <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full drop-shadow-[0_4px_12px_rgba(15,23,42,0.10)]" role="img" aria-hidden="true">
           {paths.length === 0 && <rect x="0" y="0" width={W} height={H} rx="24" fill="#f1f5f9" />}
           {paths.map((p) => (
-            <path key={p.key} d={p.d} fill={color(p.key)} stroke="#ffffff" strokeWidth={0.45} style={{ transition: "fill 1100ms ease" }} />
+            <path key={p.key} d={p.d} fill={color(p.key)} stroke="#aab4c2" strokeWidth={0.4} strokeLinejoin="round" style={{ transition: "fill 1100ms ease" }} />
           ))}
           {tags.map((t, k) => (
             <g key={t.key}>
