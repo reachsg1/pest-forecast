@@ -18,6 +18,7 @@
 - **UI는 깔끔하고 세련되게, 한눈에 알아보기 쉽게.** 촌스러운 장식·과한 색을 피하고, 등급색은 의미 전달에만 쓴다. 정보 위계(핵심 크게, 보조는 작고 회색), 넉넉한 여백, 기존 화면과 같은 톤. 바꾼 화면은 브라우저에서 데스크톱·모바일(375px) 모두 직접 확인한다.
   - 디자인 기반: 글꼴 Pretendard(npm `pretendard`), 색·그림자 토큰 `tailwind.config.ts`(brand-50~900, canvas, shadow-card/lift), 공통 클래스 `app/globals.css`(`.card` `.btn-primary` `.btn-secondary` `.segmented` `.field` `.table-clean` `.chip` `.page-title` 등), 공통 컴포넌트 `components/ui.tsx`(`PageHeader`, `GradeBar`, `Icon`). 새 화면은 이것을 재사용하고 임의 회색(gray-*) 대신 slate-* 를 쓴다.
   - 톤: 밝은 바탕(canvas) + 흰 카드. 페이지 머리(`PageHeader`)·홈 첫 화면·병해충 상세 머리에 **배경색을 깔지 않는다**(2026.11.18. 사용자 요청 — 녹색 히어로는 집중은 되지만 정보 구별이 안 됨). 강조는 글자 크기·굵기, 등급색, brand 녹색 버튼으로만. 짙은 유리 요소(`.glass-dark` 등)는 위성지도 위 패널에만 쓴다(로그인 소개 카드는 예외로 `.hero-dark` 유지). 지도는 위성(기본)/일반 전환.
+  - 색의 뜻을 겹치지 않는다: 녹색 = 서비스 강조(버튼·링크)와 등급 '예보'뿐. 실제 발생·발생률 = 주황→빨강(등급색 계열, 강조 숫자 amber-600). 발생 없음·정상·자료 없음 = 회색·회청색. 순위·진행 표시 = 짙은 남색(slate). 흰 카드 위 지도에서 빈 곳은 아주 옅게 물러나게 한다.
   - 위성 타일(Esri World Imagery)·홈 히어로 위성 배경은 개발용. 운영 전 VWorld 위성·하이브리드 타일로 교체(한글 지명).
   - 화면 날짜는 점 형식(2026.11.11. / 9.30.) — `lib/format.ts`의 fmtDate·fmtMD·fmtDateTime. 데이터·API는 ISO 유지.
   - Tailwind 설정(`tailwind.config.ts`)을 바꾸면 dev 서버를 재시작해야 반영된다. `npm run build`는 dev 서버의 `.next`를 덮어쓰므로 dev 서버를 멈추고 빌드 후 `.next`를 지우고 다시 띄운다.
