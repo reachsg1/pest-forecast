@@ -60,13 +60,13 @@ export default async function HomePage() {
   return (
     <div className="lg:-mt-3">
       {/* ── 히어로 ─────────────────────────────────────────── */}
-      <section aria-labelledby="today" className="hero-dark">
-        <div className="relative grid gap-5 px-5 py-6 sm:px-10 sm:py-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:grid-rows-[auto_1fr] lg:gap-x-10 lg:gap-y-4 lg:py-6">
+      <section aria-labelledby="today" className="break-keep">
+        <div className="grid gap-5 py-2 sm:py-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:grid-rows-[auto_1fr] lg:gap-x-10 lg:gap-y-4 lg:py-6">
           <div className="min-w-0 lg:col-start-1 lg:row-start-1">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-medium text-emerald-100 backdrop-blur">
+            <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600 shadow-sm">
               <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-50" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
               </span>
               <span className="num">
                 기준일 {fmtDate(summary.issued_date)} · {inSeason ? `${summary.horizon_days}일 전망` : "재배 시기 아님"}
@@ -75,7 +75,7 @@ export default async function HomePage() {
 
             {inSeason ? (
               <>
-                <h1 id="today" className="mt-4 text-3xl font-bold leading-tight tracking-tight sm:text-[2.4rem] sm:leading-[1.15]">
+                <h1 id="today" className="mt-4 text-3xl font-bold leading-tight tracking-tight text-slate-900 sm:text-[2.4rem] sm:leading-[1.15]">
                   {alertSpots > 0 ? (
                     <>
                       오늘 주의보 이상
@@ -92,11 +92,11 @@ export default async function HomePage() {
                     </>
                   )}
                 </h1>
-                <p className="mt-3 text-base text-white/80 sm:text-lg">
+                <p className="mt-3 text-base text-slate-600 sm:text-lg">
                   {look && look.spots > 0 ? (
                     <>
-                      앞으로 7일 안에 <b className="text-white">경보 예상 {look.spots}곳</b>
-                      <span className="text-white/60"> · {look.pests.slice(0, 2).map((p) => p.name).join(", ")}</span>
+                      앞으로 7일 안에 <b className="text-slate-900">경보 예상 {look.spots}곳</b>
+                      <span className="text-slate-400"> · {look.pests.slice(0, 2).map((p) => p.name).join(", ")}</span>
                     </>
                   ) : (
                     "앞으로 7일 동안 경보가 예상되는 곳은 없어요."
@@ -106,10 +106,10 @@ export default async function HomePage() {
                   <ul className="mt-4 flex flex-wrap gap-2" aria-label="주의보 이상 병해충">
                     {alerting.slice(0, 4).map((p) => (
                       <li key={p.pest_id}>
-                        <Link href={`/map?crop=${p.crop}&pest=${p.pest_id}`} className="glass-tile inline-flex items-center gap-2 px-3 py-1.5 text-sm">
-                          <span className="text-white/55">{p.crop_ko}</span>
-                          <span className="font-semibold">{p.name_ko.replace(p.crop_ko, "").trim() || p.name_ko}</span>
-                          <span className="num text-white/70">{alertN(p)}곳</span>
+                        <Link href={`/map?crop=${p.crop}&pest=${p.pest_id}`} className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-sm shadow-sm transition hover:border-slate-300 hover:shadow-card">
+                          <span className="text-slate-400">{p.crop_ko}</span>
+                          <span className="font-semibold text-slate-900">{p.name_ko.replace(p.crop_ko, "").trim() || p.name_ko}</span>
+                          <span className="num text-slate-500">{alertN(p)}곳</span>
                         </Link>
                       </li>
                     ))}
@@ -118,13 +118,13 @@ export default async function HomePage() {
               </>
             ) : lead ? (
               <>
-                <p className="mt-4 text-sm font-medium text-emerald-200">{lead.year} 시즌 돌아보기</p>
-                <h1 id="today" className="mt-1.5 text-balance text-[1.7rem] font-bold leading-tight tracking-tight sm:text-[2.2rem] sm:leading-[1.2]">
+                <p className="mt-4 text-sm font-medium text-brand-700">{lead.year} 시즌 돌아보기</p>
+                <h1 id="today" className="mt-1.5 text-balance text-[1.7rem] font-bold leading-tight tracking-tight text-slate-900 sm:text-[2.2rem] sm:leading-[1.2]">
                   올해 {pestFullName(lead.crop_ko, lead.name_ko)},
                   <br />
-                  조사한 시군 <span className="num text-amber-300">{pct(lead.sggOcc)}</span>에서 발생했어요
+                  조사한 시군 <span className="num text-amber-600">{pct(lead.sggOcc)}</span>에서 발생했어요
                 </h1>
-                <p className="mt-2.5 text-sm leading-relaxed text-white/75 sm:text-base">
+                <p className="mt-2.5 text-sm leading-relaxed text-slate-600 sm:text-base">
                   {lead.normal != null && (
                     <>
                       평년({lead.normalYears}) {pct(lead.normal)}
@@ -135,7 +135,7 @@ export default async function HomePage() {
                 </p>
               </>
             ) : (
-              <h1 id="today" className="mt-5 text-3xl font-bold tracking-tight">
+              <h1 id="today" className="mt-5 text-3xl font-bold tracking-tight text-slate-900">
                 오늘의 병해충 발생 위험
               </h1>
             )}
@@ -144,7 +144,9 @@ export default async function HomePage() {
 
           {mapProps && (
             <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center">
-              <HeroMap {...mapProps} />
+              <div className="card p-4 sm:p-5">
+                <HeroMap {...mapProps} />
+              </div>
             </div>
           )}
 
@@ -152,52 +154,52 @@ export default async function HomePage() {
             <MyArea pests={pestLite} />
 
             <div className="mt-4 flex flex-wrap gap-2">
-              <Link href="/map" className="btn-light">
+              <Link href="/map" className="btn-primary">
                 <Icon name="map" /> 위험도 지도
               </Link>
-              <Link href="/farm" className="btn-glass">
+              <Link href="/farm" className="btn-secondary">
                 <Icon name="farm" /> 내 농장
               </Link>
-              <ShareButton text={shareText} />
+              <ShareButton text={shareText} className="btn-secondary" />
             </div>
 
             {/* 등급 읽는 법 + 예찰로 검증한 정확도(왼쪽 열 아래를 채움) */}
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3.5">
-                <p className="text-xs font-semibold text-white/70">등급 읽는 법 · 위험지수 0~100</p>
+              <div className="card p-3.5">
+                <p className="text-xs font-semibold text-slate-700">등급 읽는 법 · 위험지수 0~100</p>
                 <ul className="mt-2.5 grid grid-cols-2 gap-x-3 gap-y-2.5">
                   {GRADES.map((g) => (
                     <li key={g.name} className="min-w-0">
-                      <div className="flex items-baseline gap-1.5 text-sm font-semibold">
+                      <div className="flex items-baseline gap-1.5 whitespace-nowrap text-sm font-semibold text-slate-900">
                         <span aria-hidden="true" style={{ color: g.color }}>
                           {g.icon}
                         </span>
                         {g.name}
-                        <span className="num text-[11px] font-normal text-white/45">
+                        <span className="num text-[11px] font-normal text-slate-400">
                           {g.min}~{g.max}
                         </span>
                       </div>
-                      <div className="truncate text-[11px] text-white/55">{g.action}</div>
+                      <div className="truncate text-[11px] text-slate-500">{g.action}</div>
                     </li>
                   ))}
                 </ul>
-                <p className="mt-2.5 text-[11px] leading-snug text-white/45">&lsquo;해당 없음&rsquo; = 재배하지 않는 지역·기간(등급 아님)</p>
+                <p className="mt-2.5 text-[11px] leading-snug text-slate-400">&lsquo;해당 없음&rsquo; = 재배하지 않는 지역·기간(등급 아님)</p>
               </div>
               {acc.length > 0 && (
-                <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3.5">
-                  <p className="text-xs font-semibold text-white/70">예찰로 검증한 정확도(AUC)</p>
+                <div className="card p-3.5">
+                  <p className="text-xs font-semibold text-slate-700">예찰로 검증한 정확도(AUC)</p>
                   <ul className="mt-2.5 space-y-1.5">
                     {acc.map((a) => (
                       <li key={a.pest_id} className="grid grid-cols-[1fr_auto] items-center gap-x-2 text-[13px]">
-                        <span className="truncate text-white/70">{a.name}</span>
-                        <b className="num">{a.auc.toFixed(2)}</b>
-                        <span className="col-span-2 h-1 overflow-hidden rounded-full bg-white/10" aria-hidden="true">
-                          <span className="block h-full rounded-full bg-emerald-300/80" style={{ width: `${Math.max(0, (a.auc - 0.5) / 0.5) * 100}%` }} />
+                        <span className="truncate text-slate-600">{a.name}</span>
+                        <b className="num text-slate-900">{a.auc.toFixed(2)}</b>
+                        <span className="col-span-2 h-1 overflow-hidden rounded-full bg-slate-100" aria-hidden="true">
+                          <span className="block h-full rounded-full bg-brand-500" style={{ width: `${Math.max(0, (a.auc - 0.5) / 0.5) * 100}%` }} />
                         </span>
                       </li>
                     ))}
                   </ul>
-                  <p className="mt-2.5 text-[11px] leading-snug text-white/45">1에 가까울수록 정확, 0.5는 찍기 수준. {acc[0].testYears} 예찰(학습에 안 쓴 해)과 비교.</p>
+                  <p className="mt-2.5 text-[11px] leading-snug text-slate-400">1에 가까울수록 정확, 0.5는 찍기 수준. {acc[0].testYears} 예찰(학습에 안 쓴 해)과 비교.</p>
                 </div>
               )}
             </div>

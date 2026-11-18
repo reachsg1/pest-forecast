@@ -1,23 +1,23 @@
 import { GRADES, NA } from "@/lib/grades";
 import type { Grade } from "@/lib/types";
 
-/** 페이지 머리: 짙은 그라데이션 띠 위에 제목 + 분류 문구 + 설명 + 오른쪽 동작. 본문이 바로 보이도록 낮게 유지한다 */
+/** 페이지 머리: 밝은 바탕에 제목 + 분류 문구 + 설명 + 오른쪽 동작(배경색 없음 — 본문 정보가 잘 구별되도록). 본문이 바로 보이도록 낮게 유지한다 */
 export function PageHeader({ eyebrow, title, desc, actions, children }: { eyebrow?: React.ReactNode; title: React.ReactNode; desc?: React.ReactNode; actions?: React.ReactNode; children?: React.ReactNode }) {
   return (
-    <header className="hero-dark">
-      <div className="relative px-5 py-4 sm:px-8 sm:py-5">
+    <header className="border-b border-slate-200/80 pb-4 sm:pb-5">
+      <div>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="min-w-0 max-w-3xl">
             <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
-              <h1 className="text-xl font-bold tracking-tight text-white sm:text-2xl">{title}</h1>
+              <h1 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">{title}</h1>
               {eyebrow && (
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-2 py-0.5 text-[11px] font-medium text-emerald-100">
-                  <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-brand-100 bg-brand-50 px-2 py-0.5 text-[11px] font-medium text-brand-700">
+                  <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-brand-500" />
                   {eyebrow}
                 </span>
               )}
             </div>
-            {desc && <p className="mt-1 text-xs leading-relaxed text-white/60 sm:text-[13px]">{desc}</p>}
+            {desc && <p className="mt-1 text-xs leading-relaxed text-slate-500 sm:text-[13px]">{desc}</p>}
           </div>
           {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
         </div>

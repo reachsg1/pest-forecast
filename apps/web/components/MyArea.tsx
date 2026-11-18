@@ -83,60 +83,60 @@ export default function MyArea({ pests }: { pests: PestLite[] }) {
     );
   };
 
-  if (farm === undefined) return <div className="glass-tile h-[132px] animate-pulse" aria-hidden="true" />;
+  if (farm === undefined) return <div className="card h-[132px] animate-pulse" aria-hidden="true" />;
 
   const title = farm ? farm.name : place ? `${place.name} 부근` : null;
   const rows = file ? rowsFor(file, pests, farm?.crop).slice(0, 3) : [];
   const allNa = rows.length > 0 && rows.every((r) => r.na);
 
   return (
-    <div className="glass-tile p-4">
+    <div className="card p-4">
       <div className="flex items-center justify-between gap-2">
-        <div className="flex min-w-0 items-center gap-2 text-sm font-semibold">
-          <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0 text-emerald-300" fill="none" stroke="currentColor" strokeWidth={2}>
+        <div className="flex min-w-0 items-center gap-2 text-sm font-semibold text-slate-900">
+          <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0 text-brand-600" fill="none" stroke="currentColor" strokeWidth={2}>
             <path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21Zm0-9a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
           </svg>
           <span className="truncate">{title ? `내 지역 · ${title}` : "우리 동네는 괜찮을까?"}</span>
         </div>
         {farm ? (
-          <Link href="/farm" className="shrink-0 text-xs text-white/60 hover:text-white">
+          <Link href="/farm" className="shrink-0 text-xs text-slate-500 hover:text-slate-900">
             내 농장 →
           </Link>
         ) : place ? (
-          <span className="num shrink-0 text-xs text-white/50">관측지점 {place.dist}km</span>
+          <span className="num shrink-0 text-xs text-slate-400">관측지점 {place.dist}km</span>
         ) : null}
       </div>
 
       {!title && (
         <div className="mt-2.5 flex flex-wrap items-center gap-2">
-          <button type="button" onClick={locate} className="btn-light px-3 py-1.5 text-sm">
+          <button type="button" onClick={locate} className="btn-primary px-3 py-1.5 text-sm">
             내 위치로 보기
           </button>
-          <Link href="/farm" className="btn-glass px-3 py-1.5 text-sm">
+          <Link href="/farm" className="btn-secondary px-3 py-1.5 text-sm">
             주소로 농장 등록
           </Link>
-          {msg && <p className="w-full text-xs text-white/60">{msg}</p>}
-          {!msg && <p className="w-full text-xs text-white/45">위치는 이 기기에서만 쓰고 저장하지 않아요.</p>}
+          {msg && <p className="w-full text-xs text-slate-500">{msg}</p>}
+          {!msg && <p className="w-full text-xs text-slate-400">위치는 이 기기에서만 쓰고 저장하지 않아요.</p>}
         </div>
       )}
 
-      {title && !file && <p className="mt-3 text-xs text-white/50">불러오는 중…</p>}
+      {title && !file && <p className="mt-3 text-xs text-slate-400">불러오는 중…</p>}
 
       {title && file && (
         <>
           {allNa ? (
-            <p className="mt-2.5 text-sm text-white/70">지금은 이 지역 {farm ? pests.find((p) => p.crop === farm.crop)?.crop_ko : ""} 재배 시기가 아니어서 위험도를 쉬고 있어요.</p>
+            <p className="mt-2.5 text-sm text-slate-600">지금은 이 지역 {farm ? pests.find((p) => p.crop === farm.crop)?.crop_ko : ""} 재배 시기가 아니어서 위험도를 쉬고 있어요.</p>
           ) : (
             <ul className="mt-2.5 space-y-1.5">
               {rows
                 .filter((r) => !r.na)
                 .map((r) => (
                   <li key={r.pest.pest_id} className="flex items-center justify-between gap-2 text-sm">
-                    <Link href={`/pests/${r.pest.pest_id}`} className="min-w-0 truncate text-white/85 hover:text-white">
-                      <span className="text-white/50">{r.pest.crop_ko}</span> {r.pest.name_ko.replace(r.pest.crop_ko, "").trim() || r.pest.name_ko}
+                    <Link href={`/pests/${r.pest.pest_id}`} className="min-w-0 truncate text-slate-700 hover:text-slate-900">
+                      <span className="text-slate-400">{r.pest.crop_ko}</span> {r.pest.name_ko.replace(r.pest.crop_ko, "").trim() || r.pest.name_ko}
                     </Link>
                     <span className="flex shrink-0 items-center gap-1.5">
-                      {r.peak && gradeRank(r.peak) > gradeRank(r.today) && <span className="num text-[11px] text-amber-200">{r.peakDay}일 뒤 {r.peak}</span>}
+                      {r.peak && gradeRank(r.peak) > gradeRank(r.today) && <span className="num text-[11px] text-amber-600">{r.peakDay}일 뒤 {r.peak}</span>}
                       <RiskBadge grade={r.today} size="sm" />
                     </span>
                   </li>
@@ -144,9 +144,9 @@ export default function MyArea({ pests }: { pests: PestLite[] }) {
             </ul>
           )}
           {!farm && (
-            <p className="mt-2 text-[11px] text-white/45">
+            <p className="mt-2 text-[11px] text-slate-400">
               작물을 골라 계속 보려면{" "}
-              <Link href={`/farm?spot=${place?.code}`} className="underline hover:text-white">
+              <Link href={`/farm?spot=${place?.code}`} className="underline hover:text-slate-700">
                 내 농장에 등록
               </Link>
               하세요.

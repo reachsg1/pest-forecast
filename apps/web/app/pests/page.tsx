@@ -27,7 +27,7 @@ function MonthStrip({ start, end, now }: { start: number; end: number; now: numb
           />
         ))}
       </ol>
-      <span className="num text-[11px] text-slate-400">
+      <span className="num whitespace-nowrap text-[11px] text-slate-400">
         {start}~{end}월
       </span>
     </div>
@@ -138,17 +138,9 @@ export default async function PestsPage({ searchParams }: { searchParams: Promis
                         <span className={`text-[15px] font-semibold ${na ? "text-slate-500" : "text-slate-900"}`}>{p.name_ko}</span>
                         <span className="truncate text-xs italic text-slate-400">{p.name_sci}</span>
                       </div>
-                      <div className="mt-0.5 flex flex-wrap items-center gap-x-2 text-xs text-slate-400">
-                        <span>{p.kind === "insect" ? "해충" : "병"}</span>
-                        <span aria-hidden="true">·</span>
-                        <span>{typeLabel(p)}</span>
-                        {na && (
-                          <>
-                            <span aria-hidden="true">·</span>
-                            <span>오늘 재배 시기 아님</span>
-                          </>
-                        )}
-                      </div>
+                      <p className="mt-0.5 break-keep text-xs leading-relaxed text-slate-400">
+                        {[p.kind === "insect" ? "해충" : "병", typeLabel(p), na ? "오늘 재배 시기 아님" : null].filter(Boolean).join(" · ")}
+                      </p>
                       <MonthStrip start={p.season.start_month} end={p.season.end_month} now={nowM} />
                     </div>
                     {s && !na && (
