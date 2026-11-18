@@ -83,14 +83,14 @@ export default function MyArea({ pests }: { pests: PestLite[] }) {
     );
   };
 
-  if (farm === undefined) return <div className="card h-[132px] animate-pulse" aria-hidden="true" />;
+  if (farm === undefined) return <div className="tile h-[132px] animate-pulse" aria-hidden="true" />;
 
   const title = farm ? farm.name : place ? `${place.name} 부근` : null;
   const rows = file ? rowsFor(file, pests, farm?.crop).slice(0, 3) : [];
   const allNa = rows.length > 0 && rows.every((r) => r.na);
 
   return (
-    <div className="card p-4">
+    <div className="tile p-5">
       <div className="flex items-center justify-between gap-2">
         <div className="flex min-w-0 items-center gap-2 text-sm font-semibold text-slate-900">
           <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0 text-brand-600" fill="none" stroke="currentColor" strokeWidth={2}>
