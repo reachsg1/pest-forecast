@@ -15,10 +15,15 @@ import type { RiskFile } from "@/lib/types";
  */
 export type HeroMapProps = { mode: "live"; pestId: string; caption: string } | { mode: "season"; pestId: string; year: number; caption: string; unit: string };
 
-/** 밝은 배경용 색. 녹색은 등급 '예보'·서비스 강조색과 겹치므로 쓰지 않는다:
- *  조사 안 함·해당 없음 = 아주 옅은 회색(물러남), 발생 없음 = 차분한 회청색, 발생 = 노랑→빨강(등급색 계열) */
-const EMPTY = "#edf1f5";
-const ZERO = "#cfd8e3";
+/** 지도 색 체계(흰 카드 위). 녹색은 등급 '예보'·서비스 강조색과 겹치므로 쓰지 않는다.
+ *  바다 = 옅은 하늘빛 면(SEA), 육지 바탕(조사 안 함·해당 없음) = 따뜻한 흰색(EMPTY) → 국토 윤곽이 바다와 대비로 또렷하게.
+ *  해안선 = 짙은 청회색 굵은 선(COAST, 시군 아래에 한 번 더 그려 바깥 테두리만 남김), 시군 경계 = 옅은 청회색 가는 선(BORDER).
+ *  발생 없음 = 차분한 회청색(ZERO), 발생 = 노랑→빨강(등급색 계열) */
+const SEA = "linear-gradient(165deg, #edf3f9 0%, #e1eaf3 100%)";
+const EMPTY = "#fcfcfa";
+const ZERO = "#ccd5df";
+const COAST = "#7d8fa3";
+const BORDER = "#c3ccd7";
 
 type Frame = { label: string; values: Map<string, number | null>; sub?: string };
 
@@ -126,11 +131,16 @@ export default function HeroMap(props: HeroMapProps) {
 
   return (
     <figure className="relative mx-auto w-full max-w-[460px] lg:max-w-[min(560px,calc((100vh-250px)*0.86))]" aria-label={props.caption}>
-      <div className="relative">
-        <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full drop-shadow-[0_4px_12px_rgba(15,23,42,0.10)]" role="img" aria-hidden="true">
-          {paths.length === 0 && <rect x="0" y="0" width={W} height={H} rx="24" fill="#f1f5f9" />}
+      <div className="relative overflow-hidden rounded-xl px-2 pb-2 pt-12 sm:pt-14" style={{ background: SEA }}>
+        <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full drop-shadow-[0_3px_6px_rgba(30,64,105,0.16)]" role="img" aria-hidden="true">
+          {/* 해안선: 굵은 선을 먼저 그리고 그 위를 시군 면이 덮어 바깥 테두리만 남긴다 */}
+          <g fill="none" stroke={COAST} strokeWidth={1.6} strokeLinejoin="round">
+            {paths.map((p) => (
+              <path key={p.key} d={p.d} />
+            ))}
+          </g>
           {paths.map((p) => (
-            <path key={p.key} d={p.d} fill={color(p.key)} stroke="#aab4c2" strokeWidth={0.4} strokeLinejoin="round" style={{ transition: "fill 1100ms ease" }} />
+            <path key={p.key} d={p.d} fill={color(p.key)} stroke={BORDER} strokeWidth={0.35} strokeLinejoin="round" style={{ transition: "fill 1100ms ease" }} />
           ))}
           {tags.map((t, k) => (
             <g key={t.key}>
@@ -143,7 +153,7 @@ export default function HeroMap(props: HeroMapProps) {
         </svg>
         {/* 가장 높은 시군 순위(지도 번호와 같음) */}
         {tags.length > 0 && (
-          <ol className="absolute bottom-[4%] right-0 space-y-1 rounded-xl border border-slate-200 bg-white/90 px-3 py-2 text-[11px] text-slate-700 shadow-sm backdrop-blur">
+          <ol className="absolute bottom-3 right-3 space-y-1 rounded-xl border border-slate-200 bg-white/90 px-3 py-2 text-[11px] text-slate-700 shadow-sm backdrop-blur">
             {tags.map((t, k) => (
               <li key={t.key} className="flex items-center gap-2">
                 <span className="num grid h-4 w-4 place-items-center rounded-full bg-slate-900 text-[10px] font-bold text-white">{k + 1}</span>
@@ -154,7 +164,7 @@ export default function HeroMap(props: HeroMapProps) {
           </ol>
         )}
         {/* 장면 표시 */}
-        <div className="absolute left-0 top-1 text-left">
+        <div className="absolute left-3 top-2.5 text-left sm:left-4 sm:top-3">
           <div className="num text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">{frame?.label ?? "…"}</div>
           {frame?.sub && <div className="num text-xs text-slate-500">{frame.sub}</div>}
           {frame && (
@@ -212,7 +222,7 @@ export default function HeroMap(props: HeroMapProps) {
               </span>
             ))}
             <span className="inline-flex items-center gap-1">
-              <i className="h-2 w-2 rounded-sm" style={{ background: EMPTY }} /> 해당 없음
+              <i className="h-2 w-2 rounded-sm border border-slate-300" style={{ background: EMPTY }} /> 해당 없음
             </span>
           </>
         ) : (
