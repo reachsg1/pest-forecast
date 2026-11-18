@@ -65,8 +65,8 @@ export default async function HomePage() {
           <div className="min-w-0 lg:col-start-1 lg:row-start-1">
             <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600 shadow-sm">
               <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-50" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                {inSeason && <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-50" />}
+                <span className={`relative inline-flex h-2 w-2 rounded-full ${inSeason ? "bg-emerald-500" : "bg-slate-300"}`} />
               </span>
               <span className="num">
                 기준일 {fmtDate(summary.issued_date)} · {inSeason ? `${summary.horizon_days}일 전망` : "재배 시기 아님"}
@@ -194,7 +194,7 @@ export default async function HomePage() {
                         <span className="truncate text-slate-600">{a.name}</span>
                         <b className="num text-slate-900">{a.auc.toFixed(2)}</b>
                         <span className="col-span-2 h-1 overflow-hidden rounded-full bg-slate-100" aria-hidden="true">
-                          <span className="block h-full rounded-full bg-brand-500" style={{ width: `${Math.max(0, (a.auc - 0.5) / 0.5) * 100}%` }} />
+                          <span className="block h-full rounded-full bg-slate-400" style={{ width: `${Math.max(0, (a.auc - 0.5) / 0.5) * 100}%` }} />
                         </span>
                       </li>
                     ))}

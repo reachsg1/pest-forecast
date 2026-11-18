@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { GRADES } from "@/lib/grades";
-import { MAP_H as H, MAP_W as W, featurePath, idxColor, obsColor, p90, px, py } from "@/lib/mapColor";
+import { MAP_H as H, MAP_W as W, featurePath, idxColor, mix, obsColor, p90, px, py } from "@/lib/mapColor";
 import { fmtMD } from "@/lib/format";
 import { assignSpots, sggValues, type SggGeo } from "@/lib/sgg";
 import type { RiskFile } from "@/lib/types";
@@ -15,9 +15,10 @@ import type { RiskFile } from "@/lib/types";
  */
 export type HeroMapProps = { mode: "live"; pestId: string; caption: string } | { mode: "season"; pestId: string; year: number; caption: string; unit: string };
 
-/** 밝은 배경용 색: 해당 없음·조사 안 함 = 연회색, 발생 없음 = 옅은 녹색 */
-const EMPTY = "#e2e8f0";
-const ZERO = "#bfe6cf";
+/** 밝은 배경용 색. 녹색은 등급 '예보'·서비스 강조색과 겹치므로 쓰지 않는다:
+ *  조사 안 함·해당 없음 = 아주 옅은 회색(물러남), 발생 없음 = 차분한 회청색, 발생 = 노랑→빨강(등급색 계열) */
+const EMPTY = "#eef2f6";
+const ZERO = "#cfd8e3";
 
 type Frame = { label: string; values: Map<string, number | null>; sub?: string };
 
@@ -104,7 +105,9 @@ export default function HeroMap(props: HeroMapProps) {
   const frame = frames?.[Math.min(i, (frames?.length ?? 1) - 1)];
   const color = (k: string) => {
     const v = frame?.values.get(k);
-    return props.mode === "live" ? idxColor(v, EMPTY) : obsColor(v, vmax, EMPTY, ZERO);
+    // 재배 시기 '정상'(0~24)은 위성지도용 짙은 회색 대신 밝은 회색으로 — 흰 카드 위에서 위험한 곳만 눈에 띄게
+    if (props.mode === "live") return v != null && v < 25 ? mix("#e2e7ee", GRADES[0].color, v / 24) : idxColor(v, EMPTY);
+    return obsColor(v, vmax, EMPTY, ZERO);
   };
 
   // 이 장면에서 가장 높은 시군 3곳 이름표

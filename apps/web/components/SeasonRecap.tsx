@@ -85,7 +85,7 @@ function RecapCard({ r, winter, latest }: { r: SeasonRecap; winter: string | nul
         <svg viewBox={`0 0 ${r.history.length * 9} 40`} className="h-10 w-32 shrink-0" role="img" aria-label={`연도별 발생 시군 비율 ${r.history[0].year}~${r.year}`}>
           {r.history.map((h, k) => {
             const hh = Math.max(1.5, (h.v / maxV) * 38);
-            return <rect key={h.year} x={k * 9 + 1} y={40 - hh} width={6} height={hh} rx={1.5} fill={k === r.history.length - 1 ? "#0f766e" : "#cbd5e1"} />;
+            return <rect key={h.year} x={k * 9 + 1} y={40 - hh} width={6} height={hh} rx={1.5} fill={k === r.history.length - 1 ? "#d97706" : "#cbd5e1"} />;
           })}
         </svg>
       </div>
