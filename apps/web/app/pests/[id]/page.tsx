@@ -95,6 +95,7 @@ export default async function PestDetailPage({ params, searchParams }: { params:
         initialTab={tab ?? "now"}
         otherPests={pests.filter((p) => p.crop === pest.crop && p.pest_id !== pest.pest_id).map((p) => ({ pest_id: p.pest_id, name_ko: p.name_ko }))}
         horizon={risk?.horizon_days ?? 10}
+        admin={role === "admin"}
       />
     </div>
   );

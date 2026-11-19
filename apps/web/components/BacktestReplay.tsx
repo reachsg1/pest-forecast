@@ -85,7 +85,8 @@ function stats(rows: BtRow[], key: string, thr: number) {
 const pct = (v: number) => `${Math.round(v * 100)}%`;
 
 /** 과거 예찰 회차로 되돌려, 그날 모델 위험지수와 실제 예찰값을 시군별로 비교한다. */
-export default function BacktestReplay({ pestId }: { pestId: string }) {
+/** allModels=false(일반 이용자): 서비스 모델만 보이고 모델 선택을 숨긴다. 관리자는 비교용 모델까지 고를 수 있다 */
+export default function BacktestReplay({ pestId, allModels = false }: { pestId: string; allModels?: boolean }) {
   const [file, setFile] = useState<BtFile | null | undefined>(undefined);
   const [modelKey, setModelKey] = useState("");
   const [year, setYear] = useState<number | null>(null);
@@ -100,6 +101,7 @@ export default function BacktestReplay({ pestId }: { pestId: string }) {
       .then((r) => (r.ok ? r.json() : null))
       .then((d: BtFile | null) => {
         if (!alive) return;
+        if (d && !allModels) d = { ...d, models: [d.models.find((m) => m.is_default) ?? d.models[0]] };
         setFile(d);
         if (d) {
           setModelKey((d.models.find((m) => m.is_default) ?? d.models[0]).key);
@@ -112,7 +114,7 @@ export default function BacktestReplay({ pestId }: { pestId: string }) {
     return () => {
       alive = false;
     };
-  }, [pestId]);
+  }, [pestId, allModels]);
 
   const years = useMemo(
     () =>
@@ -195,18 +197,18 @@ export default function BacktestReplay({ pestId }: { pestId: string }) {
       <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto]">
         <label className="block">
           <span className="text-xs font-medium text-slate-500">모델</span>
-          <select
-            className="field mt-1 w-full"
-            value={model.key}
-            onChange={(e) => setModelKey(e.target.value)}
-          >
-            {file.models.map((m) => (
-              <option key={m.key} value={m.key}>
-                {m.label}
-                {m.is_default ? " (기본)" : ""}
-              </option>
-            ))}
-          </select>
+          {file.models.length > 1 ? (
+            <select className="field mt-1 w-full" value={model.key} onChange={(e) => setModelKey(e.target.value)}>
+              {file.models.map((m) => (
+                <option key={m.key} value={m.key}>
+                  {m.label}
+                  {m.is_default ? " (기본)" : ""}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <p className="field mt-1 w-full truncate bg-slate-50 text-slate-600">{model.label}</p>
+          )}
         </label>
         <label className="block">
           <span className="text-xs font-medium text-slate-500">연도</span>

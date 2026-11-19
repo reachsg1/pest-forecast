@@ -21,7 +21,7 @@ export default function SurveyEvalCard({ models, defaultLabel }: { models: Model
   }));
   rows.sort((x, y) => (y.within ?? 0) - (x.within ?? 0));
   rows.push(
-    { name: defaultLabel, sub: "현재 기본 모델", auc: t.auc.default_rule, within: t.within_round_auc.default_rule, acc: t.classification?.default_rule?.accuracy ?? null, tone: "base" },
+    { name: defaultLabel, sub: "기존 규칙형 모델(비교 기준)", auc: t.auc.default_rule, within: t.within_round_auc.default_rule, acc: t.classification?.default_rule?.accuracy ?? null, tone: "base" },
     { name: "계절 평균", sub: "조사 시기별 과거 발생률만", auc: t.auc.climatology, within: t.within_round_auc.climatology, acc: t.classification?.climatology?.accuracy ?? null, tone: "base" },
   );
   if (t.auc.persistence != null)
@@ -88,7 +88,7 @@ export default function SurveyEvalCard({ models, defaultLabel }: { models: Model
             {Object.entries(e.test_by_year).map(([y, v]) => (
               <span key={y} className="chip num">
                 {y} · {fmt(v.auc.survey_logit)}
-                <span className="text-slate-400">(기본 {fmt(v.auc.default_rule)})</span>
+                <span className="text-slate-400">(규칙형 {fmt(v.auc.default_rule)})</span>
               </span>
             ))}
           </div>

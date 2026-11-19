@@ -1,7 +1,9 @@
 // 서버 컴포넌트·API 라우트에서 public/data/*.json 을 읽는다.
 // 클라이언트 컴포넌트는 fetch("/data/...") 로 같은 파일을 받는다.
 import { promises as fs } from "fs";
+import { headers } from "next/headers";
 import path from "path";
+import { ROLE_HEADER } from "./auth";
 import type { PestCard, RiskFile, Spot, SpotFile, Status, Summary } from "./types";
 
 const DATA_DIR = path.join(process.cwd(), "public", "data");
@@ -25,9 +27,33 @@ export const getSummary = async () => {
 export const getStatus = () => readJson<Status>("status.json");
 export const getSpots = async () => (await readJson<Spot[]>("spots.json")) ?? [];
 export const getAllPests = async () => (await readJson<PestCard[]>("pests.json")) ?? [];
-export const getPests = async () => (await getAllPests()).filter(listed);
-/** 상세: 서비스 제외 병해충도 찾는다(화면에서 관리자만 보이게 막음) */
-export const getPest = async (id: string) => (await getAllPests()).find((p) => p.pest_id === id) ?? null;
+/** 요청한 사람이 관리자인가(미들웨어가 넘긴 역할 헤더). 요청 밖(빌드·그림 생성)에서는 일반 이용자로 본다 */
+export async function isAdminRequest(): Promise<boolean> {
+  try {
+    return (await headers()).get(ROLE_HEADER) === "admin";
+  } catch {
+    return false;
+  }
+}
+/** 기존 규칙형(기본 폴더) 모델 이름 — 검증 비교표의 기준 줄에 쓴다 */
+export const ruleLabel = (p: PestCard) => p.rule_label ?? p.models?.find((m) => !m.model_id.includes("__"))?.label;
+/** 일반 이용자에게는 서비스 모델(기본 모델, 예찰 검증 통과) 하나만 — 비교용 모델(규칙형·로지스틱·RF·XGBoost)은 관리자만 */
+const serviceModelOnly = (p: PestCard): PestCard => {
+  const ms = p.models ?? [];
+  const def = ms.find((m) => m.is_default) ?? ms[0];
+  return def ? { ...p, models: [def], rule_label: ruleLabel(p) } : p;
+};
+export const getPests = async () => {
+  const [all, admin] = await Promise.all([getAllPests(), isAdminRequest()]);
+  const ps = all.filter(listed);
+  return admin ? ps : ps.map(serviceModelOnly);
+};
+/** 상세: 서비스 제외 병해충도 찾는다(화면에서 관리자만 보이게 막음). 일반 이용자에게는 서비스 모델만 */
+export const getPest = async (id: string) => {
+  const [all, admin] = await Promise.all([getAllPests(), isAdminRequest()]);
+  const p = all.find((x) => x.pest_id === id) ?? null;
+  return p && !admin ? serviceModelOnly(p) : p;
+};
 export const getRisk = (pestId: string) => readJson<RiskFile>(`risk/${safe(pestId)}.json`);
 export const getSpotFile = (code: string) => readJson<SpotFile>(`spot/${safe(code)}.json`);
 

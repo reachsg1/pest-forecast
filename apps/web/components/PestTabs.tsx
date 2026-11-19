@@ -32,6 +32,7 @@ export default function PestTabs({
   initialTab,
   otherPests,
   horizon,
+  admin = false,
 }: {
   pest: PestCard;
   entries: RiskSpotEntry[];
@@ -40,6 +41,7 @@ export default function PestTabs({
   initialTab: string;
   otherPests: { pest_id: string; name_ko: string }[];
   horizon: number;
+  admin?: boolean;
 }) {
   const router = useRouter();
   const [tab, setTab] = useState(TABS.some((t) => t.id === initialTab) ? initialTab : "now");
@@ -54,7 +56,6 @@ export default function PestTabs({
   const maxGrade = [...GRADES].reverse().find((g) => countMap[g.name] > 0)?.name ?? null;
   const top = entries.filter((e) => e.grade_today != null).slice(0, 10);
   const surveyEvalModels = models.filter((m) => m.eval?.status === "survey_evaluated" && m.eval.test);
-  const defaultLabel = models.find((m) => m.is_default)?.label ?? "기본 모델";
 
   return (
     <div className="card overflow-hidden">
@@ -222,7 +223,7 @@ export default function PestTabs({
 
         {tab === "eval" && (
           <section role="tabpanel" id="panel-eval" aria-labelledby="tab-eval" className="space-y-4 text-sm">
-            {surveyEvalModels.length > 0 && <SurveyEvalCard models={surveyEvalModels} defaultLabel={defaultLabel} />}
+            {surveyEvalModels.length > 0 && <SurveyEvalCard models={surveyEvalModels} defaultLabel={`규칙형 · ${pest.rule_label ?? pest.models?.find((m) => !m.model_id.includes("__"))?.label ?? "기존 모델"}`} />}
             {surveyEvalModels.length > 0 ? (
               <p className="text-xs leading-relaxed text-slate-500">
                 날짜별로 예측과 실제 예찰을 비교하려면{" "}
@@ -279,7 +280,7 @@ export default function PestTabs({
 
         {tab === "replay" && (
           <section role="tabpanel" id="panel-replay" aria-labelledby="tab-replay" className="text-sm">
-            <BacktestReplay pestId={pest.pest_id} />
+            <BacktestReplay pestId={pest.pest_id} allModels={admin} />
           </section>
         )}
       </div>

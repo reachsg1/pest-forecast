@@ -64,6 +64,8 @@ export interface EvalSummary {
 }
 
 export interface PestCard {
+  /** 기존 규칙형 모델 이름(일반 이용자 화면은 서비스 모델만 남기므로 lib/data가 따로 붙임) */
+  rule_label?: string;
   id: string;
   pest_id: string;
   name_ko: string;

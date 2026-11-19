@@ -4,7 +4,7 @@ import { promises as fs } from "fs";
 import path from "path";
 import BacktestReplay from "@/components/BacktestReplay";
 import { PageHeader } from "@/components/ui";
-import { getPests } from "@/lib/data";
+import { getPests, isAdminRequest } from "@/lib/data";
 import { pestFullName } from "@/lib/grades";
 
 export const metadata: Metadata = { title: "예측과 실제" };
@@ -41,7 +41,7 @@ function summary(b: Bt) {
 
 export default async function ReplayPage({ searchParams }: { searchParams: Promise<{ pest?: string }> }) {
   const { pest } = await searchParams;
-  const pests = await getPests();
+  const [pests, admin] = await Promise.all([getPests(), isAdminRequest()]);
   const dir = path.join(process.cwd(), "public", "data", "backtest");
   const files = await fs.readdir(dir).catch(() => [] as string[]);
   const cards = (
@@ -105,7 +105,7 @@ export default async function ReplayPage({ searchParams }: { searchParams: Promi
 
           {sel && (
             <section className="card card-pad" aria-label={`${pestFullName(sel.p.crop_ko, sel.p.name_ko)} 날짜별 비교`}>
-              <BacktestReplay key={sel.p.pest_id} pestId={sel.p.pest_id} />
+              <BacktestReplay key={sel.p.pest_id} pestId={sel.p.pest_id} allModels={admin} />
             </section>
           )}
 
