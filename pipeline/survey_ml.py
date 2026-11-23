@@ -111,8 +111,11 @@ def year_cv(make, X, y, years) -> float:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--pest", required=True)
-    ap.add_argument("--train", default="2015-2024")
-    ap.add_argument("--test", default="2025-2026")
+    from .retrain import window
+
+    _tr, _te = window(date.today())  # 끝난 시즌 기준(11월부터 올해): 학습 2015~N-2, 시험 N-1~N
+    ap.add_argument("--train", default=_tr)
+    ap.add_argument("--test", default=_te)
     ap.add_argument("--export", action="store_true", help="variants(survey_rf/xgb/ens) 파일과 eval.json 갱신")
     ap.add_argument("--static", choices=["none", "terrain"], default="none",
                     help="RF·XGBoost에 정적 피처 추가(terrain = 시군 재배지 지형 sgg_*, pipeline/terrain.py)")

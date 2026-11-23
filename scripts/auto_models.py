@@ -4,7 +4,7 @@
 
 매주 GitHub Actions(model-refresh.yml)가 실행. 병해충마다:
   1) 조건 확인: 예찰 CSV(data/survey)·정확한 조사 항목(pipeline/survey_trend.ITEMS)이 있고,
-     학습 연도(2015~2024) 3년 이상·시험 연도(2025~2026) 2년 이상·표본 400건 이상
+     학습 연도(2015~끝난 시즌-2) 3년 이상·시험 연도(끝난 시즌-1~끝난 시즌) 2년 이상·표본 400건 이상
   2) 아직 학습 모델(variants/survey_*)이 없으면 뼈대 생성 → 로지스틱(+직전 예찰) 학습 → RF·XGBoost(+시군 지형)·앙상블 학습·검증
   3) 기본 모델 교체는 안전장치를 통과할 때만: 앙상블 시험 AUC ≥ 0.75 이고 기존 기본(규칙형)보다 0.10 이상 높을 때
 결과 요약을 data/survey/auto_models_report.md 에 남긴다(무엇을 만들었고 무엇을 왜 건너뛰었는지).
@@ -37,7 +37,11 @@ NCPMS = {
     "rice_planthoppers": ("FC010101", "01322", "00204"),
     "rice_sheath_blight": ("FC010101", "01322", "00204"),
 }
-TRAIN, TEST = range(2015, 2025), range(2025, 2027)
+from pipeline.retrain import window  # noqa: E402
+from pipeline.survey_train import _years  # noqa: E402
+
+_TR, _TE = window(date.today())
+TRAIN, TEST = _years(_TR), _years(_TE)  # 끝난 시즌 기준 학습·시험 창(매년 11월 한 해씩 이동)
 MIN_TRAIN_YEARS, MIN_TEST_YEARS, MIN_ROWS = 3, 2, 400
 MIN_AUC, MIN_GAIN = 0.75, 0.10
 PY = sys.executable
@@ -129,8 +133,9 @@ def main(argv: list[str] | None = None) -> int:
             run(["scripts/scaffold_survey_variants.py", "--pest", pest, "--item", item, "--unit", unit_word,
                  "--kncr", kncr, "--examin", examin, "--predictn", predictn])
             rel = folder.relative_to(ROOT) / "variants" / "survey_hist"
-            run(["-m", "pipeline.survey_train", "--pest", pest, "--with-history", "--export", str(rel)])
-            run(["-m", "pipeline.survey_ml", "--pest", pest, "--export", "--static", "terrain"])
+            yrs = ["--train", _TR, "--test", _TE]
+            run(["-m", "pipeline.survey_train", "--pest", pest, *yrs, "--with-history", "--export", str(rel)])
+            run(["-m", "pipeline.survey_ml", "--pest", pest, *yrs, "--export", "--static", "terrain"])
         except Exception as e:  # noqa: BLE001
             lines.append(f"- {pest}: 학습 실패 — {str(e).splitlines()[0][:200]}")
             continue

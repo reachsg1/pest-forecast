@@ -1,4 +1,6 @@
-# 매주 월요일 07:30 KST(= 일요일 22:30 UTC): 예찰 자료가 충분히 모인 병해충에 학습 모델을 자동으로 추가한다.
+# 매주 월요일 07:30 KST(= 일요일 22:30 UTC): 예찰 자료가 충분히 모인 병해충에 학습 모델을 자동으로 추가하고,
+# 시즌이 끝나 새 해 예찰이 다 모이면(11월부터) 학습 창을 한 해 밀어 다시 학습한다(연 1회, pipeline/retrain.py —
+# 이전 모델과 같은 시험 연도로 비교해 AUC·F1이 떨어지지 않고 서비스 기준을 넘을 때만 교체).
 # 조건·안전장치는 scripts/auto_models.py(학습 3년·시험 2년·400건 이상, 기본 모델 교체는 앙상블 AUC ≥ 0.75 & 규칙형 +0.10).
 # 테스트를 통과해야만 커밋하고, 실패하면 이슈를 연다. 다음 날 05:00 예측 배치부터 새 모델이 지도에 나온다.
 name: model-refresh
@@ -20,7 +22,7 @@ concurrency:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 240
     env:
       TZ: Asia/Seoul
       NCPMS_API_KEY: ${{ secrets.NCPMS_API_KEY }}
@@ -57,16 +59,13 @@ jobs:
           restore-keys: weather-hist-
       - name: Fetch weather history
         if: steps.done.outputs.skip != '1'
-        run: python scripts/fetch_weather_all.py --years 2015-2025 --months 4-10
+        run: python scripts/fetch_weather_all.py --years 2015-$(date +%Y) --months 4-10
       - name: Auto models
         if: steps.done.outputs.skip != '1'
         id: auto
         run: |
           python scripts/auto_models.py | tee auto.log
           if grep -q "^CHANGED" auto.log; then echo "changed=1" >> "$GITHUB_OUTPUT"; fi
-      - name: Tests
-        if: steps.done.outputs.skip != '1' && steps.auto.outputs.changed == '1'
-        run: python -m pytest pipeline/tests -q
       - name: Trends
         if: steps.done.outputs.skip != '1'
         run: python -m pipeline.survey_trend
@@ -83,6 +82,16 @@ jobs:
         if: steps.done.outputs.skip != '1'
         continue-on-error: true
         run: python scripts/fetch_asos.py --max-calls 1500
+      # 연례 재학습(기상·ASOS 캐시가 채워진 뒤): 새 해 예찰이 다 모인 병해충만, 나을 때만 교체. 보고는 auto_models_report.md
+      - name: Annual retrain
+        if: steps.done.outputs.skip != '1'
+        id: retrain
+        run: |
+          python -m pipeline.retrain | tee retrain.log
+          if grep -q "^CHANGED" retrain.log; then echo "changed=1" >> "$GITHUB_OUTPUT"; fi
+      - name: Tests
+        if: steps.done.outputs.skip != '1' && (steps.auto.outputs.changed == '1' || steps.retrain.outputs.changed == '1')
+        run: python -m pytest pipeline/tests -q
       - name: Backtest (예측과 실제)
         if: steps.done.outputs.skip != '1'
         continue-on-error: true

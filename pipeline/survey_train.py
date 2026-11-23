@@ -254,8 +254,11 @@ def build_samples(pest: str, train_years: list[int], test_years: list[int], feat
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--pest", required=True)
-    ap.add_argument("--train", default="2015-2024")
-    ap.add_argument("--test", default="2025-2026")
+    from .retrain import window
+
+    _tr, _te = window(date.today())  # 끝난 시즌 기준(11월부터 올해): 학습 2015~N-2, 시험 N-1~N
+    ap.add_argument("--train", default=_tr)
+    ap.add_argument("--test", default=_te)
     ap.add_argument("--max-km", type=float, default=0.0,
                     help="관측소 없는 시군을 가까운 시군으로 대체할 때 최대 거리(km). 0이면 제한 없음")
     ap.add_argument("--export", default="",

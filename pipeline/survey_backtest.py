@@ -5,7 +5,7 @@
 - 표본·피처는 pipeline/survey_train.build_samples 와 같다(조사일 전날까지 기상 + 같은 해 직전 회차 예찰값).
 - 점수는 지금 배포된 모델 파일(variants/*)을 그대로 읽어 계산한다(재학습하지 않음).
 - 결과: data/backtest/<pest>.json (커밋) → 배치 publish 가 apps/web/public/data/backtest/ 로 복사.
-- 학습 연도(기본 2015~2024) 회차는 모델이 이미 본 자료라 '참고용'으로 표시한다. 정직한 비교는 시험 연도(2025~올해).
+- 학습 연도(기본: 배포 모델이 학습한 해, eval_<pest>_models.json) 회차는 모델이 이미 본 자료라 '참고용'으로 표시한다. 정직한 비교는 시험 연도(2025~올해).
 """
 from __future__ import annotations
 
@@ -40,18 +40,27 @@ def _centroids() -> dict[str, tuple[float, float]]:
     return out
 
 
+def _deployed_train(pest: str) -> str:
+    p = config.DATA_DIR / "survey" / f"eval_{pest}_models.json"
+    if p.exists():
+        t = str(json.loads(p.read_text(encoding="utf-8")).get("train_years") or "")
+        if "-" in t:
+            return t
+    return "2015-2024"
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--pest", help="병해충 id (--all 이면 생략)")
     ap.add_argument("--all", action="store_true", help="학습 모델(variants/survey_rf)이 있는 병해충 전부")
-    ap.add_argument("--train", default="2015-2024")
-    ap.add_argument("--test", default=f"2025-{date.today().year}", help="학습에 안 쓴 해(올해 예찰까지 포함)")
+    ap.add_argument("--train", default=None, help="기본: 배포 모델 평가 파일(eval_<pest>_models.json)의 학습 연도")
+    ap.add_argument("--test", default=None, help="기본: 학습 마지막 해 다음부터 올해(학습에 안 쓴 해, 올해 예찰까지 포함)")
     args = ap.parse_args(argv)
     if args.all:
         pests = sorted({m.card.pest_id for m in discover() if m.id.endswith("__survey_rf")})
         for p in pests:
             print("과거 비교:", p)
-            main(["--pest", p, "--train", args.train, "--test", args.test])
+            main(["--pest", p, *(["--train", args.train] if args.train else []), *(["--test", args.test] if args.test else [])])
         return 0
     if not args.pest:
         ap.error("--pest 또는 --all")
@@ -60,7 +69,9 @@ def main(argv: list[str] | None = None) -> int:
     import numpy as np
     from xgboost import XGBClassifier
 
-    train_years, test_years = _years(args.train), _years(args.test)
+    train = args.train or _deployed_train(args.pest)
+    train_years = _years(train)
+    test_years = _years(args.test or f"{train_years[-1] + 1}-{date.today().year}")
     crop, pest = _pest_folder(args.pest)
     vdir = config.MODELS_DIR / crop / pest / "variants"
 
