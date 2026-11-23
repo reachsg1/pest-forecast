@@ -21,66 +21,66 @@ label: 로지스틱 회귀(예찰+기상)
 description: 예찰 학습형에 '그 시군의 가장 최근 예찰 조사값'을 더한 모델. 직전 회차에 발생한 시군은 다음에도 발생할 가능성이 높다는
   점을 반영합니다. 지점 시군에 예찰이 없으면 가장 가까운 예찰 시군의 값을 씁니다.
 logic: 기상 피처 10개 + 최근 예찰값 log(1+피해신초율)을 표준화해 가중합 → 로지스틱 확률. 예찰값은 매일 배치 때 NCPMS(SVC51~53)에서
-  올해 회차를 받아, 그날 이전 가장 최근 회차 값을 씁니다(첫 회차 전에는 0). 2023~2025년(학습에 쓰지 않은 해) 검증에서 같은 시기
+  올해 회차를 받아, 그날 이전 가장 최근 회차 값을 씁니다(첫 회차 전에는 0). 2025~2026년(학습에 쓰지 않은 해) 검증에서 같은 시기
   시군 간 변별력이 기상만 쓴 모델보다 크게 높습니다(검증 탭).
 params:
   window_days: 150
-  bias: -0.3624
+  bias: -0.4816
   features:
   - name: tavg_14d
-    center: 21.577
-    scale: 3.988
-    weight: -0.0793
+    center: 22.145
+    scale: 3.922
+    weight: 0.0479
   - name: rh_14d
-    center: 75.395
-    scale: 10.402
-    weight: 0.2496
+    center: 76.747
+    scale: 9.729
+    weight: 0.2135
   - name: rain_14d
-    center: 64.28
-    scale: 73.591
-    weight: -0.1102
+    center: 79.429
+    scale: 85.066
+    weight: -0.0211
   - name: rain_days_14d
-    center: 3.853
-    scale: 2.429
-    weight: -0.0397
+    center: 4.101
+    scale: 2.415
+    weight: -0.0839
   - name: lwd_14d
-    center: 4.704
-    scale: 3.097
-    weight: -0.3529
+    center: 4.909
+    scale: 3.217
+    weight: -0.4028
   - name: lwd_30d
-    center: 4.588
-    scale: 2.785
-    weight: 0.0901
+    center: 4.777
+    scale: 2.923
+    weight: 0.1579
   - name: tmin_7d
-    center: 16.618
-    scale: 5.005
-    weight: 0.2783
+    center: 17.238
+    scale: 4.933
+    weight: 0.0106
   - name: rain_days_season
-    center: 13.583
-    scale: 14.348
-    weight: -0.5655
+    center: 15.196
+    scale: 14.871
+    weight: -0.9094
   - name: wet_warm_days_season
-    center: 10.988
-    scale: 12.807
-    weight: 0.7071
+    center: 12.806
+    scale: 13.773
+    weight: 0.7555
   - name: doy
-    center: 191.363
-    scale: 45.309
-    weight: -0.2042
+    center: 195.179
+    scale: 45.071
+    weight: 0.0274
   - name: prev_survey_log
-    center: 0.118
-    scale: 0.254
-    weight: 1.6581
+    center: 0.108
+    scale: 0.236
+    weight: 1.877
   survey:
     kncr: FT010601
     examin: '01322'
     predictn: 00209
     item: 복숭아순나방(피해신초율)
 references:
-- '학습 자료: NCPMS 병해충 예찰 OpenAPI(SVC51~53) 사과 ''복숭아순나방(피해신초율)'' 시군구 조사값 2015~2025 (scripts/fetch_survey.py)'
+- '학습 자료: NCPMS 병해충 예찰 OpenAPI(SVC51~53) 사과 ''복숭아순나방(피해신초율)'' 시군구 조사값 2015~2026 (scripts/fetch_survey.py)'
 - '기상 자료: 국립농업과학원 농업기상 기본 관측데이터 V3(공공데이터포털 15078057) 일자료, 관측지점 상세정보(15073274) 설치 주소로
   같은 시군 관측소를 짝지어 평균 (scripts/fetch_weather_all.py)'
-- '학습·검증 절차: pipeline/survey_train.py — 학습 2015~2022, 시험 2023~2025, 결과 data/survey/eval_apple_oriental_fruit_moth_survey.json'
+- '학습·검증 절차: pipeline/survey_train.py — 학습 2015~2024, 시험 2025~2026, 결과 data/survey/eval_apple_oriental_fruit_moth_survey.json'
 - '운영 입력: NCPMS 병해충 예찰 OpenAPI 올해 회차(pipeline/survey_live.py), 지점↔예찰 시군 짝짓기와 가까운 시군
   대체(pipeline/regions.py)'
 owner: ''

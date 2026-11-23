@@ -17,60 +17,60 @@ inputs:
 - rain
 - lwd_hours(결로시간 관측)
 label: 로지스틱 회귀(기상만)
-description: NCPMS 노지고추 탄저병 예찰(2015~2022, 시군구 피해과율)과 같은 시군 농업기상 관측소 일자료로 학습한 로지스틱
+description: NCPMS 노지고추 탄저병 예찰(2015~2024, 시군구 피해과율)과 같은 시군 농업기상 관측소 일자료로 학습한 로지스틱
   모델. '그 시기에 그 시군에서 탄저병이 발생했을 확률'을 위험지수(0~100)로 냅니다.
 logic: 조사일 전날까지 기상으로 만든 10개 피처(최근 14일 기온·습도·강수·결로, 최근 30일 결로, 6월 1일 이후 강수일수 등, 연중
-  일차)를 표준화해 가중합 → 로지스틱 확률. 2023~2025년(학습에 쓰지 않은 해) 검증에서 현재 기본 모델보다 크게 낫지만, 대부분은 계절
+  일차)를 표준화해 가중합 → 로지스틱 확률. 2025~2026년(학습에 쓰지 않은 해) 검증에서 현재 기본 모델보다 크게 낫지만, 대부분은 계절
   진행(시기)을 맞힌 효과이고 같은 시기 시군 간 차이를 가르는 힘은 약합니다(검증 탭 참고).
 params:
   window_days: 150
-  bias: -1.0053
+  bias: -1.0551
   features:
   - name: tavg_14d
-    center: 23.399
-    scale: 2.823
-    weight: 0.3894
+    center: 23.606
+    scale: 2.878
+    weight: 0.3338
   - name: rh_14d
-    center: 79.436
-    scale: 8.521
-    weight: 0.2771
+    center: 79.476
+    scale: 8.232
+    weight: 0.2332
   - name: rain_14d
-    center: 86.444
-    scale: 145.65
-    weight: 0.2299
+    center: 91.286
+    scale: 140.533
+    weight: 0.1921
   - name: rain_days_14d
-    center: 4.385
-    scale: 2.552
-    weight: -0.2498
+    center: 4.417
+    scale: 2.562
+    weight: -0.1427
   - name: lwd_14d
-    center: 5.526
-    scale: 4.265
-    weight: -0.1839
+    center: 5.517
+    scale: 4.25
+    weight: -0.3191
   - name: lwd_30d
-    center: 5.304
-    scale: 3.973
-    weight: 0.3505
+    center: 5.312
+    scale: 3.976
+    weight: 0.5032
   - name: tmin_7d
-    center: 19.088
-    scale: 3.613
-    weight: 0.0922
+    center: 19.31
+    scale: 3.604
+    weight: 0.1144
   - name: rain_days_season
-    center: 16.003
-    scale: 12.746
-    weight: 1.2848
+    center: 15.874
+    scale: 12.564
+    weight: 1.223
   - name: wet_warm_days_season
-    center: 13.134
-    scale: 11.768
-    weight: -0.5407
+    center: 13.273
+    scale: 11.737
+    weight: -0.5562
   - name: doy
-    center: 204.384
-    scale: 33.657
-    weight: 0.8899
+    center: 203.216
+    scale: 33.09
+    weight: 0.9075
 references:
-- '학습 자료: NCPMS 병해충 예찰 OpenAPI(SVC51~53) 노지고추 ''탄저병(피해과율)'' 시군구 조사값 2015~2025 (scripts/fetch_survey.py)'
+- '학습 자료: NCPMS 병해충 예찰 OpenAPI(SVC51~53) 노지고추 ''탄저병(피해과율)'' 시군구 조사값 2015~2026 (scripts/fetch_survey.py)'
 - '기상 자료: 국립농업과학원 농업기상 기본 관측데이터 V3(공공데이터포털 15078057) 일자료, 관측지점 상세정보(15073274) 설치 주소로
   같은 시군 관측소를 짝지어 평균 (scripts/fetch_weather_all.py)'
-- '학습·검증 절차: pipeline/survey_train.py — 학습 2015~2022, 시험 2023~2025, 결과 data/survey/eval_pepper_anthracnose_survey.json'
+- '학습·검증 절차: pipeline/survey_train.py — 학습 2015~2024, 시험 2025~2026, 결과 data/survey/eval_pepper_anthracnose_survey.json'
 owner: ''
 status: draft
 ncpms_key: ''

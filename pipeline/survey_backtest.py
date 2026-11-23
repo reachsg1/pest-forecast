@@ -5,7 +5,7 @@
 - 표본·피처는 pipeline/survey_train.build_samples 와 같다(조사일 전날까지 기상 + 같은 해 직전 회차 예찰값).
 - 점수는 지금 배포된 모델 파일(variants/*)을 그대로 읽어 계산한다(재학습하지 않음).
 - 결과: data/backtest/<pest>.json (커밋) → 배치 publish 가 apps/web/public/data/backtest/ 로 복사.
-- 학습 연도(기본 2015~2022) 회차는 모델이 이미 본 자료라 '참고용'으로 표시한다. 정직한 비교는 시험 연도(2023~2025).
+- 학습 연도(기본 2015~2024) 회차는 모델이 이미 본 자료라 '참고용'으로 표시한다. 정직한 비교는 시험 연도(2025~올해).
 """
 from __future__ import annotations
 
@@ -44,8 +44,8 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--pest", help="병해충 id (--all 이면 생략)")
     ap.add_argument("--all", action="store_true", help="학습 모델(variants/survey_rf)이 있는 병해충 전부")
-    ap.add_argument("--train", default="2015-2022")
-    ap.add_argument("--test", default=f"2023-{date.today().year}", help="학습에 안 쓴 해(올해 예찰까지 포함)")
+    ap.add_argument("--train", default="2015-2024")
+    ap.add_argument("--test", default=f"2025-{date.today().year}", help="학습에 안 쓴 해(올해 예찰까지 포함)")
     args = ap.parse_args(argv)
     if args.all:
         pests = sorted({m.card.pest_id for m in discover() if m.id.endswith("__survey_rf")})

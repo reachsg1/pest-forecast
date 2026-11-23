@@ -1,6 +1,6 @@
 """예찰 학습형(유형 C) 모델 학습·검증 — NCPMS 시군구 예찰값 × 같은 시군 농업기상 관측소.
 
-    python -m pipeline.survey_train --pest pepper_anthracnose --train 2015-2022 --test 2023-2025
+    python -m pipeline.survey_train --pest pepper_anthracnose --train 2015-2024 --test 2025-2026
 
 입력
 - data/survey/ncpms_<pest>_sigungu.csv  (scripts/fetch_survey.py)
@@ -254,8 +254,8 @@ def build_samples(pest: str, train_years: list[int], test_years: list[int], feat
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--pest", required=True)
-    ap.add_argument("--train", default="2015-2022")
-    ap.add_argument("--test", default="2023-2025")
+    ap.add_argument("--train", default="2015-2024")
+    ap.add_argument("--test", default="2025-2026")
     ap.add_argument("--max-km", type=float, default=0.0,
                     help="관측소 없는 시군을 가까운 시군으로 대체할 때 최대 거리(km). 0이면 제한 없음")
     ap.add_argument("--export", default="",

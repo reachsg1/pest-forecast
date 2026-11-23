@@ -48,7 +48,7 @@ python scripts/build_control_info.py                     # 방제 요령·등록
 python scripts/build_terrain_features.py --dem "<경로>/한반도90m_GRS80.img"   # DEM 지형 피처(data/reference/terrain_*.csv)
 python -m pipeline.terrain_eval --pest pepper_anthracnose   # 지형 피처 효과 검증(분석용)
 python -m pipeline.survey_trend                           # 연도별 발생 추이(data/trend, 예찰 CSV 갱신 후)
-python -m pipeline.survey_backtest --all                   # '예측과 실제' 메뉴 자료(data/backtest, 학습 모델 있는 병해충 전부, 검증 2023~올해). 모델을 다시 학습하면 함께 갱신
+python -m pipeline.survey_backtest --all                   # '예측과 실제' 메뉴 자료(data/backtest, 학습 모델 있는 병해충 전부, 학습 2015~2024·검증 2025~올해). 모델을 다시 학습하면 함께 갱신
 cd apps/web && npm install && npm run typecheck && npm run build && npm run dev
 ```
 

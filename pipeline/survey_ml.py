@@ -3,7 +3,7 @@
     python -m pipeline.survey_ml --pest pepper_anthracnose --export
 
 - 표본·피처는 pipeline/survey_train.build_samples 와 같다(조사일 전날까지 기상 + 직전 회차 예찰값).
-- 연도 분리: 학습 2015~2022, 시험 2023~2025. 시험 연도는 하이퍼파라미터 선택에 쓰지 않는다
+- 연도 분리: 학습 2015~2024, 시험 2025~2026(2026.11.23. 재학습, 이전 학습 2015~2022·시험 2023~2025). 시험 연도는 하이퍼파라미터 선택에 쓰지 않는다
   (학습 연도 안에서 한 해씩 빼고 검증하는 교차검증으로 고른다).
 - 로지스틱 회귀는 이미 배포된 variant(survey_hist, survey_logit)의 params로 '배포와 같은 계산'을 해서 평가한다.
 - 평가: AUC(전체·같은 회차), Brier, 그리고 '주의보 이상(확률 50% 이상)이면 발생'으로 볼 때의 정확도·정밀도·재현율.
@@ -111,8 +111,8 @@ def year_cv(make, X, y, years) -> float:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--pest", required=True)
-    ap.add_argument("--train", default="2015-2022")
-    ap.add_argument("--test", default="2023-2025")
+    ap.add_argument("--train", default="2015-2024")
+    ap.add_argument("--test", default="2025-2026")
     ap.add_argument("--export", action="store_true", help="variants(survey_rf/xgb/ens) 파일과 eval.json 갱신")
     ap.add_argument("--static", choices=["none", "terrain"], default="none",
                     help="RF·XGBoost에 정적 피처 추가(terrain = 시군 재배지 지형 sgg_*, pipeline/terrain.py)")

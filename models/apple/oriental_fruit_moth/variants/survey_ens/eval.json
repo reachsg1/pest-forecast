@@ -1,49 +1,49 @@
 {
   "model_id": "apple_oriental_fruit_moth__survey_ens",
   "version": "0.1.0",
-  "evaluated_at": "2026-11-17",
+  "evaluated_at": "2026-11-23",
   "status": "survey_evaluated",
   "uses_survey": true,
   "algorithm": "앙상블(로지스틱·RF·XGBoost 평균)",
-  "method": "연도 분리 검증: 학습 2015-2022, 시험 2023-2025. 정답 = 시군구 예찰값 > 0. 정확도·정밀도·재현율은 위험지수 50(주의보) 이상을 '발생'으로 볼 때.",
+  "method": "연도 분리 검증: 학습 2015-2024, 시험 2025-2026. 정답 = 시군구 예찰값 > 0. 정확도·정밀도·재현율은 위험지수 50(주의보) 이상을 '발생'으로 볼 때.",
   "n_sigungu": 25,
   "skipped": {
-    "좌표 없음": 416
+    "좌표 없음": 176
   },
   "test": {
-    "n": 580,
-    "positive_rate": 0.291,
+    "n": 437,
+    "positive_rate": 0.254,
     "auc": {
-      "survey_logit": 0.866,
-      "climatology": 0.552,
-      "default_rule": 0.496,
-      "persistence": 0.832
+      "survey_logit": 0.858,
+      "climatology": 0.543,
+      "default_rule": 0.505,
+      "persistence": 0.799
     },
     "within_round_auc": {
-      "survey_logit": 0.874,
+      "survey_logit": 0.867,
       "climatology": 0.5,
-      "default_rule": 0.501,
-      "persistence": 0.823
+      "default_rule": 0.511,
+      "persistence": 0.8
     },
     "brier": {
-      "survey_logit": 0.1218,
-      "climatology": 0.2185
+      "survey_logit": 0.1171,
+      "climatology": 0.2012
     },
     "classification": {
       "survey_logit": {
-        "accuracy": 0.867,
-        "precision": 0.795,
-        "recall": 0.734,
-        "f1": 0.763
+        "accuracy": 0.865,
+        "precision": 0.745,
+        "recall": 0.712,
+        "f1": 0.728
       },
       "default_rule": {
-        "accuracy": 0.54,
-        "precision": 0.298,
-        "recall": 0.426,
-        "f1": 0.35
+        "accuracy": 0.545,
+        "precision": 0.266,
+        "recall": 0.45,
+        "f1": 0.334
       },
       "climatology": {
-        "accuracy": 0.709,
+        "accuracy": 0.746,
         "precision": null,
         "recall": 0.0,
         "f1": null
@@ -51,111 +51,31 @@
     }
   },
   "test_by_year": {
-    "2023": {
-      "n": 208,
-      "positive_rate": 0.264,
-      "auc": {
-        "survey_logit": 0.888,
-        "climatology": 0.563,
-        "default_rule": 0.48,
-        "persistence": 0.846
-      },
-      "within_round_auc": {
-        "survey_logit": 0.893,
-        "climatology": 0.5,
-        "default_rule": 0.468,
-        "persistence": 0.834
-      },
-      "brier": {
-        "survey_logit": 0.1073,
-        "climatology": 0.2131
-      },
-      "classification": {
-        "survey_logit": {
-          "accuracy": 0.909,
-          "precision": 0.846,
-          "recall": 0.8,
-          "f1": 0.822
-        },
-        "default_rule": {
-          "accuracy": 0.543,
-          "precision": 0.256,
-          "recall": 0.382,
-          "f1": 0.307
-        },
-        "climatology": {
-          "accuracy": 0.736,
-          "precision": null,
-          "recall": 0.0,
-          "f1": null
-        }
-      }
-    },
-    "2024": {
-      "n": 175,
-      "positive_rate": 0.326,
-      "auc": {
-        "survey_logit": 0.847,
-        "climatology": 0.482,
-        "default_rule": 0.542,
-        "persistence": 0.843
-      },
-      "within_round_auc": {
-        "survey_logit": 0.868,
-        "climatology": 0.5,
-        "default_rule": 0.552,
-        "persistence": 0.854
-      },
-      "brier": {
-        "survey_logit": 0.1314,
-        "climatology": 0.2315
-      },
-      "classification": {
-        "survey_logit": {
-          "accuracy": 0.851,
-          "precision": 0.83,
-          "recall": 0.684,
-          "f1": 0.75
-        },
-        "default_rule": {
-          "accuracy": 0.571,
-          "precision": 0.375,
-          "recall": 0.474,
-          "f1": 0.419
-        },
-        "climatology": {
-          "accuracy": 0.674,
-          "precision": null,
-          "recall": 0.0,
-          "f1": null
-        }
-      }
-    },
     "2025": {
       "n": 197,
       "positive_rate": 0.289,
       "auc": {
-        "survey_logit": 0.859,
-        "climatology": 0.605,
+        "survey_logit": 0.892,
+        "climatology": 0.594,
         "default_rule": 0.465,
         "persistence": 0.807
       },
       "within_round_auc": {
-        "survey_logit": 0.861,
+        "survey_logit": 0.898,
         "climatology": 0.5,
         "default_rule": 0.49,
         "persistence": 0.785
       },
       "brier": {
-        "survey_logit": 0.1285,
-        "climatology": 0.2126
+        "survey_logit": 0.1069,
+        "climatology": 0.2065
       },
       "classification": {
         "survey_logit": {
-          "accuracy": 0.838,
-          "precision": 0.719,
-          "recall": 0.719,
-          "f1": 0.719
+          "accuracy": 0.863,
+          "precision": 0.8,
+          "recall": 0.702,
+          "f1": 0.748
         },
         "default_rule": {
           "accuracy": 0.508,
@@ -165,6 +85,46 @@
         },
         "climatology": {
           "accuracy": 0.711,
+          "precision": null,
+          "recall": 0.0,
+          "f1": null
+        }
+      }
+    },
+    "2026": {
+      "n": 240,
+      "positive_rate": 0.225,
+      "auc": {
+        "survey_logit": 0.83,
+        "climatology": 0.495,
+        "default_rule": 0.538,
+        "persistence": 0.799
+      },
+      "within_round_auc": {
+        "survey_logit": 0.841,
+        "climatology": 0.5,
+        "default_rule": 0.528,
+        "persistence": 0.813
+      },
+      "brier": {
+        "survey_logit": 0.1254,
+        "climatology": 0.1969
+      },
+      "classification": {
+        "survey_logit": {
+          "accuracy": 0.867,
+          "precision": 0.696,
+          "recall": 0.722,
+          "f1": 0.709
+        },
+        "default_rule": {
+          "accuracy": 0.575,
+          "precision": 0.26,
+          "recall": 0.481,
+          "f1": 0.338
+        },
+        "climatology": {
+          "accuracy": 0.775,
           "precision": null,
           "recall": 0.0,
           "f1": null
