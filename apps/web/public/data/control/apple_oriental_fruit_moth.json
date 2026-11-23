@@ -1,6 +1,6 @@
 {
  "pest_id": "apple_oriental_fruit_moth",
- "generated": "2026-11-16",
+ "generated": "2026-11-23",
  "ncpms": [
   {
    "name": "복숭아순나방",
@@ -2143,20 +2143,6 @@
   },
   {
    "product": "에마멕틴벤조에이트 유제",
-   "brand": "마니팜플러스",
-   "company": "(주)한얼싸이언스",
-   "moa": "6",
-   "use": "살충",
-   "crop": "사과",
-   "target": "복숭아순나방",
-   "status": "확정",
-   "dilution": "2000배",
-   "timing": "수확14일전",
-   "times": "3회",
-   "method": "발생 초부터 경엽처리"
-  },
-  {
-   "product": "에마멕틴벤조에이트 유제",
    "brand": "불카누스",
    "company": "태평에이지(주)",
    "moa": "6",
@@ -2212,6 +2198,20 @@
    "method": "발생 초부터 경엽처리"
   },
   {
+   "product": "에마멕틴벤조에이트 유제",
+   "brand": "파일럿",
+   "company": "(주)한얼싸이언스",
+   "moa": "6",
+   "use": "살충",
+   "crop": "사과",
+   "target": "복숭아순나방",
+   "status": "확정",
+   "dilution": "2000배",
+   "timing": "수확14일전",
+   "times": "3회",
+   "method": "발생 초부터 경엽처리"
+  },
+  {
    "product": "에마멕틴벤조에이트 입상수용제",
    "brand": "라인업",
    "company": "(주)경농",
@@ -2229,34 +2229,6 @@
    "product": "에마멕틴벤조에이트 입상수용제",
    "brand": "라피드",
    "company": "신젠타코리아(주)",
-   "moa": "6",
-   "use": "살충",
-   "crop": "사과",
-   "target": "복숭아순나방",
-   "status": "확정",
-   "dilution": "4000배",
-   "timing": "수확14일전",
-   "times": "3회",
-   "method": "발생 초부터 경엽처리"
-  },
-  {
-   "product": "에마멕틴벤조에이트 입상수용제",
-   "brand": "하이페론",
-   "company": "지우바이오텍 주식회사",
-   "moa": "6",
-   "use": "살충",
-   "crop": "사과",
-   "target": "복숭아순나방",
-   "status": "확정",
-   "dilution": "4000배",
-   "timing": "수확14일전",
-   "times": "3회",
-   "method": "발생 초부터 경엽처리"
-  },
-  {
-   "product": "에마멕틴벤조에이트 입상수용제",
-   "brand": "하이페론",
-   "company": "에버그린에이지",
    "moa": "6",
    "use": "살충",
    "crop": "사과",
