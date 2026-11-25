@@ -77,7 +77,14 @@
 
 등록한 농장의 병해충이 **주의보 이상으로 올라간 날** 기기로 알림을 보냅니다(`apps/web/lib/pushRules.ts`). 아래 셋이 모두 있어야 켜지고, 하나라도 없으면 화면에 알림 영역이 나오지 않습니다(다른 기능은 영향 없음).
 
-1. **구독 저장소**: Vercel 프로젝트 → Storage → Marketplace → **Upstash Redis**(무료 플랜으로 충분) → Connect. 환경변수 `KV_REST_API_URL`·`KV_REST_API_TOKEN`이 자동 등록됩니다(`UPSTASH_REDIS_REST_URL`·`UPSTASH_REDIS_REST_TOKEN`으로 들어와도 됩니다).
+1. **구독 저장소(Upstash Redis)** — 알림 구독·농장 정보를 저장하는 Redis. Vercel 안에서 만들고 연결합니다(Upstash 가입을 따로 하지 않아도 됨).
+   1. vercel.com 로그인 → 이 프로젝트 → 상단 탭 **Storage** → **Create Database**(또는 Browse Marketplace).
+   2. 목록에서 **Upstash** → **Upstash for Redis**(이름이 'Redis Compatible Database'로 보일 수 있음) → **Continue**.
+   3. 플랜 **Free** 선택(하루 1만 명령·256MB. 구독 수천 건·매일 발송 1회면 충분) → **Continue**.
+   4. 데이터베이스 이름(예 `pest-forecast-push`), Primary Region은 **Asia Pacific (Seoul)** 이 있으면 그것, 없으면 **Japan (Tokyo)** → **Create**.
+   5. 바로 나오는 **Connect Project** 화면(안 나오면 Storage 탭에서 그 DB → Connect Project): 이 프로젝트 선택, Environments는 **Production·Preview** 체크, Environment Variables Prefix는 **기본값(KV)** 그대로 → **Connect**.
+   6. 확인: 프로젝트 → **Settings → Environment Variables**에 `KV_REST_API_URL`, `KV_REST_API_TOKEN`, `KV_REST_API_READ_ONLY_TOKEN`, `KV_URL`, `REDIS_URL`이 생겼으면 됩니다. 코드는 `KV_REST_API_URL`·`KV_REST_API_TOKEN` 두 개만 씁니다(`UPSTASH_REDIS_REST_URL`·`UPSTASH_REDIS_REST_TOKEN` 이름으로 들어와도 됨, `apps/web/lib/kv.ts`). 값은 복사하거나 적어 두지 않습니다.
+   7. 환경변수는 **다음 배포부터** 적용되므로 2·3번까지 마친 뒤 **Deployments → 최신 배포 → ⋯ → Redeploy** 한 번.
 2. **VAPID 키**: 로컬에서 한 번만
    ```bash
    cd apps/web && npx web-push generate-vapid-keys
