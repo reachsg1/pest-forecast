@@ -1,0 +1,257 @@
+# 재배 기간 초안 — scripts/fetch_crop_schedules.py 가 농사로 농작업일정 표에서 뽑음(자동, 검토 전).
+# crop_calendar.yaml 과 같은 형식. 검토를 거친 항목만 crop_calendar.yaml 로 옮길 것(근거 URL 유지).
+# 생성 2026-11-25
+crops:
+  고추(노지):
+    label: 고추(노지)
+    nongsaro: 고추(보통재배) (30600)
+    table_starts: 1월
+    window_meaning: 작물이 포장에 있는 기간(정식·이앙·씨뿌림 ~ 수확 종료)
+    windows:
+    - level: national
+      region: ''
+      start: 03-11
+      end: 09-30
+      status: draft
+      source: 농촌진흥청 농사로 작목별 농작업일정-고추(보통재배)(아주심기 3월 중순~4월 중순, 붉은고추 수확 7월 상순~9월 하순) https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30600
+    review_note: 전국 기준 표. 작기가 여럿이면 NCPMS 구분(여름·가을, 난지·한지)에 맞는 것을 고르고, 권역별 시기·노지 여부는 담당 연구자 검토 후 crop_calendar.yaml 로 옮긴다.
+  고추(시설):
+    label: 고추(시설)
+    nongsaro: 고추(촉성재배) (30601)
+    table_starts: 9월
+    window_meaning: 작물이 포장에 있는 기간(정식·이앙·씨뿌림 ~ 수확 종료)
+    windows:
+    - level: national
+      region: ''
+      start: 12-01
+      end: 07-10
+      status: draft
+      source: 농촌진흥청 농사로 작목별 농작업일정-고추(촉성재배)(아주심기 준비 12월 상순~12월 상순, 풋고추 수확 2월 하순~7월 상순) https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30601
+    review_note: 전국 기준 표. 작기가 여럿이면 NCPMS 구분(여름·가을, 난지·한지)에 맞는 것을 고르고, 권역별 시기·노지 여부는 담당 연구자 검토 후 crop_calendar.yaml 로 옮긴다.
+  마늘(난지):
+    label: 마늘(난지)
+    nongsaro: 마늘 (30611)
+    table_starts: 8월
+    window_meaning: 작물이 포장에 있는 기간(정식·이앙·씨뿌림 ~ 수확 종료)
+    windows:
+    - level: national
+      region: ''
+      start: 09-21
+      end: 07-10
+      status: draft
+      source: 농촌진흥청 농사로 작목별 농작업일정-마늘(씨뿌림 9월 하순~10월 중순, 수확(한지) 6월 하순~7월 상순) https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30611
+    review_note: 전국 기준 표. 작기가 여럿이면 NCPMS 구분(여름·가을, 난지·한지)에 맞는 것을 고르고, 권역별 시기·노지 여부는 담당 연구자 검토 후 crop_calendar.yaml 로 옮긴다.
+  마늘(한지):
+    label: 마늘(한지)
+    nongsaro: 마늘 (30611)
+    table_starts: 8월
+    window_meaning: 작물이 포장에 있는 기간(정식·이앙·씨뿌림 ~ 수확 종료)
+    windows:
+    - level: national
+      region: ''
+      start: 09-21
+      end: 07-10
+      status: draft
+      source: 농촌진흥청 농사로 작목별 농작업일정-마늘(씨뿌림 9월 하순~10월 중순, 수확(한지) 6월 하순~7월 상순) https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30611
+    review_note: 전국 기준 표. 작기가 여럿이면 NCPMS 구분(여름·가을, 난지·한지)에 맞는 것을 고르고, 권역별 시기·노지 여부는 담당 연구자 검토 후 crop_calendar.yaml 로 옮긴다.
+  무(가을무):
+    label: 무(가을무)
+    nongsaro: 무 (30614)
+    table_starts: 1월
+    window_meaning: 작물이 포장에 있는 기간(정식·이앙·씨뿌림 ~ 수확 종료)
+    windows:
+    - level: national
+      region: ''
+      start: 01-21
+      end: 06-20
+      status: draft
+      source: 농촌진흥청 농사로 작목별 농작업일정-무(씨뿌림 1월 하순~3월 상순, 수확 4월 중순~6월 중순) https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30614
+    - level: national
+      region: ''
+      start: 07-11
+      end: 11-20
+      status: draft
+      source: 농촌진흥청 농사로 작목별 농작업일정-무(씨뿌림 7월 중순~8월 중순, 수확 10월 상순~11월 중순) https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30614
+    review_note: 전국 기준 표. 작기가 여럿이면 NCPMS 구분(여름·가을, 난지·한지)에 맞는 것을 고르고, 권역별 시기·노지 여부는 담당 연구자 검토 후 crop_calendar.yaml 로 옮긴다.
+  무(여름무):
+    label: 무(여름무)
+    nongsaro: 무(고랭지재배) (30615)
+    table_starts: 1월
+    window_meaning: 작물이 포장에 있는 기간(정식·이앙·씨뿌림 ~ 수확 종료)
+    windows:
+    - level: national
+      region: ''
+      start: 04-01
+      end: 07-31
+      status: draft
+      source: 농촌진흥청 농사로 작목별 농작업일정-무(고랭지재배)(씨뿌림 4월 상순~5월 상순, 수확 6월 중순~7월 하순) https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30615
+    review_note: 전국 기준 표. 작기가 여럿이면 NCPMS 구분(여름·가을, 난지·한지)에 맞는 것을 고르고, 권역별 시기·노지 여부는 담당 연구자 검토 후 crop_calendar.yaml 로 옮긴다.
+  배추(가을배추):
+    label: 배추(가을배추)
+    nongsaro: 배추 (30618)
+    table_starts: 1월
+    window_meaning: 작물이 포장에 있는 기간(정식·이앙·씨뿌림 ~ 수확 종료)
+    windows:
+    - level: national
+      region: ''
+      start: 02-11
+      end: 06-10
+      status: draft
+      source: 농촌진흥청 농사로 작목별 농작업일정-배추(잎과 줄기 신장기, 아주심기, 웃거름 2월 중순~3월 하순, 수확 4월 상순~6월 상순) https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30618
+    review_note: 전국 기준 표. 작기가 여럿이면 NCPMS 구분(여름·가을, 난지·한지)에 맞는 것을 고르고, 권역별 시기·노지 여부는 담당 연구자 검토 후 crop_calendar.yaml 로 옮긴다.
+  배추(여름배추):
+    label: 배추(여름배추)
+    nongsaro: 배추(고랭지재배) (30619)
+    table_starts: 1월
+    window_meaning: 작물이 포장에 있는 기간(정식·이앙·씨뿌림 ~ 수확 종료)
+    windows:
+    - level: national
+      region: ''
+      start: 05-21
+      end: 09-30
+      status: draft
+      source: 농촌진흥청 농사로 작목별 농작업일정-배추(고랭지재배)(아주심기, 웃거름 5월 하순~6월 하순, 수확 7월 상순~9월 하순) https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30619
+    review_note: 전국 기준 표. 작기가 여럿이면 NCPMS 구분(여름·가을, 난지·한지)에 맞는 것을 고르고, 권역별 시기·노지 여부는 담당 연구자 검토 후 crop_calendar.yaml 로 옮긴다.
+  양파:
+    label: 양파
+    nongsaro: 양파 (30633)
+    table_starts: 8월
+    window_meaning: 작물이 포장에 있는 기간(정식·이앙·씨뿌림 ~ 수확 종료)
+    windows:
+    - level: national
+      region: ''
+      start: 10-11
+      end: 07-10
+      status: draft
+      source: 농촌진흥청 농사로 작목별 농작업일정-양파(아주심기 10월 중순~11월 상순, 수확 6월 상순~7월 상순) https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30633
+    review_note: 전국 기준 표. 작기가 여럿이면 NCPMS 구분(여름·가을, 난지·한지)에 맞는 것을 고르고, 권역별 시기·노지 여부는 담당 연구자 검토 후 crop_calendar.yaml 로 옮긴다.
+  감귤:
+    label: 감귤
+    nongsaro: 감귤(노지재배) (30654)
+    table_starts: 1월
+    window_meaning: 작물이 포장에 있는 기간(정식·이앙·씨뿌림 ~ 수확 종료)
+    windows:
+    - level: national
+      region: ''
+      start: 04-01
+      end: 12-31
+      status: draft
+      source: 농촌진흥청 농사로 작목별 농작업일정-감귤(노지재배)(발아기 4월 상순~4월 중순, 수확기, 생리적 꽃눈분화기 11월 상순~12월 하순) https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30654
+    review_note: 전국 기준 표. 작기가 여럿이면 NCPMS 구분(여름·가을, 난지·한지)에 맞는 것을 고르고, 권역별 시기·노지 여부는 담당 연구자 검토 후 crop_calendar.yaml 로 옮긴다.
+  감:
+    label: 감
+    nongsaro: 단감 (30656)
+    table_starts: 1월
+    window_meaning: 작물이 포장에 있는 기간(정식·이앙·씨뿌림 ~ 수확 종료)
+    windows:
+    - level: national
+      region: ''
+      start: 03-21
+      end: 10-31
+      status: draft
+      source: 농촌진흥청 농사로 작목별 농작업일정-단감(발아전엽기 3월 하순~4월 하순, 수확 10월 중순~10월 하순) https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30656
+    review_note: 전국 기준 표. 작기가 여럿이면 NCPMS 구분(여름·가을, 난지·한지)에 맞는 것을 고르고, 권역별 시기·노지 여부는 담당 연구자 검토 후 crop_calendar.yaml 로 옮긴다.
+  배:
+    label: 배
+    nongsaro: 배 (30661)
+    table_starts: 1월
+    window_meaning: 작물이 포장에 있는 기간(정식·이앙·씨뿌림 ~ 수확 종료)
+    windows:
+    - level: national
+      region: ''
+      start: 03-21
+      end: 11-20
+      status: draft
+      source: 농촌진흥청 농사로 작목별 농작업일정-배(발아기 3월 하순~4월 상순, 만생종수확 10월 중순~11월 중순) https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30661
+    review_note: 전국 기준 표. 작기가 여럿이면 NCPMS 구분(여름·가을, 난지·한지)에 맞는 것을 고르고, 권역별 시기·노지 여부는 담당 연구자 검토 후 crop_calendar.yaml 로 옮긴다.
+  복숭아:
+    label: 복숭아
+    nongsaro: 복숭아 (30662)
+    table_starts: 1월
+    window_meaning: 작물이 포장에 있는 기간(정식·이앙·씨뿌림 ~ 수확 종료)
+    windows:
+    - level: national
+      region: ''
+      start: 04-01
+      end: 10-20
+      status: draft
+      source: 농촌진흥청 농사로 작목별 농작업일정-복숭아(발아기 4월 상순~4월 상순, 만생종수확 9월 상순~10월 중순) https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30662
+    review_note: 전국 기준 표. 작기가 여럿이면 NCPMS 구분(여름·가을, 난지·한지)에 맞는 것을 고르고, 권역별 시기·노지 여부는 담당 연구자 검토 후 crop_calendar.yaml 로 옮긴다.
+  사과:
+    label: 사과
+    nongsaro: 사과 (30663)
+    table_starts: 1월
+    window_meaning: 작물이 포장에 있는 기간(정식·이앙·씨뿌림 ~ 수확 종료)
+    windows:
+    - level: national
+      region: ''
+      start: 03-11
+      end: 11-10
+      status: draft
+      source: 농촌진흥청 농사로 작목별 농작업일정-사과(발아, 전엽 3월 중순~4월 상순, 만생종수확 10월 중순~11월 상순) https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30663
+    review_note: 전국 기준 표. 작기가 여럿이면 NCPMS 구분(여름·가을, 난지·한지)에 맞는 것을 고르고, 권역별 시기·노지 여부는 담당 연구자 검토 후 crop_calendar.yaml 로 옮긴다.
+  포도:
+    label: 포도
+    nongsaro: 포도(무가온) (30669)
+    table_starts: 1월
+    window_meaning: 작물이 포장에 있는 기간(정식·이앙·씨뿌림 ~ 수확 종료)
+    windows:
+    - level: national
+      region: ''
+      start: 04-21
+      end: 10-31
+      status: draft
+      source: 농촌진흥청 농사로 작목별 농작업일정-포도(무가온)(발아 및 신초생장기 4월 하순~5월 중순, 수확 및 저장양분축적기 9월 상순~10월 하순) https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30669
+    review_note: 전국 기준 표. 작기가 여럿이면 NCPMS 구분(여름·가을, 난지·한지)에 맞는 것을 고르고, 권역별 시기·노지 여부는 담당 연구자 검토 후 crop_calendar.yaml 로 옮긴다.
+  논벼:
+    label: 논벼
+    nongsaro: 벼 기계이앙재배 (30697)
+    table_starts: 1월
+    window_meaning: 작물이 포장에 있는 기간(정식·이앙·씨뿌림 ~ 수확 종료)
+    windows:
+    - level: national
+      region: ''
+      start: 05-11
+      end: 10-31
+      status: draft
+      source: 농촌진흥청 농사로 작목별 농작업일정-벼 기계이앙재배(모내기때 5월 중순~6월 중순, 수확할때 10월 상순~10월 하순) https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30697
+    review_note: 전국 기준 표. 작기가 여럿이면 NCPMS 구분(여름·가을, 난지·한지)에 맞는 것을 고르고, 권역별 시기·노지 여부는 담당 연구자 검토 후 crop_calendar.yaml 로 옮긴다.
+  옥수수:
+    label: 옥수수
+    nongsaro: 옥수수 (30709)
+    table_starts: 1월
+    window_meaning: 작물이 포장에 있는 기간(정식·이앙·씨뿌림 ~ 수확 종료)
+    windows:
+    - level: national
+      region: ''
+      start: 03-11
+      end: 08-10
+      status: draft
+      source: 농촌진흥청 농사로 작목별 농작업일정-옥수수(트레이파종 3월 중순~3월 하순, 수확, 출하 7월 중순~8월 상순) https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30709
+    review_note: 전국 기준 표. 작기가 여럿이면 NCPMS 구분(여름·가을, 난지·한지)에 맞는 것을 고르고, 권역별 시기·노지 여부는 담당 연구자 검토 후 crop_calendar.yaml 로 옮긴다.
+  보리:
+    label: 보리
+    nongsaro: 일반보리 (30712)
+    table_starts: 10월
+    window_meaning: 작물이 포장에 있는 기간(정식·이앙·씨뿌림 ~ 수확 종료)
+    windows:
+    - level: national
+      region: ''
+      start: 10-01
+      end: 06-30
+      status: draft
+      source: 농촌진흥청 농사로 작목별 농작업일정-일반보리(파종 및 출현 10월 상순~11월 중순, 수확기 6월 상순~6월 하순) https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30712
+    review_note: 전국 기준 표. 작기가 여럿이면 NCPMS 구분(여름·가을, 난지·한지)에 맞는 것을 고르고, 권역별 시기·노지 여부는 담당 연구자 검토 후 crop_calendar.yaml 로 옮긴다.
+  콩:
+    label: 콩
+    nongsaro: 콩 (30715)
+    table_starts: 1월
+    window_meaning: 작물이 포장에 있는 기간(정식·이앙·씨뿌림 ~ 수확 종료)
+    windows:
+    - level: national
+      region: ''
+      start: 05-21
+      end: 11-10
+      status: draft
+      source: 농촌진흥청 농사로 작목별 농작업일정-콩(파종, 초기 제초 5월 하순~7월 상순, 수확기 9월 하순~11월 상순) https://www.nongsaro.go.kr/portal/ps/psb/psbl/workScheduleDtl.ps?menuId=PS00087&cntntsNo=30715
+    review_note: 전국 기준 표. 작기가 여럿이면 NCPMS 구분(여름·가을, 난지·한지)에 맞는 것을 고르고, 권역별 시기·노지 여부는 담당 연구자 검토 후 crop_calendar.yaml 로 옮긴다.

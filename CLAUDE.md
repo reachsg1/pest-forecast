@@ -36,6 +36,7 @@ python -m pipeline.cli probe && python -m pipeline.cli spots
 python -m pipeline.cli run --spots 20                    # 라이브(키 필요)
 python -m pipeline.backtest                              # data/survey/survey.csv 있을 때
 python scripts/fetch_cultivation.py --year 2025          # 시군별 노지 재배면적 → data/reference/cultivation.csv
+python scripts/fetch_crop_schedules.py [--offline]        # 농사로 작목별 농작업일정(NCPMS 예찰 대상 19작물) → data/reference/crop_schedules/, 재배 기간 초안 crop_calendar_draft.yaml(검토 후 crop_calendar.yaml 로)
 python scripts/fetch_weather_all.py --years 2015-2025 --months 4-9   # 전국 농업기상 일자료 캐시(월 1회 호출)
 python scripts/fetch_survey.py --crop VC011205 --examin 01320 --item 탄저병 --pest pepper_anthracnose  # NCPMS 시군구 예찰
 python -m pipeline.survey_train --pest pepper_anthracnose [--with-history] [--export <variant 폴더>]   # 예찰 학습형 학습·연도 분리 검증
