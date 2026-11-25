@@ -8,7 +8,7 @@ export default function PrivacyPage() {
     <article className="mx-auto max-w-2xl space-y-6 py-4 text-sm leading-relaxed text-slate-700">
       <header>
         <h1 className="text-2xl font-bold tracking-tight text-slate-900">개인정보 처리 안내</h1>
-        <p className="mt-1 text-xs text-slate-400">병해충 발생 예측 서비스 · 시행 2026.11.12.</p>
+        <p className="mt-1 text-xs text-slate-400">병해충 발생 예측 서비스 · 시행 2026.11.12. · 개정 2026.11.25.</p>
       </header>
 
       <section>
@@ -43,6 +43,9 @@ export default function PrivacyPage() {
       <section>
         <h2 className="font-semibold text-slate-900">3. 내 농장 정보</h2>
         <p className="mt-2">&lsquo;내 농장&rsquo;에 등록한 농장 이름·위치·작물은 이용자의 브라우저에만 저장되며 서버로 보내지 않습니다. 브라우저 저장 공간을 지우면 함께 삭제됩니다.</p>
+        <p className="mt-2">
+          <b>위험도 알림을 켠 경우</b>에만, 알림을 보내기 위해 다음 정보를 서버 저장소에 보관합니다: 등록한 농장의 이름·위치(위도·경도)·작물·가장 가까운 관측지점, 이 기기의 브라우저 알림 구독 정보(푸시 주소와 암호키), 마지막으로 알린 등급(같은 알림을 반복하지 않기 위해). 계정·이메일과 연결하지 않으며, 알림을 끄면 즉시 삭제됩니다. 브라우저에서 알림 구독을 해지한 기기의 정보는 다음 발송 때 자동으로 삭제됩니다.
+        </p>
       </section>
 
       <section>

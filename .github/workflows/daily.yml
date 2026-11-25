@@ -117,6 +117,26 @@ jobs:
             exit 1
           fi
 
+      # 농장 알림: 커밋 → Vercel 재배포가 끝나 오늘 결과가 서비스되면 /api/cron/notify 가 구독자에게 푸시를 보낸다(apps/web/app/api/cron/notify).
+      # 재배포 전에는 stale 로 답하므로 1분 간격으로 최대 15번 다시 부른다. Secrets CRON_SECRET·Variables SITE_URL 이 없으면 건너뛴다.
+      - name: Notify farms
+        if: steps.done.outputs.skip != '1'
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: |
+          if [ -z "$CRON_SECRET" ] || [ -z "$SITE_URL" ]; then echo "CRON_SECRET/SITE_URL 없음 → 알림 발송 건너뜀"; exit 0; fi
+          for i in $(seq 1 15); do
+            out=$(curl -sS -m 70 -X POST -H "Authorization: Bearer $CRON_SECRET" "${SITE_URL%/}/api/cron/notify" || true)
+            case "$out" in
+              *'"stale":true'*) echo "재배포 대기 ($i/15)"; sleep 60 ;;
+              *'"ok":true'*) echo "발송 결과: $out"; exit 0 ;;
+              *'"error"'*|*'"ok":false'*) echo "::warning::알림 발송 거부: $out — CRON_SECRET(Vercel과 같은 값)·알림 환경변수 설정을 확인하세요"; exit 0 ;;
+              *) echo "응답: ${out:-없음} ($i/15)"; sleep 60 ;;
+            esac
+          done
+          echo "::warning::알림 발송을 확인하지 못했습니다(재배포 지연 또는 설정 확인). 예비 크론(07:30 KST)이 다시 시도합니다."
+
       - name: Open issue on failure
         if: failure()
         uses: actions/github-script@v7

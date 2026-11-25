@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import AddressSearch from "./AddressSearch";
+import FarmAlerts from "./FarmAlerts";
 import FarmSite from "./FarmSite";
 import { ActionBox } from "./ControlGuide";
 import RiskBadge from "./RiskBadge";
@@ -94,6 +95,10 @@ export default function FarmClient({ spots, pests, horizon }: { spots: Spot[]; p
       setMsg("우리나라 안의 위치를 입력하세요(위도 33~39, 경도 124~132).");
       return;
     }
+    if (farms.length >= 10) {
+      setMsg("농장은 10곳까지 등록할 수 있어요.");
+      return;
+    }
     const n = nearest(spots, la, lo);
     if (!n) {
       setMsg("관측지점 정보가 없습니다.");
@@ -133,7 +138,7 @@ export default function FarmClient({ spots, pests, horizon }: { spots: Spot[]; p
         </div>
         <label className="block">
           <span className="field-label">농장 이름</span>
-          <input className="field" value={name} onChange={(e) => setName(e.target.value)} placeholder="예: 뒷밭 사과원" />
+          <input className="field" value={name} maxLength={40} onChange={(e) => setName(e.target.value)} placeholder="예: 뒷밭 사과원" />
         </label>
         <label className="block">
           <span className="field-label">작물</span>
@@ -174,10 +179,11 @@ export default function FarmClient({ spots, pests, horizon }: { spots: Spot[]; p
           </button>
         </div>
         {msg && <p className="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">{msg}</p>}
-        <p className="text-xs leading-relaxed text-slate-400">주소·지명을 검색하거나 현재 위치를 쓰면 위도·경도가 채워져요. 농장 정보는 이 브라우저에만 저장돼요.</p>
+        <p className="text-xs leading-relaxed text-slate-400">주소·지명을 검색하거나 현재 위치를 쓰면 위도·경도가 채워져요. 농장 정보는 이 브라우저에만 저장돼요(위험도 알림을 켠 경우에만 알림 발송을 위해 서버에도 저장).</p>
       </form>
 
       <section className="space-y-4" aria-label="등록한 농장">
+        <FarmAlerts farms={farms.map((f) => ({ name: f.name, crop: f.crop, lat: f.lat, lon: f.lon, spot_code: f.spot_code }))} />
         {farms.length === 0 && (
           <div className="card flex flex-col items-center px-6 py-16 text-center">
             <span className="grid h-12 w-12 place-items-center rounded-2xl bg-slate-100 text-slate-400">

@@ -10,6 +10,7 @@
   - 같은 병해충의 추가 모델은 `<병해충>/variants/<이름>/`(같은 `pest_id`, 다른 `id`, `label` 필수). 예측 지도에서 모델을 골라 결과를 비교한다(`?model=`). 요약·등급 집계는 기본 모델 기준(병해충 폴더 `model.yaml`의 `default_variant`로 variant를 기본으로 지정 가능 — 고추 탄저병은 앙상블). `demo_only: true`는 데모 실행 전용 시연 모형 — 실제 모델로 쓰지 않는다. 자세한 규칙은 `docs/model-authoring.md`.
 - `pipeline/` — `cli.py run [--demo]` 가 수집→정제→실행→발행. 발행 결과는 `apps/web/public/data/`(웹이 읽음)와 `data/predictions/`(스냅샷).
 - `apps/web/` — Next.js 15 App Router + Tailwind. 서버 컴포넌트는 `lib/data.ts`로 JSON을 fs로 읽고, 클라이언트는 `/data/*.json`을 fetch.
+  - 내 농장 위험도 알림(Web Push): `lib/pushRules.ts`(판정, `node --test lib/pushRules.test.ts`)·`lib/push.ts`(VAPID·구독 저장, Upstash REST `lib/kv.ts`)·`app/api/push/*`(설정·구독)·`app/api/cron/notify`(발송, daily.yml 'Notify farms'와 vercel.json 크론이 호출)·`public/sw.js`·`components/FarmAlerts.tsx`. 환경변수 `KV_REST_API_URL/TOKEN`·`VAPID_PUBLIC_KEY/PRIVATE_KEY/SUBJECT`가 모두 있을 때만 켜짐(없으면 화면에 안 나옴). 저장은 구독(기기) 단위 — 계정·이메일과 연결하지 않는다. 절차 `docs/setup-guide.md` H.
 - `.github/workflows/daily.yml` — 05:00 KST 배치 후 결과 커밋(→ Vercel 자동 배포). `backtest-on-pr.yml` — PR 검증.
 
 ## 꼭 지킬 규칙
@@ -52,6 +53,7 @@ python -m pipeline.survey_trend                           # 연도별 발생 추
 python -m pipeline.survey_backtest --all                   # '예측과 실제' 메뉴 자료(data/backtest, 학습 모델 있는 병해충 전부, 학습 연도는 배포 모델 평가 파일에서 읽음·검증은 그 다음 해~올해). 모델을 다시 학습하면 함께 갱신
 python -m pipeline.retrain [--dry-run] [--pest <pest>]     # 연례 재학습(매주 model-refresh.yml이 실행, 11월 이후 새 해 예찰이 다 모이면 학습 창을 한 해 밀어 재학습·나을 때만 교체)
 cd apps/web && npm install && npm run typecheck && npm run build && npm run dev
+cd apps/web && node --test lib/*.test.ts                 # 웹 순수 로직 테스트(알림 판정)
 ```
 
 ## 지금 남은 일(우선순위)

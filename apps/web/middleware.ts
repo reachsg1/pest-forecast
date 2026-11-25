@@ -35,6 +35,6 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  // 로그인 화면·로그인 처리·배치 갱신(자체 비밀값)·Next 내부 파일·아이콘은 제외
-  matcher: ["/((?!login|privacy|opengraph-image|api/auth|api/cron|_next/static|_next/image|favicon\\.ico|icon|apple-icon|robots\\.txt).*)"],
+  // 로그인 화면·로그인 처리·배치 갱신(자체 비밀값)·Next 내부 파일·아이콘·앱 설치 파일(매니페스트·서비스 워커)은 제외
+  matcher: ["/((?!login|privacy|opengraph-image|api/auth|api/cron|_next/static|_next/image|favicon\\.ico|icon|apple-icon|manifest\\.webmanifest|sw\\.js|robots\\.txt).*)"],
 };

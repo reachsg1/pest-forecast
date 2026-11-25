@@ -72,7 +72,7 @@ export function GradeBar({ counts, naCount = 0, legend = true, compact = false }
 }
 
 /** 작은 아이콘(인라인 SVG). 외부 아이콘 라이브러리 없이 일관된 선 아이콘을 쓴다. */
-export function Icon({ name, className = "h-4 w-4" }: { name: "map" | "farm" | "arrow" | "leaf" | "info" | "chart" | "close" | "location" | "plus"; className?: string }) {
+export function Icon({ name, className = "h-4 w-4" }: { name: "map" | "farm" | "arrow" | "leaf" | "info" | "chart" | "close" | "location" | "plus" | "bell"; className?: string }) {
   const p = { fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
@@ -85,6 +85,7 @@ export function Icon({ name, className = "h-4 w-4" }: { name: "map" | "farm" | "
       {name === "close" && <path {...p} d="M6 6l12 12M18 6 6 18" />}
       {name === "location" && <path {...p} d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21Zm0-9a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />}
       {name === "plus" && <path {...p} d="M12 5v14M5 12h14" />}
+      {name === "bell" && <path {...p} d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15L6 16Zm4 4a2 2 0 0 0 4 0" />}
     </svg>
   );
 }

@@ -58,7 +58,7 @@
 
 1. vercel.com → Add New Project → GitHub 저장소 선택
 2. **Root Directory: `apps/web`** (중요), Framework: Next.js
-3. Environment Variables: `CRON_SECRET`(임의의 긴 문자열). 외부 API 키는 Vercel에 넣지 않아도 됩니다(1단계는 정적 JSON만 서빙).
+3. Environment Variables: `CRON_SECRET`(임의의 긴 문자열). 외부 API 키는 Vercel에 넣지 않아도 됩니다(1단계는 정적 JSON만 서빙). 내 농장 알림을 쓰려면 H절.
 4. Deploy → 발급된 URL 확인. 이후 main에 커밋될 때마다 자동 배포, PR마다 미리보기 URL 생성
 5. (선택) Settings → Domains 에서 청 도메인 연결은 정보보안 부서 협의 후
 
@@ -72,6 +72,20 @@
 - 외부 클라우드(Vercel·GitHub) 호스팅에 대해 정보보안 담당부서와 사전 협의 (개인정보 미저장·공개 정보 서비스임을 설명)
 - 지도 타일: 운영 전 OSM 타일 → VWorld(국토부) 또는 청 계약 타일로 교체 (`apps/web/components/MapView.tsx`의 `MAP_STYLE`)
 - 공공누리 유형 확정, 푸터 문의처 기재 (`apps/web/components/Footer.tsx`, `app/about/page.tsx`)
+
+## H. 내 농장 위험도 알림(Web Push, 선택 · 20분)
+
+등록한 농장의 병해충이 **주의보 이상으로 올라간 날** 기기로 알림을 보냅니다(`apps/web/lib/pushRules.ts`). 아래 셋이 모두 있어야 켜지고, 하나라도 없으면 화면에 알림 영역이 나오지 않습니다(다른 기능은 영향 없음).
+
+1. **구독 저장소**: Vercel 프로젝트 → Storage → Marketplace → **Upstash Redis**(무료 플랜으로 충분) → Connect. 환경변수 `KV_REST_API_URL`·`KV_REST_API_TOKEN`이 자동 등록됩니다(`UPSTASH_REDIS_REST_URL`·`UPSTASH_REDIS_REST_TOKEN`으로 들어와도 됩니다).
+2. **VAPID 키**: 로컬에서 한 번만
+   ```bash
+   cd apps/web && npx web-push generate-vapid-keys
+   ```
+   출력된 Public Key → `VAPID_PUBLIC_KEY`, Private Key → `VAPID_PRIVATE_KEY`, 운영 연락처 `VAPID_SUBJECT=mailto:담당자@기관.go.kr`를 Vercel Environment Variables(Production·Preview)에 등록. 비공개키는 어디에도 적어 두지 않습니다(바꾸면 모든 구독이 무효가 되어 이용자가 다시 켜야 함).
+3. **발송 호출**: GitHub 저장소 Settings → Secrets에 `CRON_SECRET`(Vercel과 **같은 값**), Variables에 `SITE_URL`(예: `https://pest-forecast.vercel.app`). 매일 배치가 결과를 커밋한 뒤 재배포를 기다려 `/api/cron/notify`를 부릅니다. `apps/web/vercel.json`의 예비 크론(07:30 KST)도 하루 한 번 같은 주소를 부르며, 같은 날 중복 발송은 없습니다.
+4. 확인: 재배포 뒤 내 농장 화면에 '위험도 알림' 카드가 보이면 설정 완료. 알림 켜기 → 권한 허용 → 상태가 '켜짐'. iPhone은 Safari '홈 화면에 추가' 뒤 그 아이콘으로 열어야 켤 수 있습니다(iOS 16.4+).
+5. 개인정보 처리 안내(`/privacy`) 3절에 저장 항목을 적어 두었습니다. 기관 양식이 있으면 맞춰 고치세요.
 
 ## 완료 확인 체크리스트
 

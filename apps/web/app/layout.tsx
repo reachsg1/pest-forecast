@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "./globals.css";
 import Header from "@/components/Header";
@@ -14,7 +14,11 @@ export const metadata: Metadata = {
   // 링크 미리보기(카카오톡 등) 그림 주소를 절대 경로로 만든다. 그림은 app/opengraph-image.tsx
   metadataBase: new URL(process.env.SITE_URL ?? (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000")),
   openGraph: { type: "website", locale: "ko_KR", siteName: "병해충 발생 예측", title: "병해충 발생 예측", description: "오늘 우리 지역 병해충 위험도와 7일 전망" },
+  // 홈 화면에 추가(iOS·Android) — 내 농장 알림(Web Push)은 iOS 에서 홈 화면에 추가한 뒤에만 받을 수 있다. 매니페스트·아이콘은 app/manifest.ts, app/icon.tsx
+  appleWebApp: { capable: true, title: "병해충 예측", statusBarStyle: "black-translucent" },
 };
+
+export const viewport: Viewport = { themeColor: "#0b3b36" };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const status = await getStatus();

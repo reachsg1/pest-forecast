@@ -13,7 +13,7 @@ export default async function FarmPage() {
       <PageHeader
         eyebrow="농장 맞춤"
         title="내 농장 위험도"
-        desc={`농장 위치와 작물을 등록하면 가장 가까운 관측지점 기준으로 ${summary?.horizon_days ?? 10}일 위험도를 보여줍니다. 등록 정보는 이 브라우저에만 저장되며 서버로 보내지 않습니다.`}
+        desc={`농장 위치와 작물을 등록하면 가장 가까운 관측지점 기준으로 ${summary?.horizon_days ?? 10}일 위험도를 보여줍니다. 등록 정보는 이 브라우저에만 저장되며, 위험도 알림을 켠 경우에만 알림 발송을 위해 서버에 저장됩니다.`}
       />
       <Suspense fallback={null}>
         <FarmClient spots={spots} pests={pests.map((p) => ({ pest_id: p.pest_id, name_ko: p.name_ko, crop: p.crop, crop_ko: p.crop_ko }))} horizon={summary?.horizon_days ?? 10} />
